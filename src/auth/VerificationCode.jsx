@@ -11,7 +11,7 @@ function VerificationCode() {
       const newCode = [...code];
       newCode[index] = value;
       setCode(newCode);
-      
+
       // Move to next input
       if (value && index < 4) {
         document.getElementById(`code-${index + 1}`).focus();
@@ -63,21 +63,10 @@ function VerificationCode() {
             >
               Verify Code
             </button>
-
-            <div className="text-center mt-4">
-              <span className="text-gray-400">Didn't receive a code? </span>
-              <button 
-                type="button" 
-                className="text-blue-400 hover:underline"
-                onClick={() => console.log('Resend code')}
-              >
-                Resend
-              </button>
-            </div>
           </form>
         </div>
       </div>
-      
+
       {/* Right Column - Illustration */}
       <div className="hidden md:flex md:w-1/2 bg-[#162236] items-center justify-center relative">
         <div className="absolute top-4 right-4">
