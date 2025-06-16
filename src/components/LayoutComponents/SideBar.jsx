@@ -22,12 +22,12 @@ export const AdminItems = [
     link: "/dashboard/user-management",
     children: [
       {
-        key: "profile",
+        key: "all-user",
         label: "All User",
         link: "/dashboard/user-management/all-user",
       },
       {
-        key: "terms",
+        key: "sign-up-request",
         label: "Sign Up Request",
         link: "/dashboard/user-management/sign-up-request",
       },

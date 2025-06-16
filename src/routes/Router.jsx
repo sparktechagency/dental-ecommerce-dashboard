@@ -24,6 +24,8 @@ import BookingTable from "../page/BookingManagement/BookingTable";
 import ForgetPassword from "../auth/ForgetPassword";
 import WelcomeMessage from "../auth/WelcomeMessage";
 import UserManagement from "../page/user-management/UserManagement";
+import AllUser from "../page/user-management/AllUser";
+import SignUpRequest from "../page/user-management/SignUpRequest";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +39,14 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/user-management",
         element: <UserManagement />,
+      },
+      {
+        path: "/dashboard/user-management/all-user",
+        element: <AllUser />,
+      },
+      {
+        path: "/dashboard/user-management/sign-up-request",
+        element: <SignUpRequest />,
       },
       {
         path: "/dashboard/seller-management",
