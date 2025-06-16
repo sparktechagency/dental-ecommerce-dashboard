@@ -76,7 +76,7 @@ function SignIn() {
                 />
                 <span className="ml-2 text-gray-300">Remember Me</span>
               </label>
-              <Link to="/forgot-password" className="text-red-500 hover:underline text-sm">
+              <Link to="/forget-password" className="text-red-500 hover:underline text-sm">
                 Forgot Password?
               </Link>
             </div>

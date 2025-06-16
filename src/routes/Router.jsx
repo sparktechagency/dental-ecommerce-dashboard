@@ -16,11 +16,12 @@ import Support from "../page/Support/Support";
 import CategoryManagement from "../page/CategoryManagement/CategoryManagement";
 import Chat from "../page/Chat/Chat";
 import ResetPassword from "../auth/ResetPassword";
-import ForgetPassword from "../auth/ForgetPassword";
+// import ForgetPassword from "../auth/ForgetPassword";
 import Users from "../page/UserManagement/Users";
 import SignIn from "../auth/SignIn";
 import BookingManagement from "../page/BookingManagement/BookingManagement";
 import BookingTable from "../page/BookingManagement/BookingTable";
+import ForgetPassword from "../auth/ForgetPassword";
 
 export const router = createBrowserRouter([
   {
