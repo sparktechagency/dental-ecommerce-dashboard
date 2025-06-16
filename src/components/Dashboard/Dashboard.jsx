@@ -68,7 +68,7 @@ function DashboardPage() {
           </div>
 
           <p className="text-[#34C759] text-4xl font-bold">
-            ${new Intl.NumberFormat().format(6500)}
+            {new Intl.NumberFormat().format(300)}
           </p>
         </div>
         <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
@@ -84,7 +84,7 @@ function DashboardPage() {
           </div>
 
           <p className="text-[#34C759] text-4xl font-bold">
-            ${new Intl.NumberFormat().format(6500)}
+            {new Intl.NumberFormat().format(6500)}
           </p>
         </div>
         <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
@@ -100,7 +100,7 @@ function DashboardPage() {
           </div>
 
           <p className="text-red-500 text-4xl font-bold">
-            ${new Intl.NumberFormat().format()}
+            {new Intl.NumberFormat().format(10)}
           </p>
         </div>
       </div>
