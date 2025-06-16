@@ -1,7 +1,6 @@
 import { MdDashboard, MdManageAccounts, MdOutlineCategory, MdOutlinePets } from "react-icons/md";
 import { FaUsers, FaChevronRight, FaFileAlt, FaCog } from "react-icons/fa";
 import { IoIosLogIn } from "react-icons/io";
-import logo from "../../assets/header/logo.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { IoChatboxEllipsesOutline } from "react-icons/io5";
@@ -17,11 +16,29 @@ export const AdminItems = [
     link: "/",
   },
   {
-    key: "chat",
-    label: "Chat",
-    icon: IoChatboxEllipsesOutline,
-    link: "/chat",
+    key: "userManagement",
+    label: "User management",
+    icon: FaCog,
+    link: "/dashboard/user-management",
+    children: [
+      {
+        key: "profile",
+        label: "All User",
+        link: "/dashboard/user-management/all-user",
+      },
+      {
+        key: "terms",
+        label: "Sign Up Request",
+        link: "/dashboard/user-management/sign-up-request",
+      },
+    ],
   },
+  // {
+  //   key: "chat",
+  //   label: "Chat",
+  //   icon: IoChatboxEllipsesOutline,
+  //   link: "/chat",
+  // },
   {
     key: "userManagement",
     label: "Pet owners",

@@ -17,12 +17,13 @@ import CategoryManagement from "../page/CategoryManagement/CategoryManagement";
 import Chat from "../page/Chat/Chat";
 import ResetPassword from "../auth/ResetPassword";
 // import ForgetPassword from "../auth/ForgetPassword";
-import Users from "../page/UserManagement/Users";
+// import Users from "../page/UserManagement/Users";
 import SignIn from "../auth/SignIn";
 import BookingManagement from "../page/BookingManagement/BookingManagement";
 import BookingTable from "../page/BookingManagement/BookingTable";
 import ForgetPassword from "../auth/ForgetPassword";
 import WelcomeMessage from "../auth/WelcomeMessage";
+import UserManagement from "../page/user-management/UserManagement";
 
 export const router = createBrowserRouter([
   {
@@ -35,7 +36,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard/user-management",
-        element: <Users />,
+        element: <UserManagement />,
       },
       {
         path: "/dashboard/seller-management",
