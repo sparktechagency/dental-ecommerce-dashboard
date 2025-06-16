@@ -22,6 +22,7 @@ import SignIn from "../auth/SignIn";
 import BookingManagement from "../page/BookingManagement/BookingManagement";
 import BookingTable from "../page/BookingManagement/BookingTable";
 import ForgetPassword from "../auth/ForgetPassword";
+import WelcomeMessage from "../auth/WelcomeMessage";
 
 export const router = createBrowserRouter([
   {
@@ -114,5 +115,9 @@ export const router = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />,
+  },
+  {
+    path: "/welcome",
+    element: <WelcomeMessage />,
   },
 ]);

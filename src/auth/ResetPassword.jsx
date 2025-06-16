@@ -74,7 +74,7 @@ function ResetPassword() {
               </div>
             </div>
 
-            <Link to="/">
+            <Link to="/welcome">
               <button
                 type="submit"
                 className="w-full bg-[#136BFB] text-white font-bold py-3 px-4 rounded-lg transition mt-5"
