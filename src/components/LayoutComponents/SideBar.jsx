@@ -150,7 +150,7 @@ const SideBar = () => {
   return (
     <div className="min-h-[100vh] bg-[#B5ED90] overflow-y-auto">
       <div className="custom-sidebar-logo flex justify-center">
-        <img src={logo} alt="Logo" className="w-[95px]" />
+        <img src="/logo.svg" alt="Logo" className="w-[95px]" />
       </div>
       <div className="menu-items">
         <div>
