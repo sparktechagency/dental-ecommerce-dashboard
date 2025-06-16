@@ -103,7 +103,7 @@ function SignIn() {
           </button>
         </div>
         <div className="text-center px-12">
-          <div className="w-[500px] h-[500px] mx-auto mb-8">
+          <div className="w-[500px] h-[500px] mx-auto">
             <img src="./signin.svg" alt="" />
           </div>
         </div>

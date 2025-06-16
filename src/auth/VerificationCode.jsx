@@ -75,7 +75,7 @@ function VerificationCode() {
           </Link>
         </div>
         <div className="text-center px-12">
-          <div className="w-[400px] h-[400px] mx-auto mb-8">
+          <div className="w-[400px] h-[400px] mx-auto">
             <img src="/otp.svg" alt="Verification" className="w-full h-full object-contain" />
           </div>
         </div>
