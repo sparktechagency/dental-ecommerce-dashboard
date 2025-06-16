@@ -27,26 +27,26 @@ const SubscriptionGrowth = () => {
   }, []);
 
   const data = [
-    { month: "Jan", vendors: 200 },
-    { month: "Feb", vendors: 185 },
-    { month: "Mar", vendors: 165 },
-    { month: "Apr", vendors: 175 },
-    { month: "May", vendors: 185 },
-    { month: "Jun", vendors: 195 },
-    { month: "Jul", vendors: 200 },
-    { month: "Aug", vendors: 185 },
-    { month: "Sep", vendors: 175 },
-    { month: "Oct", vendors: 160 },
-    { month: "Nov", vendors: 180 },
-    { month: "Dec", vendors: 200 },
+    { month: "Jan", vendors: 0 },
+    { month: "Feb", vendors: 85 },
+    { month: "Mar", vendors: 65 },
+    { month: "Apr", vendors: 75 },
+    { month: "May", vendors: 85 },
+    { month: "Jun", vendors: 95 },
+    { month: "Jul", vendors: 100 },
+    { month: "Aug", vendors: 85 },
+    { month: "Sep", vendors: 75 },
+    { month: "Oct", vendors: 65 },
+    { month: "Nov", vendors: 85 },
+    { month: "Dec", vendors: 100 },
   ];
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-[#202020] text-white p-3 rounded-lg shadow-lg border border-[#B5ED90]">
+        <div className="bg-white text-black p-3 rounded-lg shadow-lg border border-[#B5ED90]">
           <p className="font-medium">{`Month: ${label}`}</p>
-          <p className="font-medium text-[#FF62BD]">{`Vendors: ${payload[0].value}`}</p>
+          <p className="font-medium text-[#5492F7]">{`Vendors: ${payload[0].value}`}</p>
         </div>
       );
     }
@@ -76,7 +76,7 @@ const SubscriptionGrowth = () => {
           <Area
             type="monotone"
             dataKey="vendors"
-            stroke="#5492F7"
+            // stroke="#5492F7"
             strokeWidth={3}
             fill="url(#vendorGrowth)"
           />

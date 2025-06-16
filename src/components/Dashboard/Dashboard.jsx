@@ -9,6 +9,7 @@ import SubscriptionGrowth from "./SubscriptionGrowth";
 import SellerGrowth from "./SellerGrowth";
 import RecentSellerRequests from "./RecentSellerRequests";
 import { Modal } from "antd";
+import EarningGrowth from "./EarningGrowth";
 
 function DashboardPage() {
   const currentYear = dayjs().year();
@@ -176,10 +177,43 @@ function DashboardPage() {
           <SubscriptionGrowth />
         </div>
       </div>
-      <div className="mt-5">
-        <h1 className="text-2xl font-bold mb-5">Business owners Requests</h1>
-        <RecentSellerRequests showModal={showModal} />
-      </div>
+      {/* <div className="mt-5"> */}
+      <div className="w-full p-5 bg-[#707070] rounded-lg shadow-md mt-5">
+          <div className="flex flex-col md:flex-row md:justify-between lg:justify-between items-center gap-5 my-5">
+            <div>
+              <h1 className="text-xl font-semibold">Earning Growth</h1>
+            </div>
+
+            <div className="relative w-full md:w-32">
+              {/* Selected Year Display */}
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md flex justify-between items-center bg-white transition"
+              >
+                <span className="text-[#0B704E]">{selectedYear}</span>
+                <FaChevronDown className="text-[#0B704E] w-5 h-5 ml-5" />
+              </button>
+
+              {/* Dropdown List */}
+              {isOpen && (
+                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
+                  {years.map((year) => (
+                    <div
+                      key={year}
+                      onClick={() => handleSelect(year)}
+                      className={`p-2 cursor-pointer hover:bg-gray-100 transition ${year === selectedYear ? "bg-gray-200" : ""
+                        }`}
+                    >
+                      {year}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <EarningGrowth />
+        </div>
+      {/* </div> */}
       <Modal open={isModalOpen} centered onCancel={handleCancel} footer={null}>
         <div className="p-5">
           <h1 className="text-4xl text-center text-[#0D0D0D]">
