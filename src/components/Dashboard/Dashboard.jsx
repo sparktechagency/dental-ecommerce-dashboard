@@ -39,80 +39,68 @@ function DashboardPage() {
   return (
     <div className="flex flex-col">
       <div className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-3 lg:grid-cols-4 gap-2">
-        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md">
-          <h2 className="text-gray-700 text-lg font-medium mb-2">
-            Total Users
-          </h2>
-
-          <div className="rounded-full">
-            <div className="flex items-center justify-center mb-2">
-              <img
-                src={user}
-                alt="User Stats Icon"
-                className="w-[64px] h-[64px]"
-              />
-            </div>
+        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+          <div className="rounded-full flex items-center justify-center mb-2 gap-2">
+            <img
+              src="./money.svg"
+              alt="User Stats Icon"
+              className="w-[40px] h-[40px]"
+            />
+            <h2 className="text-white text-2xl font-medium">
+              Total Earning
+            </h2>
           </div>
 
-          <p className="text-gray-900 text-4xl font-bold">
-            {new Intl.NumberFormat().format(6500)}
+          <p className="text-[#34C759] text-4xl font-bold">
+            ${new Intl.NumberFormat().format(6500)}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md">
-          <h2 className="text-gray-700 text-lg font-medium mb-2">
-            Total Income
-          </h2>
-
-          <div className="rounded-full">
-            <div className="flex items-center justify-center mb-2">
-              <img
-                src={medal}
-                alt="User Stats Icon"
-                className="w-[64px] h-[64px]"
-              />
-            </div>
+        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+          <div className="rounded-full flex items-center justify-center mb-2 gap-2">
+            <img
+              src="./order.svg"
+              alt="User Stats Icon"
+              className="w-[40px] h-[40px]"
+            />
+            <h2 className="text-white text-2xl font-medium">
+              Total Order
+            </h2>
           </div>
 
-          <p className="text-gray-900 text-4xl font-bold">
-            ${new Intl.NumberFormat().format(2650)}
+          <p className="text-[#34C759] text-4xl font-bold">
+            ${new Intl.NumberFormat().format(6500)}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md">
-          <h2 className="text-gray-700 text-lg font-medium mb-2">
-            Total Seller
-          </h2>
-
-          <div className="rounded-full">
-            <div className="flex items-center justify-center mb-2">
-              <img
-                src={profit}
-                alt="User Stats Icon"
-                className="w-[64px] h-[64px]"
-              />
-            </div>
+        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+          <div className="rounded-full flex items-center justify-center mb-2 gap-2">
+            <img
+              src="./user.svg"
+              alt="User Stats Icon"
+              className="w-[40px] h-[40px]"
+            />
+            <h2 className="text-white text-2xl font-medium">
+              Total User
+            </h2>
           </div>
 
-          <p className="text-gray-900 text-4xl font-bold">
-            {new Intl.NumberFormat().format(26500)}
+          <p className="text-[#34C759] text-4xl font-bold">
+            ${new Intl.NumberFormat().format(6500)}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md">
-          <h2 className="text-gray-700 text-lg font-medium mb-2">
-            Total Subscribers
-          </h2>
-
-          <div className="rounded-full">
-            <div className="flex items-center justify-center mb-2">
-              <img
-                src={seller}
-                alt="User Stats Icon"
-                className="w-[64px] h-[64px]"
-              />
-            </div>
+        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+          <div className="rounded-full flex items-center justify-center mb-2 gap-2">
+            <img
+              src="./block.svg"
+              alt="User Stats Icon"
+              className="w-[40px] h-[40px]"
+            />
+            <h2 className="text-white text-2xl font-medium">
+              Blocked account
+            </h2>
           </div>
 
-          <p className="text-gray-900 text-4xl font-bold">
-            {new Intl.NumberFormat().format(2650)}
+          <p className="text-red-500 text-4xl font-bold">
+            ${new Intl.NumberFormat().format()}
           </p>
         </div>
       </div>
@@ -141,9 +129,8 @@ function DashboardPage() {
                     <div
                       key={year}
                       onClick={() => handleSelect(year)}
-                      className={`p-2 cursor-pointer hover:bg-gray-100 transition ${
-                        year === selectedYear ? "bg-gray-200" : ""
-                      }`}
+                      className={`p-2 cursor-pointer hover:bg-gray-100 transition ${year === selectedYear ? "bg-gray-200" : ""
+                        }`}
                     >
                       {year}
                     </div>
@@ -175,9 +162,8 @@ function DashboardPage() {
                     <div
                       key={year}
                       onClick={() => handleSelect(year)}
-                      className={`p-2 cursor-pointer hover:bg-gray-100 transition ${
-                        year === selectedYear ? "bg-gray-200" : ""
-                      }`}
+                      className={`p-2 cursor-pointer hover:bg-gray-100 transition ${year === selectedYear ? "bg-gray-200" : ""
+                        }`}
                     >
                       {year}
                     </div>
