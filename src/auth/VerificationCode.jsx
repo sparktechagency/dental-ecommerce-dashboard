@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import BrandLogo from "../shared/BrandLogo";
+import { useNavigate, Link } from "react-router-dom";
+import { IoClose } from "react-icons/io5";
 
 function VerificationCode() {
   const [code, setCode] = useState(new Array(5).fill(""));
@@ -11,48 +11,85 @@ function VerificationCode() {
       const newCode = [...code];
       newCode[index] = value;
       setCode(newCode);
-      if (value && index < 5) {
+      
+      // Move to next input
+      if (value && index < 4) {
         document.getElementById(`code-${index + 1}`).focus();
       }
     }
   };
 
-  const handleVerifyCode = async () => {
+  const handleKeyDown = (e, index) => {
+    if (e.key === 'Backspace' && !code[index] && index > 0) {
+      // Move to previous input on backspace
+      document.getElementById(`code-${index - 1}`).focus();
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     navigate("/reset-password");
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-white p-5">
-      <div className="bg-white relative shadow-lg rounded-2xl px-10 py-20 w-full max-w-xl text-center">
-        <BrandLogo
-          status=" Check your email"
-          information=" Please enter your email to get verification code."
-        />
-        <form className="space-y-5">
-          <div className="flex justify-center gap-2">
-            {code.map((digit, index) => (
-              <input
-                key={index}
-                id={`code-${index}`}
-                type="text"
-                maxLength="1"
-                value={digit}
-                onChange={(e) => handleChange(e.target.value, index)}
-                className="shadow-xs w-12 h-12 text-2xl text-center border border-[#FF62BD] text-[#FF62BD] rounded-lg focus:outline-none"
-              />
-            ))}
-          </div>
+    <div className="flex min-h-screen bg-white">
+      {/* Left Column - Form */}
+      <div className="w-full md:w-1/2 bg-[#171717] p-8 flex flex-col justify-center relative">
+        <div className="max-w-md mx-auto w-full">
+          <h1 className="text-4xl font-bold text-white mb-2">Verification Code</h1>
+          <p className="text-gray-300 mb-8">
+            We have sent the verification code to your email
+          </p>
 
-          <div className="flex flex-col gap-5 justify-center items-center text-[#000000]">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="flex justify-between max-w-md mx-auto mb-8">
+              {code.map((digit, index) => (
+                <input
+                  key={index}
+                  id={`code-${index}`}
+                  type="text"
+                  maxLength="1"
+                  value={digit}
+                  onChange={(e) => handleChange(e.target.value, index)}
+                  onKeyDown={(e) => handleKeyDown(e, index)}
+                  className="w-14 h-14 text-2xl text-center bg-[#2D2D2D] text-white border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                />
+              ))}
+            </div>
+
             <button
-              onClick={handleVerifyCode}
-              type="button"
-              className="whitespace-nowrap w-full bg-[#B5ED90] text-[#000000] font-semibold py-3 rounded-lg shadow-lg cursor-pointer my-5"
+              type="submit"
+              className="w-full bg-[#136BFB] text-white font-medium py-3 px-4 rounded-lg transition hover:bg-blue-700"
             >
-              Continue
+              Verify Code
             </button>
+
+            <div className="text-center mt-4">
+              <span className="text-gray-400">Didn't receive a code? </span>
+              <button 
+                type="button" 
+                className="text-blue-400 hover:underline"
+                onClick={() => console.log('Resend code')}
+              >
+                Resend
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      
+      {/* Right Column - Illustration */}
+      <div className="hidden md:flex md:w-1/2 bg-[#162236] items-center justify-center relative">
+        <div className="absolute top-4 right-4">
+          <Link to="/signin" className="text-white hover:bg-blue-700 p-2 rounded-full inline-block">
+            <IoClose size={24} />
+          </Link>
+        </div>
+        <div className="text-center px-12">
+          <div className="w-[400px] h-[400px] mx-auto mb-8">
+            <img src="/otp.svg" alt="Verification" className="w-full h-full object-contain" />
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

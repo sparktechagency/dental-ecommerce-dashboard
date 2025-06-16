@@ -38,14 +38,16 @@ function ForgetPassword() {
             </div>
 
 
+            <Link to="/verify-mail">
+              <button
+                type="submit"
+                className="w-full bg-[#136BFB] text-white font-bold py-3 px-4 rounded-lg transition mt-5"
+              >
+                Get OTP
+              </button>
+            </Link>
 
 
-            <button
-              type="submit"
-              className="w-full bg-[#136BFB] text-white font-bold py-3 px-4 rounded-lg transition"
-            >
-            Get OTP
-            </button>
           </form>
         </div>
       </div>

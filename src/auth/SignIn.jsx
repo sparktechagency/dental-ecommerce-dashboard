@@ -29,7 +29,7 @@ function SignIn() {
         <div className="max-w-md mx-auto w-full">
           <h1 className="text-4xl font-bold text-white mb-2">Welcome Back !</h1>
           <p className="text-gray-300 mb-8">Please enter your email and password to continue</p>
-          
+
           <form className="space-y-6">
             <div>
               <label className="block text-gray-300 text-sm mb-2">Email</label>
@@ -43,7 +43,7 @@ function SignIn() {
                 required
               />
             </div>
-            
+
             <div>
               <label className="block text-gray-300 text-sm mb-2">Password</label>
               <div className="relative">
@@ -65,7 +65,7 @@ function SignIn() {
                 </button>
               </div>
             </div>
-            
+
             <div className="flex items-center justify-between">
               <label className="flex items-center">
                 <input
@@ -80,17 +80,21 @@ function SignIn() {
                 Forgot Password?
               </Link>
             </div>
-            
-            <button
-              type="submit"
-              className="w-full bg-[#136BFB] text-white font-medium py-3 px-4 rounded-lg transition"
-            >
-              Log In
-            </button>
+
+
+            <Link to="/">
+              <button
+                type="submit"
+                className="w-full bg-[#136BFB] text-white font-medium py-3 px-4 rounded-lg transition mt-5"
+              >
+                Log In
+              </button>
+            </Link>
+
           </form>
         </div>
       </div>
-      
+
       {/* Right Column - Illustration */}
       <div className="hidden md:flex md:w-1/2 bg-[#162236] items-center justify-center relative">
         <div className="absolute top-4 right-4">
@@ -100,7 +104,7 @@ function SignIn() {
         </div>
         <div className="text-center px-12">
           <div className="w-[500px] h-[500px] mx-auto mb-8">
-           <img src="./signin.svg" alt="" />
+            <img src="./signin.svg" alt="" />
           </div>
         </div>
       </div>
