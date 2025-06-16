@@ -62,21 +62,21 @@ const SubscriptionGrowth = () => {
         >
           <defs>
             <linearGradient id="vendorGrowth" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#FF62BD" stopOpacity={1} />
-              <stop offset="95%" stopColor="#B5ED90" stopOpacity={1} />
+              <stop offset="5%" stopColor="#5492F7" stopOpacity={1} />
+              <stop offset="95%" stopColor="#3A3A3A" stopOpacity={1} />
             </linearGradient>
           </defs>
           <XAxis
             dataKey="month"
-            tick={{ fill: "#666" }}
-            tickLine={{ stroke: "#666" }}
+            tick={{ fill: "#9F9C96" }}
+            tickLine={{ stroke: "#9F9C96" }}
           />
-          <YAxis tick={{ fill: "#666" }} tickLine={{ stroke: "#666" }} />
+          <YAxis tick={{ fill: "#9F9C96" }} tickLine={{ stroke: "#9F9C96" }} />
           <Tooltip content={<CustomTooltip />} />
           <Area
             type="monotone"
             dataKey="vendors"
-            stroke="#FF62BD"
+            stroke="#5492F7"
             strokeWidth={3}
             fill="url(#vendorGrowth)"
           />

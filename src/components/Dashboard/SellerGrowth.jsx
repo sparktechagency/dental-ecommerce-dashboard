@@ -11,28 +11,27 @@ import {
 
 const SellerGrowth = () => {
   const userData = [
-    { month: "Jan", appUsers: 1200, activeUsers: 900 },
-    { month: "Feb", appUsers: 1500, activeUsers: 1100 },
-    { month: "Mar", appUsers: 800, activeUsers: 600 },
-    { month: "Apr", appUsers: 1600, activeUsers: 1300 },
-    { month: "May", appUsers: 2000, activeUsers: 1600 },
-    { month: "Jun", appUsers: 1700, activeUsers: 1400 },
-    { month: "Jul", appUsers: 2200, activeUsers: 1900 },
-    { month: "Aug", appUsers: 1900, activeUsers: 1700 },
-    { month: "Sept", appUsers: 2100, activeUsers: 1800 },
-    { month: "Oct", appUsers: 2300, activeUsers: 2000 },
-    { month: "Nov", appUsers: 2500, activeUsers: 2200 },
-    { month: "Dec", appUsers: 2800, activeUsers: 2500 },
+    { month: "Jan", activeUsers: 900 },
+    { month: "Feb", activeUsers: 1500 },
+    { month: "Mar", activeUsers: 800 },
+    { month: "Apr", activeUsers: 1600 },
+    { month: "May", activeUsers: 2000 },
+    { month: "Jun", activeUsers: 1700 },
+    { month: "Jul", activeUsers: 2200 },
+    { month: "Aug", activeUsers: 1700 },
+    { month: "Sept", activeUsers: 1800 },
+    { month: "Oct", activeUsers: 2000 },
+    { month: "Nov", activeUsers: 2200 },
+    { month: "Dec", activeUsers: 2500 },
   ];
 
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const { month, appUsers, activeUsers } = payload[0].payload;
+      const { month, activeUsers } = payload[0].payload;
       return (
         <div className="bg-white py-2 px-3 rounded shadow border">
           <p className="text-black font-semibold">{`Month: ${month}`}</p>
-          <p className="text-[#B5ED90]">{`App Users: ${appUsers}`}</p>
-          <p className="text-[#FF62BD]">{`Active Users: ${activeUsers}`}</p>
+          <p className="text-[#29A366]">{`Active Users: ${activeUsers}`}</p>
         </div>
       );
     }
@@ -47,22 +46,22 @@ const SellerGrowth = () => {
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           barGap={100}
           barCategoryGap={40}
+
         >
-          <XAxis tickLine={false} dataKey="month" />
-          <YAxis tickLine={false} />
+          {/* <XAxis tickLine={false} dataKey="month" />
+          <YAxis tickLine={false} /> */}
+          <XAxis
+            dataKey="month"
+            tick={{ fill: "#9F9C96" }}
+            tickLine={{ stroke: "#9F9C96" }}
+          />
+          <YAxis tick={{ fill: "#9F9C96" }} tickLine={{ stroke: "#9F9C96" }} />
           <Tooltip content={<CustomTooltip />} />
           <Legend />
           <Bar
-            dataKey="appUsers"
-            fill="#FF62BD"
-            barSize={30}
-            radius={[5, 5, 0, 0]}
-            name="App Users"
-          />
-          <Bar
             dataKey="activeUsers"
-            fill="#B5ED90"
-            barSize={30}
+            fill="#29A366"
+            barSize={40}
             radius={[5, 5, 0, 0]}
             name="Active Users"
           />
