@@ -148,7 +148,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="min-h-[100vh] bg-[#B5ED90] overflow-y-auto">
+    <div className="min-h-[100vh] bg-[#202020] overflow-y-auto">
       <div className="custom-sidebar-logo flex justify-center">
         <img src="/logo.svg" alt="Logo" className="w-[95px]" />
       </div>
@@ -176,8 +176,8 @@ const SideBar = () => {
                     isSettingsActive ||
                     isCreatorActive ||
                     isCategoriesActive
-                      ? "bg-[#0B704E] text-white rounded-md"
-                      : "bg-white rounded-md hover:bg-[#B3D3C8]"
+                      ? "bg-[#136BFB] text-white rounded-md"
+                      : "bg-white rounded-md hover:bg-[#9ac0fc]"
                   }`}
                   onClick={(e) => {
                     if (item.children) {
