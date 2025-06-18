@@ -1,6 +1,6 @@
 import { MdDashboard, MdManageAccounts, MdOutlineCategory, MdOutlinePets } from "react-icons/md";
 import { FaChevronRight, FaCog } from "react-icons/fa";
-import { IoIosLogIn } from "react-icons/io";
+import { IoIosLogOut } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { TbHomeDollar } from "react-icons/tb";
@@ -157,15 +157,14 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-b from-gray-800 to-gray-900 text-gray-200 w-64 shadow-lg">
-      {/* Fixed Header */}
-      <div className="p-6 mb-4 flex-shrink-0">
+    <div className="flex flex-col h-full">
+      <div className="p-6 mb-4">
         <img src="/logo.svg" alt="Logo" className="w-24 h-auto" />
       </div>
-
-      {/* Scrollable Content */}
+      
+      {/* Scrollable menu items */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
-        <div className="px-4 space-y-1">
+        <div className="px-4 space-y-1 pb-4">
           {AdminItems.map((item) => {
             const isActive = selectedKey === item.key ||
               (item.key === "settings" && item.children?.some(child => child.link === location.pathname)) ||
@@ -176,7 +175,7 @@ const SideBar = () => {
             return (
               <div key={item.key} className="mb-1">
                 <Link
-                  to={item.link}
+                  to={item.link || '#'}
                   className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
                     isActive
                       ? "bg-blue-600 text-white shadow-md"
@@ -192,7 +191,7 @@ const SideBar = () => {
                   }}
                 >
                   <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
-                  <span className="flex-1">{item.label}</span>
+                  <span className="flex-1 text-left">{item.label}</span>
                   {item.children && (
                     <FaChevronRight
                       className={`ml-2 transition-transform duration-200 ${
@@ -221,7 +220,7 @@ const SideBar = () => {
                           to={child.link}
                           className={`block px-3 py-2 text-sm rounded-md transition-colors duration-150 ${
                             selectedKey === child.key
-                              ? "bg-blue-500/20 text-blue-400 font-medium"
+                              ? "bg-blue-600/30 text-blue-400 font-medium"
                               : "text-gray-400 hover:bg-gray-700/50 hover:text-gray-200"
                           }`}
                           onClick={() => {
@@ -240,13 +239,13 @@ const SideBar = () => {
         </div>
       </div>
 
-      {/* Fixed Footer */}
-      <div className="p-4 bg-gray-800/50 backdrop-blur-sm border-t border-gray-700 flex-shrink-0">
+      {/* Logout button at the bottom */}
+      <div className="p-4 border-t border-gray-700">
         <button
           onClick={handleLogout}
           className="w-full flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors duration-200"
         >
-          <IoIosLogIn className="w-5 h-5 mr-2" />
+          <IoIosLogOut className="w-5 h-5 mr-2" />
           <span>Log Out</span>
         </button>
       </div>
