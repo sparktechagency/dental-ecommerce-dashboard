@@ -2,13 +2,15 @@ import { useState } from "react";
 import { IoEyeOutline, IoSearch } from "react-icons/io5";
 import { MdBlockFlipped } from "react-icons/md";
 import PageHeading from "../../shared/PageHeading";
-import { ConfigProvider, Modal, Table } from "antd";
+import { ConfigProvider, Modal, Table, Select, Input } from "antd";
 import UserInformation from "../user-management/UserInformation";
 
 const AllOrder = () => {
           const [isModalOpen, setIsModalOpen] = useState(false);
           const [userDetailsModal, setUserDetailsModal] = useState(false);
           const [selectedUser, setSelectedUser] = useState(null);
+          const [statusFilter, setStatusFilter] = useState('all');
+          const [searchText, setSearchText] = useState('');
 
           const getStatusStyle = (status) => {
                     const styles = {
@@ -20,6 +22,7 @@ const AllOrder = () => {
                     return styles[status] || 'bg-gray-100 text-gray-800';
           };
 
+        
           const dataSource = [
                     { key: "#1201", no: "1", customer: "Shah Aman", products: "Root canal kit, Gloves", qty: "12", total: "123456", status: "Pending" },
                     { key: "#1202", no: "2", customer: "Liam Smith", products: "Dental Mirror", qty: "5", total: "45678", status: "Processing" },
@@ -109,21 +112,48 @@ const AllOrder = () => {
                               ),
                     },
           ];
+          const filteredData = dataSource.filter(item => {
+                    const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
+                    const matchesSearch = item.customer.toLowerCase().includes(searchText.toLowerCase()) ||
+                              item.products.toLowerCase().includes(searchText.toLowerCase()) ||
+                              item.key.toLowerCase().includes(searchText.toLowerCase());
+                    return matchesStatus && matchesSearch;
+          });
+
 
           return (
                     <>
                               <div className="my-5 md:my-10 flex flex-col md:flex-row gap-5 justify-between items-center">
                                         <PageHeading title="All User" />
-                                        <div className="relative w-full sm:w-[300px] mt-5 md:mt-0 lg:mt-0">
-                                                  <input
-                                                            type="text"
-                                                            placeholder="Search User"
-                                                            className="border-2 border-[#3b3b3b] py-3 pl-12 pr-[65px] outline-none w-full rounded-md"
-                                                  />
-                                                  <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
-                                                            <IoSearch className="text-[1.3rem]" />
-                                                  </span>
+                                        <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                                                  <div className="relative w-full sm:w-[200px]">
+                                                            <Select
+                                                                      className="w-full h-[46px]"
+                                                                      placeholder="Filter by status"
+                                                                      value={statusFilter}
+                                                                      onChange={setStatusFilter}
+                                                                      options={[
+                                                                                { value: 'all', label: 'All' },
+                                                                                { value: 'Pending', label: 'Pending' },
+                                                                                { value: 'Processing', label: 'Processing' },
+                                                                                { value: 'Shipped', label: 'Shipped' },
+                                                                                { value: 'Cancelled', label: 'Cancelled' },
+                                                                      ]}
+                                                            />
+                                                  </div>
+                                                  <div className="relative w-full sm:w-[300px]">
+                                                            <Input
+                                                                      placeholder="Search orders..."
+                                                                      value={searchText}
+                                                                      onChange={(e) => setSearchText(e.target.value)}
+                                                                      className="h-[46px] pl-12 pr-4 rounded-md border-2 border-[#3b3b3b]"
+                                                                      prefix={
+                                                                                <IoSearch className="text-gray-400 absolute left-3 top-3.5" size={20} />
+                                                                      }
+                                                            />
+                                                  </div>
                                         </div>
+
                               </div>
                               <ConfigProvider
                                         theme={{
@@ -155,10 +185,10 @@ const AllOrder = () => {
                                         }}
                               >
                                         <Table
-                                                  dataSource={dataSource}
+                                                  dataSource={filteredData}
                                                   columns={columns}
                                                   pagination={{ pageSize: 10 }}
-                                                  scroll={{ x: "max-content" }}
+                                                  scroll={{ x: true }}
                                         />
 
                                         <Modal
