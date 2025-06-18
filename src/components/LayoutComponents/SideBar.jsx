@@ -19,7 +19,7 @@ export const AdminItems = [
     key: "userManagement",
     label: "User management",
     icon: FaCog,
-    link: "/dashboard/user-management",
+    // link: "/dashboard/user-management",
     children: [
       {
         key: "all-user",

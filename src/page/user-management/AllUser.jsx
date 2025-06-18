@@ -275,7 +275,7 @@ const AllUser = () => {
                     {
                               title: "Action",
                               key: "action",
-                              render: () => (
+                              render: (_, record) => (
                                         <div className="flex gap-2">
                                                   <button
                                                             onClick={() => {
@@ -385,9 +385,9 @@ const AllUser = () => {
                                                   open={userDetailsModal}
                                                   onCancel={() => setUserDetailsModal(false)}
                                                   footer={null}
-                                        // className="user-details-modal"
                                         >
                                                   {selectedUser && <UserInformation user={selectedUser} />}
+                                               
                                         </Modal>
                               </ConfigProvider>
                     </>
