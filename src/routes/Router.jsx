@@ -24,6 +24,7 @@ import WelcomeMessage from "../auth/WelcomeMessage";
 import AllUser from "../page/user-management/AllUser";
 import SignUpRequest from "../page/user-management/SignUpRequest";
 import AllOrder from "../page/order-management/AllOrder";
+import AllProducts from "../page/product-management/AllProducts";
 
 export const router = createBrowserRouter([
   {
@@ -48,7 +49,11 @@ export const router = createBrowserRouter([
         path: "/order/all-order",
         element: <AllOrder />,
       },
-
+      // Product Management
+      {
+        path: "/product/all-product",
+        element: <AllProducts />,
+      },
 
       {
         path: "/dashboard/seller-management",

@@ -37,7 +37,12 @@ export const AdminItems = [
     icon: MdOutlinePets,
     link: "/order/all-order",
   },
-
+  {
+    key: "productManagement",
+    label: "Product Management",
+    icon: MdOutlinePets,
+    link: "/product/all-product",
+  },
   {
     key: "petOwners",
     label: "Pet owners",

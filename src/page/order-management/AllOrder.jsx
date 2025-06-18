@@ -6,7 +6,6 @@ import { ConfigProvider, Modal, Table, Select, Input } from "antd";
 import UserInformation from "../user-management/UserInformation";
 
 const AllOrder = () => {
-          const [isModalOpen, setIsModalOpen] = useState(false);
           const [userDetailsModal, setUserDetailsModal] = useState(false);
           const [selectedUser, setSelectedUser] = useState(null);
           const [statusFilter, setStatusFilter] = useState('all');
@@ -22,7 +21,7 @@ const AllOrder = () => {
                     return styles[status] || 'bg-gray-100 text-gray-800';
           };
 
-        
+
           const dataSource = [
                     { key: "#1201", no: "1", customer: "Shah Aman", products: "Root canal kit, Gloves", qty: "12", total: "123456", status: "Pending" },
                     { key: "#1202", no: "2", customer: "Liam Smith", products: "Dental Mirror", qty: "5", total: "45678", status: "Processing" },
@@ -90,27 +89,31 @@ const AllOrder = () => {
                               title: "Action",
                               key: "action",
                               render: (_, record) => (
-                                        <div className="flex gap-2">
-                                                  <button
-                                                            onClick={() => {
-                                                                      setSelectedUser(record);
-                                                                      setUserDetailsModal(true);
-                                                            }}
-                                                            className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
-                                                  >
-                                                            <IoEyeOutline className="w-6 h-6 text-[#3b3b3b]" />
-                                                  </button>
-                                                  <button
-                                                            onClick={() => {
-                                                                      setIsModalOpen(true);
-                                                            }}
-                                                            className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
-                                                  >
-                                                            <MdBlockFlipped className="w-6 h-6 text-[#3b3b3b]" />
-                                                  </button>
-                                        </div>
+                                <div className="flex items-center gap-2">
+                                  <button
+                                    onClick={() => {
+                                      setSelectedUser(record);
+                                      setUserDetailsModal(true);
+                                    }}
+                                    className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
+                                    title="View Details"
+                                  >
+                                    <IoEyeOutline className="w-6 h-6 text-[#3b3b3b]" />
+                                  </button>
+                                  <Select
+                                    className="w-32 h-9"
+                                    value={record.status}
+                                    onChange={(value) => handleStatusChange(record.key, value)}
+                                    options={[
+                                      { value: 'Pending', label: 'Pending' },
+                                      { value: 'Processing', label: 'Processing' },
+                                      { value: 'Shipped', label: 'Shipped' },
+                                      { value: 'Cancelled', label: 'Cancelled' }
+                                    ]}
+                                  />
+                                </div>
                               ),
-                    },
+                            }
           ];
           const filteredData = dataSource.filter(item => {
                     const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
@@ -119,6 +122,12 @@ const AllOrder = () => {
                               item.key.toLowerCase().includes(searchText.toLowerCase());
                     return matchesStatus && matchesSearch;
           });
+          const handleStatusChange = (orderId, newStatus) => {
+                    // In a real app, you would make an API call here to update the status
+                    console.log(`Order ${orderId} status updated to ${newStatus}`);
+                    // For demo purposes, we'll just show an alert
+                    alert(`Order ${orderId} status changed to ${newStatus}`);
+          };
 
 
           return (
@@ -191,36 +200,7 @@ const AllOrder = () => {
                                                   scroll={{ x: true }}
                                         />
 
-                                        <Modal
-                                                  open={isModalOpen}
-                                                  centered
-                                                  onCancel={() => setIsModalOpen(false)}
-                                                  footer={null}
-                                        >
-                                                  <div className="p-5">
-                                                            <h1 className="text-4xl text-center text-[#0D0D0D]">
-                                                                      Are you sure you want to block ?
-                                                            </h1>
 
-                                                            <div className="text-center py-5">
-                                                                      <button
-
-                                                                                onClick={() => setIsModalOpen(false)}
-                                                                                className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
-                                                                      >
-                                                                                Yes,Block
-                                                                      </button>
-                                                            </div>
-                                                            <div className="text-center pb-5">
-                                                                      <button
-                                                                                onClick={() => setIsModalOpen(false)}
-                                                                                className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
-                                                                      >
-                                                                                No,Don’t Block
-                                                                      </button>
-                                                            </div>
-                                                  </div>
-                                        </Modal>
                                         <Modal
                                                   centered
                                                   open={userDetailsModal}
