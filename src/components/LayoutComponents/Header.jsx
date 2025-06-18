@@ -24,14 +24,14 @@ const Header = () => {
   const handleLogout = () => navigate("/login");
 
   const userMenu = (
-    <div className="bg-white rounded-lg shadow-lg py-2 w-48">
-      <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+    <div className="bg-gray-800 rounded-lg shadow-lg py-2 w-48">
+      <button className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center">
         <IoMdSettings className="mr-2" />
         Settings
       </button>
       <button 
         onClick={handleLogout}
-        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+        className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center"
       >
         <IoIosLogOut className="mr-2" />
         Sign out
@@ -41,38 +41,38 @@ const Header = () => {
 
   return (
     <>
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <header className="bg-gray-800 border-b border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Mobile menu button */}
           <button
             onClick={showDrawer}
-            className="lg:hidden text-gray-500 hover:text-gray-600 focus:outline-none"
+            className="lg:hidden text-gray-300 hover:text-white focus:outline-none"
           >
             <FaBars className="h-6 w-6" />
           </button>
 
-          <div className="flex-1 flex items-center justify-end space-x-4">
+          <div className="flex-1 flex items-center justify-end space-x-6">
             {/* Notifications */}
-            <button className="p-1 text-gray-400 hover:text-gray-500 relative">
+            <button className="p-1 text-gray-400 hover:text-white relative">
               <LuBell className="h-6 w-6" />
               <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
             </button>
 
             {/* User dropdown */}
             <Dropdown overlay={userMenu} trigger={['click']} placement="bottomRight">
-              <div className="flex items-center space-x-2 cursor-pointer">
+              <div className="flex items-center space-x-3 cursor-pointer group">
                 <Avatar 
                   size="default" 
-                  className="bg-blue-500 text-white" 
+                  className="bg-blue-500 text-white group-hover:bg-blue-600 transition-colors" 
                   icon={
-                    <span>AD</span>
+                    <span className="font-medium">AD</span>
                   } 
                 />
                 <div className="hidden md:block">
-                  <p className="text-sm font-medium text-gray-700">Admin User</p>
-                  <p className="text-xs text-gray-500">Admin</p>
+                  <p className="text-sm font-medium text-gray-200 group-hover:text-white">Admin User</p>
+                  <p className="text-xs text-gray-400">Admin</p>
                 </div>
-                <FaChevronDown className="text-gray-400 text-xs" />
+                <FaChevronDown className="text-gray-400 text-xs group-hover:text-white transition-colors" />
               </div>
             </Dropdown>
           </div>
@@ -97,7 +97,7 @@ const Header = () => {
         className="mobile-sidebar"
         bodyStyle={{ padding: 0 }}
       >
-        <div className="h-full overflow-y-auto">
+        <div className="h-full overflow-y-auto bg-gray-800">
           {AdminItems.map((item) => (
             <div key={item.key} className="px-2 py-1">
               <Link
@@ -105,7 +105,7 @@ const Header = () => {
                 className={`flex items-center px-4 py-3 text-sm rounded-lg mx-2 ${
                   selectedKey === item.key
                     ? 'bg-blue-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    : 'text-gray-300 hover:bg-gray-700'
                 }`}
                 onClick={(e) => {
                   if (item.children) {
@@ -140,15 +140,15 @@ const Header = () => {
                   }}
                   ref={(el) => (contentRef.current[item.key] = el)}
                 >
-                  <div className="ml-8 pl-2 border-l-2 border-gray-200 space-y-1">
+                  <div className="ml-8 pl-2 border-l-2 border-gray-700 space-y-1">
                     {item.children.map((child) => (
                       <Link
                         key={child.key}
                         to={child.link}
                         className={`block px-3 py-2 text-sm rounded-md ${
                           selectedKey === child.key
-                            ? 'bg-blue-50 text-blue-600 font-medium'
-                            : 'text-gray-600 hover:bg-gray-100'
+                            ? 'bg-blue-600 text-white font-medium'
+                            : 'text-gray-300 hover:bg-gray-700'
                         }`}
                         onClick={() => {
                           setSelectedKey(child.key);
