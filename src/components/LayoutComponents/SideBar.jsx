@@ -1,9 +1,8 @@
 import { MdDashboard, MdManageAccounts, MdOutlineCategory, MdOutlinePets } from "react-icons/md";
-import { FaUsers, FaChevronRight, FaFileAlt, FaCog } from "react-icons/fa";
+import { FaChevronRight, FaCog } from "react-icons/fa";
 import { IoIosLogIn } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { IoChatboxEllipsesOutline } from "react-icons/io5";
 import { TbHomeDollar } from "react-icons/tb";
 import { LuBadgeCheck } from "react-icons/lu";
 import { BiCheckShield, BiCommand } from "react-icons/bi";
@@ -19,7 +18,6 @@ export const AdminItems = [
     key: "userManagement",
     label: "User management",
     icon: FaCog,
-    // link: "/dashboard/user-management",
     children: [
       {
         key: "all-user",
@@ -33,17 +31,11 @@ export const AdminItems = [
       },
     ],
   },
-  // {
-  //   key: "chat",
-  //   label: "Chat",
-  //   icon: IoChatboxEllipsesOutline,
-  //   link: "/chat",
-  // },
   {
-    key: "userManagement",
+    key: "petOwners",
     label: "Pet owners",
     icon: MdOutlinePets,
-    link: "/dashboard/user-management",
+    link: "/dashboard/pet-owners",
   },
   {
     key: "sellermanagement",
@@ -63,7 +55,7 @@ export const AdminItems = [
     icon: MdManageAccounts,
     link: "/premium-subscribers",
   },
-    {
+  {
     key: "categorymanagement",
     label: "Category",
     icon: MdOutlineCategory,
@@ -144,7 +136,7 @@ const SideBar = () => {
       setSelectedKey(
         activeParent.children
           ? activeParent.children.find((child) => child.link === currentPath)
-              ?.key || activeParent.key
+            ?.key || activeParent.key
           : activeParent.key
       );
 
@@ -169,11 +161,14 @@ const SideBar = () => {
       <div className="custom-sidebar-logo flex justify-center">
         <img src="/logo.svg" alt="Logo" className="w-[95px]" />
       </div>
-      <div className="menu-items">
+      <div>
         <div>
           {AdminItems.map((item) => {
             const isSettingsActive =
               item.key === "settings" &&
+              item.children.some((child) => child.link === location.pathname);
+            const userManagementActive =
+              item.key === "userManagement" &&
               item.children.some((child) => child.link === location.pathname);
 
             const isCreatorActive =
@@ -188,14 +183,14 @@ const SideBar = () => {
               <div key={item.key}>
                 <Link
                   to={item.link}
-                  className={`menu-item my-4 mx-5 py-3 px-3 flex items-center cursor-pointer ${
-                    selectedKey === item.key ||
+                  className={`my-4 mx-5 py-3 px-3 flex items-center cursor-pointer ${selectedKey === item.key ||
+                    userManagementActive ||
                     isSettingsActive ||
                     isCreatorActive ||
                     isCategoriesActive
-                      ? "bg-[#136BFB] text-white rounded-md"
-                      : "bg-white rounded-md hover:bg-[#9ac0fc]"
-                  }`}
+                    ? "bg-[#136BFB] text-white rounded-md"
+                    : "bg-white rounded-md hover:bg-[#9ac0fc]"
+                    }`}
                   onClick={(e) => {
                     if (item.children) {
                       e.preventDefault();
@@ -211,9 +206,8 @@ const SideBar = () => {
                   {/* Show dropdown arrow if children exist */}
                   {item.children && (
                     <FaChevronRight
-                      className={`ml-auto transform transition-all duration-300 ${
-                        expandedKeys.includes(item.key) ? "rotate-90" : ""
-                      }`}
+                      className={`ml-auto transform transition-all duration-300 ${expandedKeys.includes(item.key) ? "rotate-90" : ""
+                        }`}
                     />
                   )}
                 </Link>
@@ -221,9 +215,8 @@ const SideBar = () => {
                 {/* Show children menu if expanded */}
                 {item.children && (
                   <div
-                    className={`children-menu bg-white -my-2 mx-5 transition-all duration-300 ${
-                      expandedKeys.includes(item.key) ? "expanded" : ""
-                    }`}
+                    className={`children-menu -my-2 mx-5 transition-all duration-300 space-y-2 bg-white ${expandedKeys.includes(item.key) ? "expanded" : ""
+                      }`}
                     style={{
                       maxHeight: expandedKeys.includes(item.key)
                         ? `${contentRef.current[item.key]?.scrollHeight}px`
@@ -235,11 +228,10 @@ const SideBar = () => {
                       <Link
                         key={child.key}
                         to={child.link}
-                        className={`menu-item p-4 flex items-center cursor-pointer ${
-                          selectedKey === child.key
-                            ? "bg-[#136BFB] text-white"
-                            : "hover:bg-[#9BC0FD]"
-                        }`}
+                        className={`p-2 flex items-center cursor-pointer  ${selectedKey === child.key
+                          ? "bg-[#136BFB] text-white border-2 border-[#136BFB]"
+                          : "bg-white hover:bg-[#9ac0fc]"
+                          }`}
                         onClick={() => {
                           setSelectedKey(child.key); // Set the selected key for children
                           setExpandedKeys([]); // Close all expanded items
