@@ -40,7 +40,7 @@ function DashboardPage() {
   return (
     <div className="flex flex-col">
       <div className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-3 lg:grid-cols-4 gap-2">
-        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
           <div className="rounded-full flex items-center justify-center mb-2 gap-2">
             <img
               src="./money.svg"
@@ -56,7 +56,7 @@ function DashboardPage() {
             ${new Intl.NumberFormat().format(6500)}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
           <div className="rounded-full flex items-center justify-center mb-2 gap-2">
             <img
               src="./order.svg"
@@ -72,7 +72,7 @@ function DashboardPage() {
             {new Intl.NumberFormat().format(300)}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
           <div className="rounded-full flex items-center justify-center mb-2 gap-2">
             <img
               src="./user.svg"
@@ -88,7 +88,7 @@ function DashboardPage() {
             {new Intl.NumberFormat().format(6500)}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center p-5 bg-white rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
           <div className="rounded-full flex items-center justify-center mb-2 gap-2">
             <img
               src="./block.svg"

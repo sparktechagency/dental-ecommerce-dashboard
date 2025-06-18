@@ -3,18 +3,12 @@ import { IoEyeOutline, IoSearch } from "react-icons/io5";
 import { MdBlockFlipped } from "react-icons/md";
 import PageHeading from "../../shared/PageHeading";
 import { ConfigProvider, Modal, Table } from "antd";
+import UserInformation from "./UserInformation";
 
 const AllUser = () => {
           const [isModalOpen, setIsModalOpen] = useState(false);
-          const handleOk = () => {
-                    setIsModalOpen(false);
-          };
-          const handleCancel = () => {
-                    setIsModalOpen(false);
-          };
-          const showModal = () => {
-                    setIsModalOpen(true);
-          };
+          const [userDetailsModal, setUserDetailsModal] = useState(false);
+          const [selectedUser, setSelectedUser] = useState(null);
           const dataSource = [
                     {
                               key: "1",
@@ -277,20 +271,25 @@ const AllUser = () => {
                     },
                     { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber" },
                     { title: "Email", dataIndex: "email", key: "email" },
-                    { title: "GDCNO", dataIndex: "GDCNO", key: "GDCNO" },
+                    { title: "GDC NO", dataIndex: "GDCNO", key: "GDCNO" },
                     {
                               title: "Action",
                               key: "action",
                               render: () => (
                                         <div className="flex gap-2">
                                                   <button
-                                                            // onClick={showModal}
+                                                            onClick={() => {
+                                                                      setSelectedUser(record);
+                                                                      setUserDetailsModal(true);
+                                                            }}
                                                             className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
                                                   >
                                                             <IoEyeOutline className="w-6 h-6 text-[#3b3b3b]" />
                                                   </button>
                                                   <button
-                                                            onClick={showModal}
+                                                            onClick={() => {
+                                                                      setIsModalOpen(true);
+                                                            }}
                                                             className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
                                                   >
                                                             <MdBlockFlipped className="w-6 h-6 text-[#3b3b3b]" />
@@ -354,7 +353,7 @@ const AllUser = () => {
                                         <Modal
                                                   open={isModalOpen}
                                                   centered
-                                                  onCancel={handleCancel}
+                                                  onCancel={() => setIsModalOpen(false)}
                                                   footer={null}
                                         >
                                                   <div className="p-5">
@@ -364,7 +363,8 @@ const AllUser = () => {
 
                                                             <div className="text-center py-5">
                                                                       <button
-                                                                                onClick={handleOk}
+
+                                                                                onClick={() => setIsModalOpen(false)}
                                                                                 className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
                                                                       >
                                                                                 Yes,Block
@@ -372,7 +372,7 @@ const AllUser = () => {
                                                             </div>
                                                             <div className="text-center pb-5">
                                                                       <button
-                                                                                onClick={handleOk}
+                                                                                onClick={() => setIsModalOpen(false)}
                                                                                 className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
                                                                       >
                                                                                 No,Don’t Block
@@ -385,7 +385,7 @@ const AllUser = () => {
                                                   open={userDetailsModal}
                                                   onCancel={() => setUserDetailsModal(false)}
                                                   footer={null}
-                                                  // className="user-details-modal"
+                                        // className="user-details-modal"
                                         >
                                                   {selectedUser && <UserInformation user={selectedUser} />}
                                         </Modal>
