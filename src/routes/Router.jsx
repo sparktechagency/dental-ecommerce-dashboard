@@ -23,6 +23,7 @@ import ForgetPassword from "../auth/ForgetPassword";
 import WelcomeMessage from "../auth/WelcomeMessage";
 import AllUser from "../page/user-management/AllUser";
 import SignUpRequest from "../page/user-management/SignUpRequest";
+import AllOrder from "../page/order-management/AllOrder";
 
 export const router = createBrowserRouter([
   {
@@ -33,14 +34,22 @@ export const router = createBrowserRouter([
         path: "/",
         element: <Dashboard />,
       },
+      // User Management
       {
-        path: "/dashboard/user-management/all-user",
+        path: "/user/all-user",
         element: <AllUser />,
       },
       {
-        path: "/dashboard/user-management/sign-up-request",
+        path: "/user/sign-up-request",
         element: <SignUpRequest />,
       },
+      // Order Management
+      {
+        path: "/order/all-order",
+        element: <AllOrder />,
+      },
+
+
       {
         path: "/dashboard/seller-management",
         element: <SellerManagement />,

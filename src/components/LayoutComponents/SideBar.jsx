@@ -22,15 +22,22 @@ export const AdminItems = [
       {
         key: "all-user",
         label: "All User",
-        link: "/dashboard/user-management/all-user",
+        link: "/user/all-user",
       },
       {
         key: "sign-up-request",
         label: "Sign Up Request",
-        link: "/dashboard/user-management/sign-up-request",
+        link: "/user/sign-up-request",
       },
     ],
   },
+  {
+    key: "orderManagement",
+    label: "Order Management",
+    icon: MdOutlinePets,
+    link: "/order/all-order",
+  },
+
   {
     key: "petOwners",
     label: "Pet owners",
@@ -161,7 +168,7 @@ const SideBar = () => {
       <div className="p-6 mb-4">
         <img src="/logo.svg" alt="Logo" className="w-24 h-auto" />
       </div>
-      
+
       {/* Scrollable menu items */}
       <div className="flex-1 overflow-y-auto scrollbar-hide">
         <div className="px-4 space-y-1 pb-4">
@@ -176,11 +183,10 @@ const SideBar = () => {
               <div key={item.key} className="mb-1">
                 <Link
                   to={item.link || '#'}
-                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    isActive
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                  }`}
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${isActive
+                    ? "bg-blue-600 text-white shadow-md"
+                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    }`}
                   onClick={(e) => {
                     if (item.children) {
                       e.preventDefault();
@@ -194,18 +200,16 @@ const SideBar = () => {
                   <span className="flex-1 text-left">{item.label}</span>
                   {item.children && (
                     <FaChevronRight
-                      className={`ml-2 transition-transform duration-200 ${
-                        expandedKeys.includes(item.key) ? "transform rotate-90" : ""
-                      }`}
+                      className={`ml-2 transition-transform duration-200 ${expandedKeys.includes(item.key) ? "transform rotate-90" : ""
+                        }`}
                     />
                   )}
                 </Link>
 
                 {item.children && (
                   <div
-                    className={`overflow-hidden transition-all duration-300 ${
-                      expandedKeys.includes(item.key) ? "my-2" : "m-0"
-                    }`}
+                    className={`overflow-hidden transition-all duration-300 ${expandedKeys.includes(item.key) ? "my-2" : "m-0"
+                      }`}
                     style={{
                       maxHeight: expandedKeys.includes(item.key)
                         ? `${contentRef.current[item.key]?.scrollHeight}px`
@@ -218,11 +222,10 @@ const SideBar = () => {
                         <Link
                           key={child.key}
                           to={child.link}
-                          className={`block px-3 py-2 text-sm rounded-md transition-colors duration-150 ${
-                            selectedKey === child.key
-                              ? "bg-blue-600/30 text-blue-400 font-medium"
-                              : "text-gray-400 hover:bg-gray-700/50 hover:text-gray-200"
-                          }`}
+                          className={`block px-3 py-2 text-sm rounded-md transition-colors duration-150 ${selectedKey === child.key
+                            ? "bg-blue-600/30 text-blue-400 font-medium"
+                            : "text-gray-400 hover:bg-gray-700/50 hover:text-gray-200"
+                            }`}
                           onClick={() => {
                             setSelectedKey(child.key);
                           }}
