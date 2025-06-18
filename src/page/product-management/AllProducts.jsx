@@ -1,5 +1,5 @@
-import React from 'react';
-import { Input, Select, Button, Card, Tag, Dropdown, Menu } from 'antd';
+import React, { useState } from 'react';
+import { Input, Button, Card, Tag, Dropdown, Menu, Select } from 'antd';
 import {
           IoSearch,
           IoEllipsisVertical,
@@ -7,25 +7,211 @@ import {
           IoPencil,
           IoTrashOutline,
           IoAddOutline,
+          IoFilter
 } from 'react-icons/io5';
 import PageHeading from '../../shared/PageHeading';
+import t1 from '../../assets/t1.png';
+import t2 from '../../assets/t2.jpg';
+import t3 from '../../assets/t3.jpg';
+import t5 from '../../assets/t5.jpg';
+import t6 from '../../assets/t6.png';
+import t7 from '../../assets/t7.jpg';
+import { BiEditAlt } from 'react-icons/bi';
+
 
 const { Search } = Input;
 const { Option } = Select;
 
 const AllProducts = () => {
-          // Dummy product data matching the image
+          const [searchText, setSearchText] = useState('');
+          const [categoryFilter, setCategoryFilter] = useState('all');
+
           const products = [
                     {
                               id: 1,
-                              image: 'https://via.placeholder.com/150', // Replace with actual image path
-                              name: 'High-speed titanium handpiece with quattro spray, ergonomic grip',
+                              image: t1,
+                              name: 'High-speed titanium handpiece',
+                              description: 'High-speed titanium handpiece with quattro spray, ergonomic grip',
                               price: 500.00,
                               category: 'Endodontics',
                               brand: 'Panora',
+                    },
+                    {
+                              id: 2,
+                              image: t2,
+                              name: 'LED Curing Light – Cordless & Rechargeable',
+                              description: 'LED Curing Light – Cordless & Rechargeable',
+                              price: 120.00,
+                              category: 'Restorative',
+                              brand: 'DentLight',
+                    },
+                    {
+                              id: 3,
+                              image: t3,
+                              name: 'Digital Apex Locator',
+                              description: 'Digital Apex Locator with Precision Sensors',
+                              price: 230.00,
+                              category: 'Endodontics',
+                              brand: 'ApexPro',
+                    },
+                    {
+                              id: 4,
+                              image: t1,
+                              name: 'Ultrasonic Scaler – Multi-Tip Compatible',
+                              description: 'Ultrasonic Scaler – Multi-Tip Compatible',
+                              price: 320.00,
+                              category: 'Periodontics',
+                              brand: 'SonicCare',
+                    },
+                    {
+                              id: 5,
+                              image: t5,
+                              name: 'Portable X-ray Unit – Battery Operated',
+                              description: 'Portable X-ray Unit – Battery Operated',
+                              price: 750.00,
+                              category: 'Radiology',
+                              brand: 'XPro',
+                    },
+                    {
+                              id: 6,
+                              image: t6,
+                              name: 'Rubber Dam Kit – Complete with Clamps & Frame',
+                              description: 'Rubber Dam Kit – Complete with Clamps & Frame',
+                              price: 80.00,
+                              category: 'Endodontics',
+                              brand: 'SealDent',
+                    },
+                    {
+                              id: 7,
+                              image: t7,
+                              name: 'Intraoral Camera – HD with USB Connection',
+                              description: 'Intraoral Camera – HD with USB Connection',
+                              price: 270.00,
+                              category: 'Imaging',
+                              brand: 'ViewDent',
+                    },
+                    {
+                              id: 8,
+                              image: t1,
+                              name: 'Disposable Saliva Ejectors – Pack of 100',
+                              description: 'Disposable Saliva Ejectors – Pack of 100',
+                              price: 15.00,
+                              category: 'General',
+                              brand: 'Ejecto',
+                    },
+                    {
+                              id: 9,
+                              image: t1,
+                              name: 'Fiber Optic Dental Handpiece – Quiet & Lightweight',
+                              description: 'Fiber Optic Dental Handpiece – Quiet & Lightweight',
+                              price: 460.00,
+                              category: 'Prosthodontics',
+                              brand: 'BrightLite',
+                    },
+                    {
+                              id: 10,
+                              image: t2,
+                              name: 'Surgical Aspirator Tips – Autoclavable',
+                              description: 'Surgical Aspirator Tips – Autoclavable',
+                              price: 25.00,
+                              category: 'Surgery',
+                              brand: 'AspiraMed',
+                    },
+                    {
+                              id: 11,
+                              image: t3,
+                              name: 'Dental Tray Setup Kit – 5 Instruments Included',
+                              description: 'Dental Tray Setup Kit – 5 Instruments Included',
+                              price: 55.00,
+                              category: 'General',
+                              brand: 'KitDent',
+                    },
+                    {
+                              id: 12,
+                              image: t1,
+                              name: 'Implant Driver Set – Hex, Torx, Square',
+                              description: 'Implant Driver Set – Hex, Torx, Square',
+                              price: 290.00,
+                              category: 'Implantology',
+                              brand: 'Implanta',
+                    },
+                    {
+                              id: 13,
+                              image: t5,
+                              name: 'Cotton Roll Dispenser – Dustproof Lid',
+                              description: 'Cotton Roll Dispenser – Dustproof Lid',
+                              price: 18.00,
+                              category: 'Operatory',
+                              brand: 'SafeRoll',
+                    },
+                    {
+                              id: 14,
+                              image: t6,
+                              name: 'Air-Water Syringe Tips – Disposable, 250/box',
+                              description: 'Air-Water Syringe Tips – Disposable, 250/box',
+                              price: 22.00,
+                              category: 'Operatory',
+                              brand: 'EZTips',
+                    },
+                    {
+                              id: 15,
+                              image: t7,
+                              name: 'Dental Mirror – Front Surface, Anti-Fog',
+                              description: 'Dental Mirror – Front Surface, Anti-Fog',
+                              price: 12.00,
+                              category: 'Diagnostic',
+                              brand: 'VisionPro',
+                    },
+                    {
+                              id: 16,
+                              image: t1,
+                              name: 'Endo Motor with Cordless Handpiece',
+                              description: 'Endo Motor with Cordless Handpiece',
+                              price: 610.00,
+                              category: 'Endodontics',
+                              brand: 'EndoMax',
+                              description: 'Impression Tray Set – Upper & Lower',
+                    },
+                    {
+                              id: 17,
+                              image: t2,
+                              name: 'Impression Tray Set – Upper & Lower',
+                              description: 'Impression Tray Set – Upper & Lower',
+                              price: 40.00,
+                              category: 'Prosthodontics',
+                              brand: 'MoldDent',
+                    },
+                    {
+                              id: 18,
+                              image: t3,
+                              name: 'Surgical Kit for Implant Placement – Complete System',
+                              description: 'Surgical Kit for Implant Placement – Complete System',
+                              price: 990.00,
+                              category: 'Surgery',
+                              brand: 'ImplaKit',
+                    },
+                    {
+                              id: 19,
+                              image: t1,
+                              name: 'Amalgam Carrier – Large Capacity',
+                              description: 'Amalgam Carrier – Large Capacity',
+                              price: 38.00,
+                              category: 'Restorative',
+                              brand: 'CarryFill',
+                    },
+                    {
+                              id: 20,
+                              image: t5,
+                              name: 'Dental Articulator – Semi-Adjustable',
+                              description: 'Dental Articulator – Semi-Adjustable',
+                              price: 310.00,
+                              category: 'Prosthodontics',
+                              brand: 'Articulite',
                     }
           ];
 
+          // Extract unique categories for filter
+          const categories = [...new Set(products.map(product => product.category))];
 
           const menu = (
                     <Menu>
@@ -36,35 +222,63 @@ const AllProducts = () => {
                     </Menu>
           );
 
+          // Filter products based on search and category
+          const filteredProducts = products.filter(product => {
+                    const matchesSearch = product.name.toLowerCase().includes(searchText.toLowerCase()) ||
+                              product.brand.toLowerCase().includes(searchText.toLowerCase());
+                    const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
+                    return matchesSearch && matchesCategory;
+          });
+
           return (
                     <div className="p-6">
                               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                                         <PageHeading title="All Products" />
-                                        <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-                                                  <Search
-                                                            placeholder="Search products..."
-                                                            allowClear
-                                                            enterButton={<IoSearch />}
-                                                            className="w-full md:w-64"
-                                                  />
-                                                  <Button
-                                                            type="primary"
-                                                            icon={<IoAddOutline />}
-                                                            className="w-full md:w-auto"
+                                        <div className="flex flex-col md:flex-row justify-center items-center md:items-center gap-2 w-full md:w-auto">
+
+                                                  <div className='flex gap-2'>
+                                                            <div className="relative w-full md:w-[200px] h-[46px]">
+                                                                      <Input
+                                                                                placeholder="Search products..."
+                                                                                value={searchText}
+                                                                                onChange={(e) => setSearchText(e.target.value)}
+                                                                                className="w-full h-[46px] pl-12 pr-4 rounded-md border-2 border-[#3b3b3b]"
+                                                                                prefix={
+                                                                                          <IoSearch className="text-gray-400 absolute left-3 top-3.5" size={20} />
+                                                                                }
+                                                                      />
+                                                            </div>
+                                                            <Select
+                                                                      className="w-full md:w-[200px] h-[46px]"
+                                                                      placeholder="Filter by category"
+                                                                      value={categoryFilter}
+                                                                      onChange={setCategoryFilter}
+                                                                      options={[
+                                                                                { value: 'all', label: 'All Categories' },
+                                                                                ...categories.map(category => ({
+                                                                                          value: category,
+                                                                                          label: category
+                                                                                }))
+                                                                      ]}
+
+                                                            />
+                                                  </div>
+                                                  <button
+                                                            className="w-full md:w-[200px] p-[10px] bg-[#136BFB] rounded text-white"
                                                   >
-                                                            Add New Product
-                                                  </Button>
+                                                            + Add Product
+                                                  </button>
                                         </div>
                               </div>
 
-                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                                        {products.map((product) => (
+                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-5">
+                                        {filteredProducts.map((product) => (
                                                   <Card
                                                             key={product.id}
-                                                            className="h-full flex flex-col"
-                                                            bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column' }}
+                                                            className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300"
+                                                            bodyStyle={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '16px' }}
                                                             cover={
-                                                                      <div className="h-48 bg-gray-100 flex items-center justify-center relative group">
+                                                                      <div className="h-48 bg-gray-50 flex items-center justify-center">
                                                                                 <img
                                                                                           alt={product.name}
                                                                                           src={product.image}
@@ -73,34 +287,42 @@ const AllProducts = () => {
                                                                       </div>
                                                             }
                                                   >
-                                                            <div className="flex-grow">
-                                                                      <div className="flex justify-between items-start mb-2">
-                                                                                <Tag color="blue" className="m-0">{product.brand}</Tag>
-                                                                                <Dropdown overlay={menu} trigger={['click']}>
-                                                                                          <Button
-                                                                                                    type="text"
-                                                                                                    icon={<IoEllipsisVertical />}
-                                                                                                    className="opacity-0 group-hover:opacity-100 transition-opacity"
-                                                                                          />
-                                                                                </Dropdown>
-                                                                      </div>
+                                                            <div className="flex-grow flex flex-col">
 
-                                                                      <h3 className="font-medium text-gray-900 line-clamp-2 h-14">
+
+                                                                      <h1 className="font-medium text-gray-900 line-clamp-2 h-10">
                                                                                 {product.name}
+                                                                      </h1>
+
+                                                                      <h3 className="font-medium text-[#9F9C96] line-clamp-2 h-14">
+                                                                                {product.description}
                                                                       </h3>
-
-                                                                      <div className="mt-2">
-                                                                                <span className="text-lg font-bold text-gray-900">${product.price.toFixed(2)}</span>
-                                                                                {product.originalPrice && (
-                                                                                          <span className="ml-2 text-sm text-gray-500 line-through">
-                                                                                                    ${product.originalPrice.toFixed(2)}
+                                                                      <div className="mt-auto pt-2">
+                                                                                <div className="flex justify-between items-center">
+                                                                                          <span className="text-lg font-bold text-[#136BFB]">
+                                                                                                    ${product.price.toFixed(2)}
                                                                                           </span>
-                                                                                )}
-                                                                      </div>
+                                                                                          <p className="m-0 text-[#29A366] font-semibold">{product.brand}</p>
 
-                                                                      <div className="flex justify-between items-center mt-2">
-                                                                                <span className="text-sm text-gray-500">{product.category}</span>
+                                                                                </div>
+                                                                                <p className="m-0 text-[#9F9C96]">{product.category}</p>
                                                                       </div>
+                                                            </div>
+                                                            <div className="flex justify-start gap-2 mt-4">
+                                                                      <button
+
+                                                                                className="border-2 border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
+                                                                                title="View Details"
+                                                                      >
+                                                                                <IoEyeOutline className="w-6 h-6 text-[#3b3b3b]" />
+                                                                      </button>
+                                                                      <button className="border-2 border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2">
+                                                                                <BiEditAlt className="w-6 h-6 text-[#3b3b3b]" />
+                                                                      </button>
+                                                                      <button className="border-2 border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2">
+                                                                                <IoTrashOutline className="w-6 h-6 text-[#3b3b3b]" />
+                                                                      </button>
+
                                                             </div>
                                                   </Card>
                                         ))}
@@ -108,5 +330,6 @@ const AllProducts = () => {
                     </div>
           );
 };
+
 
 export default AllProducts;

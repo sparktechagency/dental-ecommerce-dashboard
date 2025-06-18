@@ -95,13 +95,13 @@ const AllOrder = () => {
                                       setSelectedUser(record);
                                       setUserDetailsModal(true);
                                     }}
-                                    className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
+                                    className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-[6px]"
                                     title="View Details"
                                   >
                                     <IoEyeOutline className="w-6 h-6 text-[#3b3b3b]" />
                                   </button>
                                   <Select
-                                    className="w-32 h-9"
+                                    className="w-32 h-10"
                                     value={record.status}
                                     onChange={(value) => handleStatusChange(record.key, value)}
                                     options={[
@@ -133,7 +133,7 @@ const AllOrder = () => {
           return (
                     <>
                               <div className="my-5 md:my-10 flex flex-col md:flex-row gap-5 justify-between items-center">
-                                        <PageHeading title="All User" />
+                                        <PageHeading title="All Order" />
                                         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
                                                   <div className="relative w-full sm:w-[200px]">
                                                             <Select
