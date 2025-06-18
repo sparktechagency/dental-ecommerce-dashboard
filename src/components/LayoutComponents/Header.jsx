@@ -1,13 +1,10 @@
 import { LuBell } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
-import { Drawer } from "antd";
-import logo from "../../assets/header/logo.png";
-import { FaBars, FaChevronRight } from "react-icons/fa";
-import { IoIosLogIn } from "react-icons/io";
+import { Drawer, Dropdown, Avatar } from "antd";
+import { FaBars, FaChevronRight, FaChevronDown } from "react-icons/fa";
+import { IoIosLogOut, IoMdSettings } from "react-icons/io";
 import { AdminItems } from "./SideBar";
-
-
 
 const Header = () => {
   const [selectedKey, setSelectedKey] = useState("dashboard");
@@ -15,152 +12,160 @@ const Header = () => {
   const navigate = useNavigate();
   const contentRef = useRef({});
   const [open, setOpen] = useState(false);
-  const [placement] = useState("left");
 
   const onParentClick = (key) => {
     setExpandedKeys((prev) =>
       prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
     );
   };
-  const showDrawer = () => {
-    setOpen(true);
-  };
 
-  const onClose = () => {
-    setOpen(false);
-  };
+  const showDrawer = () => setOpen(true);
+  const onClose = () => setOpen(false);
+  const handleLogout = () => navigate("/login");
 
-  const handleLogout = () => {
-    navigate("/login");
-  };
+  const userMenu = (
+    <div className="bg-white rounded-lg shadow-lg py-2 w-48">
+      <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center">
+        <IoMdSettings className="mr-2" />
+        Settings
+      </button>
+      <button 
+        onClick={handleLogout}
+        className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center"
+      >
+        <IoIosLogOut className="mr-2" />
+        Sign out
+      </button>
+    </div>
+  );
 
   return (
-    <div className="bg-[#202020] text-white px-5 py-4">
-      <div className="flex justify-between items-center">
-        <div className="lg:hidden">
-          <button onClick={showDrawer} className="p-2">
-            <FaBars size={24} />
-          </button>
-          <Drawer
-            title={
-              <div className="flex justify-center">
-                <img src={logo} alt="Logo" className="md:w-[160px] w-[80px]" />
-              </div>
-            }
-            placement={placement}
-            width={300}
-            onClose={onClose}
-            open={open}
-            className="custom-drawer"
+    <>
+      <header className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* Mobile menu button */}
+          <button
+            onClick={showDrawer}
+            className="lg:hidden text-gray-500 hover:text-gray-600 focus:outline-none"
           >
-            <div className="menu-items">
-              {AdminItems.map((item) => (
-                <div key={item.key}>
-                  <Link
-                    to={item?.link}
-                    className={`menu-item my-4 mx-5 py-3 px-3 flex items-center cursor-pointer ${selectedKey === item?.key
-                        ? "bg-[#0B704E] text-white rounded-md"
-                        : "bg-white rounded-md"
-                      }`}
-                    onClick={(e) => {
-                      if (item.children) {
-                        e.preventDefault();
-                        onParentClick(item.key);
-                      } else {
-                        setSelectedKey(item.key);
-                        onClose();
-                      }
-                    }}
-                  >
-                    {item?.icon()}
-                    <span className="ml-3 text-base font-medium">
-                      {item?.label}
-                    </span>
-                    {item?.children && (
-                      <FaChevronRight
-                        className={`ml-auto transform transition-all duration-300 ${expandedKeys.includes(item?.key) ? "rotate-90" : ""
-                          }`}
-                      />
-                    )}
-                  </Link>
+            <FaBars className="h-6 w-6" />
+          </button>
 
-                  {item.children && (
-                    <div
-                      className={`children-menu bg-white -my-2 mx-5 text-black transition-all duration-300 ${expandedKeys.includes(item?.key) ? "expanded" : ""
-                        }`}
-                      style={{
-                        maxHeight: expandedKeys.includes(item.key)
-                          ? `${contentRef.current[item?.key]?.scrollHeight}px`
-                          : "0",
-                      }}
-                      ref={(el) => (contentRef.current[item?.key] = el)}
-                    >
-                      {item.children.map((child) => (
-                        <Link
-                          key={child?.key}
-                          to={child?.link}
-                          className={`menu-item p-4 flex items-center cursor-pointer ${selectedKey === child?.key
-                              ? "bg-[#0B704E] text-white"
-                              : "hover:bg-[#B3D3C8]"
-                            }`}
-                          onClick={() => {
-                            setSelectedKey(child?.key);
-                            setExpandedKeys([]);
-                            onClose();
-                          }}
-                        >
-                          <span className="ml-8">{child?.label}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+          <div className="flex-1 flex items-center justify-end space-x-4">
+            {/* Notifications */}
+            <button className="p-1 text-gray-400 hover:text-gray-500 relative">
+              <LuBell className="h-6 w-6" />
+              <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+            </button>
 
-            <div className="custom-sidebar-footer absolute bottom-0 w-full p-4">
-              <button
-                onClick={handleLogout}
-                className="w-full flex bg-[#0B704E] text-white text-start rounded-md p-3 mt-10"
-              >
-                <span className="text-2xl">
-                  <IoIosLogIn />
-                </span>
-                <span className="ml-3">Logout</span>
-              </button>
-            </div>
-          </Drawer>
-        </div>
-
-        <div className="ml-auto flex items-center justify-center gap-5">
-          <div className="relative">
-            <Link to={"/dashboard/Settings/notification"}>
-              <LuBell className="text-2xl text-[#136BFB] w-[40px] h-[40px]" />
-            </Link>
-            <span className="absolute -top-2 -right-2 bg-[#136BFB] text-xs rounded-full w-6 h-6 flex items-center justify-center">
-              10
-            </span>
-          </div>
-          <div className="pl-5 border-gray-600">
-            <Link to={"/dashboard/Settings/profile"}>
-              <div className="flex items-center gap-3">
-                <img
-                  src="https://avatar.iran.liara.run/public/44"
-                  className="w-[40px] h-[40px] object-cover rounded-full border-2 border-[#136BFB]"
-                  alt="User Avatar"
+            {/* User dropdown */}
+            <Dropdown overlay={userMenu} trigger={['click']} placement="bottomRight">
+              <div className="flex items-center space-x-2 cursor-pointer">
+                <Avatar 
+                  size="default" 
+                  className="bg-blue-500 text-white" 
+                  icon={
+                    <span>AD</span>
+                  } 
                 />
-                <div className="hidden md:flex flex-col items-start">
-                  <h3 className="text-white text-sm">Shah Aman</h3>
-                  <p className="text-xs px-2 py-1 bg-[#ebfcf4] text-[#136BFB] rounded">
-                    Admin
-                  </p>
+                <div className="hidden md:block">
+                  <p className="text-sm font-medium text-gray-700">Admin User</p>
+                  <p className="text-xs text-gray-500">Admin</p>
                 </div>
+                <FaChevronDown className="text-gray-400 text-xs" />
               </div>
-            </Link>
+            </Dropdown>
           </div>
         </div>
-      </div>
-    </div>
+      </header>
+
+      {/* Mobile Sidebar */}
+      <Drawer
+        title={
+          <div className="flex items-center justify-center py-4">
+            <img 
+              src="/logo.svg" 
+              alt="Logo" 
+              className="h-8" 
+            />
+          </div>
+        }
+        placement="left"
+        width={280}
+        onClose={onClose}
+        open={open}
+        className="mobile-sidebar"
+        bodyStyle={{ padding: 0 }}
+      >
+        <div className="h-full overflow-y-auto">
+          {AdminItems.map((item) => (
+            <div key={item.key} className="px-2 py-1">
+              <Link
+                to={item.link || '#'}
+                className={`flex items-center px-4 py-3 text-sm rounded-lg mx-2 ${
+                  selectedKey === item.key
+                    ? 'bg-blue-600 text-white'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+                onClick={(e) => {
+                  if (item.children) {
+                    e.preventDefault();
+                    onParentClick(item.key);
+                  } else {
+                    setSelectedKey(item.key);
+                    onClose();
+                  }
+                }}
+              >
+                <item.icon className="w-5 h-5 mr-3 flex-shrink-0" />
+                <span className="flex-1">{item.label}</span>
+                {item.children && (
+                  <FaChevronRight
+                    className={`ml-2 transition-transform duration-200 ${
+                      expandedKeys.includes(item.key) ? 'transform rotate-90' : ''
+                    }`}
+                  />
+                )}
+              </Link>
+
+              {item.children && (
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${
+                    expandedKeys.includes(item.key) ? 'my-1' : 'm-0'
+                  }`}
+                  style={{
+                    maxHeight: expandedKeys.includes(item.key)
+                      ? `${contentRef.current[item.key]?.scrollHeight}px`
+                      : '0',
+                  }}
+                  ref={(el) => (contentRef.current[item.key] = el)}
+                >
+                  <div className="ml-8 pl-2 border-l-2 border-gray-200 space-y-1">
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.key}
+                        to={child.link}
+                        className={`block px-3 py-2 text-sm rounded-md ${
+                          selectedKey === child.key
+                            ? 'bg-blue-50 text-blue-600 font-medium'
+                            : 'text-gray-600 hover:bg-gray-100'
+                        }`}
+                        onClick={() => {
+                          setSelectedKey(child.key);
+                          onClose();
+                        }}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </Drawer>
+    </>
   );
 };
 
