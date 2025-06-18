@@ -3,18 +3,16 @@ import { IoEyeOutline, IoSearch } from "react-icons/io5";
 import { MdBlockFlipped } from "react-icons/md";
 import PageHeading from "../../shared/PageHeading";
 import { ConfigProvider, Modal, Table } from "antd";
+import UserInformation from "./UserInformation";
+import { FaCheck } from "react-icons/fa6";
+import { CgClose } from "react-icons/cg";
+
 
 const SignUpRequest = () => {
           const [isModalOpen, setIsModalOpen] = useState(false);
-          const handleOk = () => {
-                    setIsModalOpen(false);
-          };
-          const handleCancel = () => {
-                    setIsModalOpen(false);
-          };
-          const showModal = () => {
-                    setIsModalOpen(true);
-          };
+          const [isModalOpen2, setIsModalOpen2] = useState(false);
+          const [userDetailsModal, setUserDetailsModal] = useState(false);
+          const [selectedUser, setSelectedUser] = useState(null);
           const dataSource = [
                     {
                               key: "1",
@@ -22,6 +20,7 @@ const SignUpRequest = () => {
                               userName: "Shah Aman",
                               email: "shahaman@example.com",
                               phoneNumber: "123-456-7890",
+                              GDCNO: "123456",
                     },
                     {
                               key: "2",
@@ -29,6 +28,7 @@ const SignUpRequest = () => {
                               userName: "Jane Doe",
                               email: "janedoe@example.com",
                               phoneNumber: "234-567-8901",
+                              GDCNO: "123456",
                     },
                     {
                               key: "3",
@@ -36,6 +36,7 @@ const SignUpRequest = () => {
                               userName: "John Smith",
                               email: "johnsmith@example.com",
                               phoneNumber: "345-678-9012",
+                              GDCNO: "123456",
                     },
                     {
                               key: "4",
@@ -43,6 +44,7 @@ const SignUpRequest = () => {
                               userName: "Alice Johnson",
                               email: "alicej@example.com",
                               phoneNumber: "456-789-0123",
+                              GDCNO: "123456",
                     },
                     {
                               key: "5",
@@ -50,6 +52,7 @@ const SignUpRequest = () => {
                               userName: "Bob Brown",
                               email: "bobb@example.com",
                               phoneNumber: "567-890-1234",
+                              GDCNO: "123456",
                     },
                     {
                               key: "6",
@@ -57,6 +60,7 @@ const SignUpRequest = () => {
                               userName: "Charlie Davis",
                               email: "charlied@example.com",
                               phoneNumber: "678-901-2345",
+                              GDCNO: "123456",
                     },
                     {
                               key: "7",
@@ -64,6 +68,7 @@ const SignUpRequest = () => {
                               userName: "Dana Evans",
                               email: "danae@example.com",
                               phoneNumber: "789-012-3456",
+                              GDCNO: "123456",
                     },
                     {
                               key: "8",
@@ -71,6 +76,7 @@ const SignUpRequest = () => {
                               userName: "Evan Foster",
                               email: "evanf@example.com",
                               phoneNumber: "890-123-4567",
+                              GDCNO: "123456",
                     },
                     {
                               key: "9",
@@ -78,6 +84,7 @@ const SignUpRequest = () => {
                               userName: "Fiona Gray",
                               email: "fionag@example.com",
                               phoneNumber: "901-234-5678",
+                              GDCNO: "123456",
                     },
                     {
                               key: "10",
@@ -85,6 +92,7 @@ const SignUpRequest = () => {
                               userName: "George Hall",
                               email: "georgeh@example.com",
                               phoneNumber: "012-345-6789",
+                              GDCNO: "123456",
                     },
                     {
                               key: "11",
@@ -92,6 +100,7 @@ const SignUpRequest = () => {
                               userName: "Hannah Ives",
                               email: "hannahi@example.com",
                               phoneNumber: "111-222-3333",
+                              GDCNO: "123456",
                     },
                     {
                               key: "12",
@@ -99,6 +108,7 @@ const SignUpRequest = () => {
                               userName: "Ian Jones",
                               email: "ianj@example.com",
                               phoneNumber: "222-333-4444",
+                              GDCNO: "123456",
                     },
                     {
                               key: "13",
@@ -106,6 +116,7 @@ const SignUpRequest = () => {
                               userName: "Julia King",
                               email: "juliak@example.com",
                               phoneNumber: "333-444-5555",
+                              GDCNO: "123456",
                     },
                     {
                               key: "14",
@@ -113,6 +124,7 @@ const SignUpRequest = () => {
                               userName: "Kevin Lee",
                               email: "kevinl@example.com",
                               phoneNumber: "444-555-6666",
+                              GDCNO: "123456",
                     },
                     {
                               key: "15",
@@ -120,6 +132,7 @@ const SignUpRequest = () => {
                               userName: "Laura Moore",
                               email: "lauram@example.com",
                               phoneNumber: "555-666-7777",
+                              GDCNO: "123456",
                     },
                     {
                               key: "16",
@@ -127,6 +140,7 @@ const SignUpRequest = () => {
                               userName: "Mike Nguyen",
                               email: "miken@example.com",
                               phoneNumber: "666-777-8888",
+                              GDCNO: "123456",
                     },
                     {
                               key: "17",
@@ -134,6 +148,7 @@ const SignUpRequest = () => {
                               userName: "Nina Owens",
                               email: "ninao@example.com",
                               phoneNumber: "777-888-9999",
+                              GDCNO: "123456",
                     },
                     {
                               key: "18",
@@ -141,6 +156,7 @@ const SignUpRequest = () => {
                               userName: "Oscar Patel",
                               email: "oscarp@example.com",
                               phoneNumber: "888-999-0000",
+                              GDCNO: "123456",
                     },
                     {
                               key: "19",
@@ -148,6 +164,7 @@ const SignUpRequest = () => {
                               userName: "Paula Quinn",
                               email: "paulaq@example.com",
                               phoneNumber: "999-000-1111",
+                              GDCNO: "123456",
                     },
                     {
                               key: "20",
@@ -155,6 +172,7 @@ const SignUpRequest = () => {
                               userName: "Quinn Ross",
                               email: "quinnr@example.com",
                               phoneNumber: "000-111-2222",
+                              GDCNO: "123456",
                     },
                     {
                               key: "21",
@@ -162,6 +180,7 @@ const SignUpRequest = () => {
                               userName: "Rachel Scott",
                               email: "rachels@example.com",
                               phoneNumber: "101-202-3030",
+                              GDCNO: "123456",
                     },
                     {
                               key: "22",
@@ -169,6 +188,7 @@ const SignUpRequest = () => {
                               userName: "Steve Thomas",
                               email: "stevet@example.com",
                               phoneNumber: "202-303-4040",
+                              GDCNO: "123456",
                     },
                     {
                               key: "23",
@@ -176,6 +196,7 @@ const SignUpRequest = () => {
                               userName: "Tina Underwood",
                               email: "tinau@example.com",
                               phoneNumber: "303-404-5050",
+                              GDCNO: "123456",
                     },
                     {
                               key: "24",
@@ -183,6 +204,7 @@ const SignUpRequest = () => {
                               userName: "Uma Vincent",
                               email: "umav@example.com",
                               phoneNumber: "404-505-6060",
+                              GDCNO: "123456",
                     },
                     {
                               key: "25",
@@ -190,6 +212,7 @@ const SignUpRequest = () => {
                               userName: "Victor White",
                               email: "victorw@example.com",
                               phoneNumber: "505-606-7070",
+                              GDCNO: "123456",
                     },
                     {
                               key: "26",
@@ -197,6 +220,7 @@ const SignUpRequest = () => {
                               userName: "Wendy Xu",
                               email: "wendyx@example.com",
                               phoneNumber: "606-707-8080",
+                              GDCNO: "123456",
                     },
                     {
                               key: "27",
@@ -204,6 +228,7 @@ const SignUpRequest = () => {
                               userName: "Xander Young",
                               email: "xandery@example.com",
                               phoneNumber: "707-808-9090",
+                              GDCNO: "123456",
                     },
                     {
                               key: "28",
@@ -211,6 +236,7 @@ const SignUpRequest = () => {
                               userName: "Yara Zane",
                               email: "yaraz@example.com",
                               phoneNumber: "808-909-1010",
+                              GDCNO: "123456",
                     },
                     {
                               key: "29",
@@ -218,6 +244,7 @@ const SignUpRequest = () => {
                               userName: "Zach Allen",
                               email: "zacha@example.com",
                               phoneNumber: "909-101-2121",
+                              GDCNO: "123456",
                     },
                     {
                               key: "30",
@@ -225,13 +252,15 @@ const SignUpRequest = () => {
                               userName: "Abby Baker",
                               email: "abbyb@example.com",
                               phoneNumber: "101-212-3232",
+                              GDCNO: "123456",
                     },
           ];
+
 
           const columns = [
                     { title: "No", dataIndex: "no", key: "no" },
                     {
-                              title: "Pet Owner Name",
+                              title: "Name",
                               key: "userName",
                               render: (_, record) => (
                                         <div className="flex items-center gap-3">
@@ -246,22 +275,36 @@ const SignUpRequest = () => {
                     },
                     { title: "Phone Number", dataIndex: "phoneNumber", key: "phoneNumber" },
                     { title: "Email", dataIndex: "email", key: "email" },
+                    { title: "GDC NO", dataIndex: "GDCNO", key: "GDCNO" },
                     {
                               title: "Action",
                               key: "action",
-                              render: () => (
+                              render: (_, record) => (
                                         <div className="flex gap-2">
                                                   <button
-                                                            // onClick={showModal}
-                                                            className="border border-[#14803c] text-[#14803c] rounded-lg p-2 bg-[#d3e8e6] hover:bg-[#b4d9d4] transition duration-200"
+                                                            onClick={() => {
+                                                                      setSelectedUser(record);
+                                                                      setUserDetailsModal(true);
+                                                            }}
+                                                            className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
                                                   >
-                                                            <IoEyeOutline className="w-6 h-6 text-[#14803c]" />
+                                                            <IoEyeOutline className="w-6 h-6 text-[#3b3b3b]" />
                                                   </button>
                                                   <button
-                                                            onClick={showModal}
-                                                            className="border border-[#14803c] text-[#14803c] rounded-lg p-2 bg-[#d3e8e6] hover:bg-[#b4d9d4] transition duration-200"
+                                                            onClick={() => {
+                                                                      setIsModalOpen(true);
+                                                            }}
+                                                            className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
                                                   >
-                                                            <MdBlockFlipped className="w-6 h-6 text-[#14803c]" />
+                                                            <FaCheck className="w-6 h-6 text-[#3b3b3b] font-bold" />
+                                                  </button>
+                                                  <button
+                                                            onClick={() => {
+                                                                      setIsModalOpen2(true);
+                                                            }}
+                                                            className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
+                                                  >
+                                                            <CgClose className="w-6 h-6 text-[#3b3b3b]" />
                                                   </button>
                                         </div>
                               ),
@@ -275,8 +318,8 @@ const SignUpRequest = () => {
                                         <div className="relative w-full sm:w-[300px] mt-5 md:mt-0 lg:mt-0">
                                                   <input
                                                             type="text"
-                                                            placeholder="Search..."
-                                                            className="border-2 border-[#FF62BD] py-3 pl-12 pr-[65px] outline-none w-full rounded-md"
+                                                            placeholder="Search User"
+                                                            className="border-2 border-[#3b3b3b] py-3 pl-12 pr-[65px] outline-none w-full rounded-md"
                                                   />
                                                   <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
                                                             <IoSearch className="text-[1.3rem]" />
@@ -290,23 +333,24 @@ const SignUpRequest = () => {
                                                                       activeBorderColor: "#14803c",
                                                             },
                                                             Pagination: {
-                                                                      colorPrimaryBorder: "rgb(19,194,194)",
-                                                                      colorBorder: "rgb(82,196,26)",
-                                                                      colorTextPlaceholder: "rgb(82,196,26)",
-                                                                      colorTextDisabled: "rgb(82,196,26)",
-                                                                      colorBgTextActive: "rgb(82,196,26)",
-                                                                      itemActiveBgDisabled: "rgb(82,196,26)",
-                                                                      itemActiveColorDisabled: "rgb(0,0,0)",
-                                                                      itemBg: "rgb(82,196,26)",
-                                                                      colorBgTextHover: "rgb(82,196,26)",
-                                                                      colorPrimary: "rgb(82,196,26)",
-                                                                      colorPrimaryHover: "rgb(82,196,26)",
+                                                                      colorPrimaryBorder: "#3b3b3b",
+                                                                      colorBorder: "#3b3b3b",
+                                                                      colorTextPlaceholder: "#3b3b3b",
+                                                                      colorTextDisabled: "#3b3b3b",
+                                                                      colorBgTextActive: "#3b3b3b",
+                                                                      itemActiveBgDisabled: "#3b3b3b",
+                                                                      itemActiveColorDisabled: "#3b3b3b",
+                                                                      itemBg: "#3b3b3b",
+                                                                      colorBgTextHover: "#3b3b3b",
+                                                                      colorPrimary: "#3b3b3b",
+                                                                      colorPrimaryHover: "#3b3b3b",
                                                             },
                                                             Table: {
-                                                                      headerBg: "#14803c",
-                                                                      headerColor: "rgb(255,255,255)",
+                                                                      headerBg: "#3b3b3b",
+                                                                      headerColor: "#fff",
                                                                       cellFontSize: 16,
-                                                                      headerSplitColor: "#14803c",
+                                                                      headerSplitColor: "#3b3b3b",
+
                                                             },
                                                   },
                                         }}
@@ -321,28 +365,68 @@ const SignUpRequest = () => {
                                         <Modal
                                                   open={isModalOpen}
                                                   centered
-                                                  onCancel={handleCancel}
+                                                  onCancel={() => setIsModalOpen(false)}
                                                   footer={null}
                                         >
                                                   <div className="p-5">
                                                             <h1 className="text-4xl text-center text-[#0D0D0D]">
-                                                                      Are you sure you want to block ?
+                                                                      Are you sure you want to Approve ?
                                                             </h1>
 
                                                             <div className="text-center py-5">
                                                                       <button
-                                                                                onClick={handleOk}
-                                                                                className="bg-[#14803c] text-white font-semibold w-full py-2 rounded transition duration-200"
+
+                                                                                onClick={() => setIsModalOpen(false)}
+                                                                                className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
                                                                       >
-                                                                                Yes,Block
+                                                                                Yes,Approve
                                                                       </button>
                                                             </div>
                                                             <div className="text-center pb-5">
                                                                       <button
-                                                                                onClick={handleOk}
-                                                                                className="text-[#14803c] border-2 border-green-600 bg-white font-semibold w-full py-2 rounded transition duration-200"
+                                                                                onClick={() => setIsModalOpen(false)}
+                                                                                className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
                                                                       >
-                                                                                No,Don’t Block
+                                                                                No,Don’t Approve
+                                                                      </button>
+                                                            </div>
+                                                  </div>
+                                        </Modal>
+                                        <Modal
+                                                  centered
+                                                  open={userDetailsModal}
+                                                  onCancel={() => setUserDetailsModal(false)}
+                                                  footer={null}
+                                        >
+                                                  {selectedUser && <UserInformation user={selectedUser} />}
+
+                                        </Modal>
+                                        <Modal
+                                                  open={isModalOpen2}
+                                                  centered
+                                                  onCancel={() => setIsModalOpen2(false)}
+                                                  footer={null}
+                                        >
+                                                  <div className="p-5">
+                                                            <h1 className="text-4xl text-center text-[#0D0D0D]">
+                                                                      Are you sure you want to Reject?
+                                                            </h1>
+
+                                                            <div className="text-center py-5">
+                                                                      <button
+
+                                                                                onClick={() => setIsModalOpen2(false)}
+                                                                                className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
+                                                                      >
+                                                                                Yes,Reject
+                                                                      </button>
+                                                            </div>
+                                                            <div className="text-center pb-5">
+                                                                      <button
+                                                                                onClick={() => setIsModalOpen2(false)}
+                                                                                className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
+                                                                      >
+                                                                                No,Don’t Reject
                                                                       </button>
                                                             </div>
                                                   </div>
