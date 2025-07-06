@@ -12,7 +12,7 @@ export default function ViewProduct() {
     "https://images.pexels.com/photos/4386321/pexels-photo-4386321.jpeg?auto=compress&cs=tinysrgb&w=600",
   ];
   return (
-    <>
+    <div className="w-full px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
         <PageHeading title="Product Details" />
         <div className="flex gap-2">
@@ -25,23 +25,23 @@ export default function ViewProduct() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-10">
         {/* Left Side - Product Images */}
-        <div className="space-y-5">
-          <div className="relative aspect-square bg-gray-100 rounded-xl overflow-hidden group">
+        <div className="w-full space-y-5">
+          <div className="w-full bg-gray-100 rounded-xl overflow-hidden group" style={{ maxHeight: '600px' }}>
             <img
               src={productImages[selectedImage]}
               alt="PANORA 200"
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-auto max-h-[600px] mx-auto object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
 
-          <div className="flex gap-3 overflow-x-auto pb-2">
+          <div className="w-full flex gap-3 overflow-x-auto pb-2">
             {productImages.map((image, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedImage(index)}
-                className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                   selectedImage === index
                     ? "border-blue-500 ring-2 ring-blue-200"
                     : "border-gray-200 hover:border-gray-300"
@@ -58,7 +58,7 @@ export default function ViewProduct() {
         </div>
 
         {/* Right Side - Product Details */}
-        <div className="space-y-5">
+        <div className="w-full space-y-5">
           <div>
             <h1 className="text-2xl font-bold text-white mb-2">PANORA 200</h1>
           </div>
@@ -97,6 +97,6 @@ export default function ViewProduct() {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
