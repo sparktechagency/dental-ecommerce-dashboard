@@ -12,7 +12,7 @@ export default function ViewProduct() {
 
   const productImages = [t1, t2, t3, t5, t6, t7];
   return (
-    <div className="w-full">
+    <div className="w-full pb-10">
       <div className="flex justify-between items-start md:items-center mb-5 gap-5">
         <PageHeading title="Product Details" />
         <div className="flex gap-2">

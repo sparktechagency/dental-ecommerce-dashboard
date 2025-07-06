@@ -26,6 +26,7 @@ import SignUpRequest from "../page/user-management/SignUpRequest";
 import AllOrder from "../page/order-management/AllOrder";
 import AllProducts from "../page/product-management/AllProducts";
 import ViewProduct from "../page/product-management/ViewProduct";
+import EditProduct from "../page/product-management/EditProduct";
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
       {
         path: "/view-product/:id",
         element: <ViewProduct />,
+      },
+      {
+        path: "/edit-product/:id",
+        element: <EditProduct />,
       },
 
       {

@@ -18,14 +18,17 @@ import t7 from "../../assets/t7.jpg";
 import { BiEditAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import AddProduct from "./AddProduct";
+import EditProduct from "./EditProduct";
 
 const { Search } = Input;
 const { Option } = Select;
 
 const AllProducts = () => {
   const [searchText, setSearchText] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [form] = Form.useForm();
 
   const products = [
@@ -213,6 +216,7 @@ const AllProducts = () => {
     },
   ];
 
+  // Extract unique categories for filter
   const categories = [...new Set(products.map((product) => product.category))];
 
   const menu = (
@@ -244,9 +248,28 @@ const AllProducts = () => {
     form.resetFields();
     setIsAddModalVisible(true);
   };
+
   const handleAddCancel = () => {
     setIsAddModalVisible(false);
   };
+
+  const handleEditCancel = () => {
+    setIsEditModalVisible(false);
+  };
+
+  const onAddFinish = (values) => {
+    const newProduct = {
+      id: Math.max(...products.map((p) => p.id)) + 1,
+      ...values,
+      image: values.image?.[0]?.thumbUrl || t1, // Default image if none uploaded
+    };
+
+    console.log("New product:", newProduct);
+
+    message.success("Product added successfully!");
+    setIsAddModalVisible(false);
+  };
+
   const [formData, setFormData] = useState({
     productName: "",
     description: "",
@@ -256,6 +279,12 @@ const AllProducts = () => {
     availability: "In Stock",
   });
 
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   return (
     <div className="p-5">
@@ -350,7 +379,13 @@ const AllProducts = () => {
                   <IoEyeOutline className="w-6 h-6 text-[#3b3b3b]" />
                 </button>
               </Link>
-              <button className="border-2 border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2">
+              <button
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setIsEditModalVisible(true);
+                }}
+                className="border-2 border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
+              >
                 <BiEditAlt className="w-6 h-6 text-[#3b3b3b]" />
               </button>
               <button className="border-2 border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2">
@@ -361,21 +396,45 @@ const AllProducts = () => {
         ))}
       </div>
       {/* Add Product Modal */}
-      <Modal
-        title="Add New Product"
-        open={isAddModalVisible}
-        onCancel={handleAddCancel}
-        footer={null}
-        width={700}
-      >
+      {isAddModalVisible && (
         <AddProduct
           isVisible={isAddModalVisible}
           onClose={() => setIsAddModalVisible(false)}
           onAddProduct={(newProduct) => {
+            console.log("New product:", newProduct);
             setIsAddModalVisible(false);
           }}
         />
-      </Modal>
+      )}
+      {/* Edit Product Modal */}
+      {isEditModalVisible && (
+        <EditProduct
+          isVisible={isEditModalVisible}
+          onClose={() => setIsEditModalVisible(false)}
+          product={selectedProduct}
+          onUpdateProduct={(updatedProduct) => {
+            console.log("Updated product:", updatedProduct);
+            setIsEditModalVisible(false);
+          }}
+        />
+      )}
+      {/* <Modal
+        title="Edit Product"
+        open={isEditModalVisible}
+        onCancel={handleEditCancel}
+        footer={null}
+        width={700}
+      >
+        <EditProduct
+          isVisible={isEditModalVisible}
+          onClose={() => setIsEditModalVisible(false)}
+          product={selectedProduct}
+          onUpdateProduct={(updatedProduct) => {
+            console.log("Updated product:", updatedProduct);
+            setIsEditModalVisible(false);
+          }}
+        />
+      </Modal> */}
     </div>
   );
 };

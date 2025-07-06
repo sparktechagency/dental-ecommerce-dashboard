@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Modal } from "antd";
 import { MdCloudUpload, MdKeyboardArrowDown } from "react-icons/md";
 
-export default AddProduct = ({ isVisible, onClose, onAddProduct }) => {
+const AddProduct = ({ isVisible, onClose, onAddProduct }) => {
   const [formData, setFormData] = useState({
     productName: "",
     description: "",
@@ -225,3 +225,6 @@ export default AddProduct = ({ isVisible, onClose, onAddProduct }) => {
     </Modal>
   );
 };
+
+export default AddProduct;
+
