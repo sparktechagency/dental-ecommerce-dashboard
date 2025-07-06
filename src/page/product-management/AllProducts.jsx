@@ -1,16 +1,13 @@
 import React, { useState } from "react";
-import { Input, Button, Card, Tag, Dropdown, Menu, Select } from "antd";
-import { Modal, Form, InputNumber, Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { Input, Card, Menu, Select } from "antd";
+import { Modal, Form, message } from "antd";
 import {
   IoSearch,
-  IoEllipsisVertical,
   IoEyeOutline,
   IoPencil,
   IoTrashOutline,
-  IoAddOutline,
-  IoFilter,
 } from "react-icons/io5";
+import { MdClose, MdCloudUpload, MdKeyboardArrowDown } from "react-icons/md";
 import PageHeading from "../../shared/PageHeading";
 import t1 from "../../assets/t1.png";
 import t2 from "../../assets/t2.jpg";
@@ -20,6 +17,7 @@ import t6 from "../../assets/t6.png";
 import t7 from "../../assets/t7.jpg";
 import { BiEditAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
+import AddProduct from "./AddProduct";
 
 const { Search } = Input;
 const { Option } = Select;
@@ -215,7 +213,6 @@ const AllProducts = () => {
     },
   ];
 
-  // Extract unique categories for filter
   const categories = [...new Set(products.map((product) => product.category))];
 
   const menu = (
@@ -247,23 +244,18 @@ const AllProducts = () => {
     form.resetFields();
     setIsAddModalVisible(true);
   };
-
   const handleAddCancel = () => {
     setIsAddModalVisible(false);
   };
+  const [formData, setFormData] = useState({
+    productName: "",
+    description: "",
+    brand: "Squre Pharma",
+    category: "Endodontics",
+    procedureGuide: "Root canal",
+    availability: "In Stock",
+  });
 
-  const onAddFinish = (values) => {
-    const newProduct = {
-      id: Math.max(...products.map((p) => p.id)) + 1,
-      ...values,
-      image: values.image?.[0]?.thumbUrl || t1, // Default image if none uploaded
-    };
-
-    console.log("New product:", newProduct);
-
-    message.success("Product added successfully!");
-    setIsAddModalVisible(false);
-  };
 
   return (
     <div className="p-5">
@@ -376,100 +368,13 @@ const AllProducts = () => {
         footer={null}
         width={700}
       >
-        <Form form={form} layout="vertical" onFinish={onAddFinish}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Form.Item
-              name="name"
-              label="Product Name"
-              rules={[
-                { required: true, message: "Please input the product name!" },
-              ]}
-            >
-              <Input placeholder="Enter product name" />
-            </Form.Item>
-
-            <Form.Item
-              name="brand"
-              label="Brand"
-              rules={[{ required: true, message: "Please input the brand!" }]}
-            >
-              <Input placeholder="Enter brand name" />
-            </Form.Item>
-
-            <Form.Item
-              name="category"
-              label="Category"
-              rules={[{ required: true, message: "Please select a category!" }]}
-            >
-              <Select placeholder="Select category">
-                {categories.map((category) => (
-                  <Option key={category} value={category}>
-                    {category}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-
-            <Form.Item
-              name="price"
-              label="Price"
-              rules={[{ required: true, message: "Please input the price!" }]}
-            >
-              <InputNumber
-                style={{ width: "100%" }}
-                formatter={(value) =>
-                  `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-                }
-                parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
-                min={0}
-                step={0.01}
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="description"
-              label="Description"
-              rules={[
-                { required: true, message: "Please input the description!" },
-              ]}
-              className="md:col-span-2"
-            >
-              <Input.TextArea
-                rows={3}
-                placeholder="Enter product description"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="image"
-              label="Product Image"
-              valuePropName="fileList"
-              getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}
-              className="md:col-span-2"
-            >
-              <Upload
-                listType="picture-card"
-                maxCount={1}
-                beforeUpload={() => false} // Prevent auto upload
-                accept="image/*"
-              >
-                <div>
-                  <UploadOutlined />
-                  <div style={{ marginTop: 8 }}>Upload</div>
-                </div>
-              </Upload>
-            </Form.Item>
-          </div>
-
-          <div className="flex justify-end gap-3 mt-6">
-            <Button onClick={handleAddCancel} className="mr-2">
-              Cancel
-            </Button>
-            <Button type="primary" htmlType="submit">
-              Add Product
-            </Button>
-          </div>
-        </Form>
+        <AddProduct
+          isVisible={isAddModalVisible}
+          onClose={() => setIsAddModalVisible(false)}
+          onAddProduct={(newProduct) => {
+            setIsAddModalVisible(false);
+          }}
+        />
       </Modal>
     </div>
   );

@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import PageHeading from "../../shared/PageHeading";
+import t1 from "../../assets/t1.png";
+import t2 from "../../assets/t2.jpg";
+import t3 from "../../assets/t3.jpg";
+import t5 from "../../assets/t5.jpg";
+import t6 from "../../assets/t6.png";
+import t7 from "../../assets/t7.jpg";
 
 export default function ViewProduct() {
   const [selectedImage, setSelectedImage] = useState(0);
 
-  const productImages = [
-    "https://images.pexels.com/photos/4386321/pexels-photo-4386321.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "https://images.pexels.com/photos/4386321/pexels-photo-4386321.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "https://images.pexels.com/photos/4386321/pexels-photo-4386321.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "https://images.pexels.com/photos/4386321/pexels-photo-4386321.jpeg?auto=compress&cs=tinysrgb&w=600",
-    "https://images.pexels.com/photos/4386321/pexels-photo-4386321.jpeg?auto=compress&cs=tinysrgb&w=600",
-  ];
+  const productImages = [t1, t2, t3, t5, t6, t7];
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
+    <div className="w-full">
+      <div className="flex justify-between items-start md:items-center mb-5 gap-5">
         <PageHeading title="Product Details" />
         <div className="flex gap-2">
           <button className="px-5 py-2 border border-red-600 text-red-600 rounded-lg">
@@ -32,7 +32,7 @@ export default function ViewProduct() {
             <img
               src={productImages[selectedImage]}
               alt="PANORA 200"
-              className="w-full h-auto max-h-[600px] mx-auto object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-[500px] md:h-[600px] mx-auto object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
 
