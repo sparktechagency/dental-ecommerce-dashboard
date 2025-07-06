@@ -27,12 +27,12 @@ function SignIn() {
       {/* Left Column - Form */}
       <div className="w-full md:w-1/2 bg-[#171717] p-8 flex flex-col justify-center relative">
         <div className="max-w-md mx-auto w-full">
-          <h1 className="text-4xl font-bold text-white mb-2">Welcome Back !</h1>
-          <p className="text-gray-300 mb-8">Please enter your email and password to continue</p>
+          <h1 className="text-center text-3xl font-bold text-white mb-2">Welcome Back !</h1>
+          <p className="text-center text-[#9F9C96] mb-8">Please enter your email and password to continue</p>
 
           <form className="space-y-6">
             <div>
-              <label className="block text-gray-300 text-sm mb-2">Email</label>
+              <label className="block text-white font-bold text-lg mb-2">Email</label>
               <input
                 type="email"
                 name="email"
@@ -45,7 +45,7 @@ function SignIn() {
             </div>
 
             <div>
-              <label className="block text-gray-300 text-sm mb-2">Password</label>
+              <label className="block text-white font-bold text-lg mb-2">Password</label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -85,7 +85,7 @@ function SignIn() {
             <Link to="/">
               <button
                 type="submit"
-                className="w-full bg-[#136BFB] text-white font-medium py-3 px-4 rounded-lg transition mt-5"
+                className="w-full bg-[#136BFB] text-white font-bold py-3 px-4 rounded-lg transition mt-5"
               >
                 Log In
               </button>

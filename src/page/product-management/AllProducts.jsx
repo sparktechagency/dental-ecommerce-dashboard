@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Input, Button, Card, Tag, Dropdown, Menu, Select } from 'antd';
+import { Modal, Form, InputNumber, Upload, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 import {
           IoSearch,
           IoEllipsisVertical,
@@ -25,6 +27,8 @@ const { Option } = Select;
 const AllProducts = () => {
           const [searchText, setSearchText] = useState('');
           const [categoryFilter, setCategoryFilter] = useState('all');
+          const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+          const [form] = Form.useForm();
 
           const products = [
                     {
@@ -230,6 +234,33 @@ const AllProducts = () => {
                     return matchesSearch && matchesCategory;
           });
 
+          const showAddModal = () => {
+                    form.resetFields();
+                    setIsAddModalVisible(true);
+          };
+
+          const handleAddCancel = () => {
+                    setIsAddModalVisible(false);
+          };
+
+          const onAddFinish = (values) => {
+                    const newProduct = {
+                              id: Math.max(...products.map(p => p.id)) + 1,
+                              ...values,
+                              image: values.image?.[0]?.thumbUrl || t1, // Default image if none uploaded
+                    };
+
+                    // In a real app, you would make an API call here
+                    // For now, we'll just log it
+                    console.log('New product:', newProduct);
+
+                    message.success('Product added successfully!');
+                    setIsAddModalVisible(false);
+
+                    // In a real app, you would update the products state here
+                    // setProducts([...products, newProduct]);
+          };
+
           return (
                     <div className="p-6">
                               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -264,6 +295,7 @@ const AllProducts = () => {
                                                             />
                                                   </div>
                                                   <button
+                                                            onClick={showAddModal}
                                                             className="w-full md:w-[200px] p-[10px] bg-[#136BFB] rounded text-white"
                                                   >
                                                             + Add Product
@@ -327,6 +359,102 @@ const AllProducts = () => {
                                                   </Card>
                                         ))}
                               </div>
+                              {/* Add Product Modal */}
+                              <Modal
+                                        title="Add New Product"
+                                        open={isAddModalVisible}
+                                        onCancel={handleAddCancel}
+                                        footer={null}
+                                        width={700}
+                              >
+                                        <Form
+                                                  form={form}
+                                                  layout="vertical"
+                                                  onFinish={onAddFinish}
+                                        >
+                                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                                            <Form.Item
+                                                                      name="name"
+                                                                      label="Product Name"
+                                                                      rules={[{ required: true, message: 'Please input the product name!' }]}
+                                                            >
+                                                                      <Input placeholder="Enter product name" />
+                                                            </Form.Item>
+
+                                                            <Form.Item
+                                                                      name="brand"
+                                                                      label="Brand"
+                                                                      rules={[{ required: true, message: 'Please input the brand!' }]}
+                                                            >
+                                                                      <Input placeholder="Enter brand name" />
+                                                            </Form.Item>
+
+                                                            <Form.Item
+                                                                      name="category"
+                                                                      label="Category"
+                                                                      rules={[{ required: true, message: 'Please select a category!' }]}
+                                                            >
+                                                                      <Select placeholder="Select category">
+                                                                                {categories.map(category => (
+                                                                                          <Option key={category} value={category}>{category}</Option>
+                                                                                ))}
+                                                                      </Select>
+                                                            </Form.Item>
+
+                                                            <Form.Item
+                                                                      name="price"
+                                                                      label="Price"
+                                                                      rules={[{ required: true, message: 'Please input the price!' }]}
+                                                            >
+                                                                      <InputNumber
+                                                                                style={{ width: '100%' }}
+                                                                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                                                                min={0}
+                                                                                step={0.01}
+                                                                      />
+                                                            </Form.Item>
+
+                                                            <Form.Item
+                                                                      name="description"
+                                                                      label="Description"
+                                                                      rules={[{ required: true, message: 'Please input the description!' }]}
+                                                                      className="md:col-span-2"
+                                                            >
+                                                                      <Input.TextArea rows={3} placeholder="Enter product description" />
+                                                            </Form.Item>
+
+                                                            <Form.Item
+                                                                      name="image"
+                                                                      label="Product Image"
+                                                                      valuePropName="fileList"
+                                                                      getValueFromEvent={(e) => (Array.isArray(e) ? e : e?.fileList)}
+                                                                      className="md:col-span-2"
+                                                            >
+                                                                      <Upload
+                                                                                listType="picture-card"
+                                                                                maxCount={1}
+                                                                                beforeUpload={() => false} // Prevent auto upload
+                                                                                accept="image/*"
+                                                                      >
+                                                                                <div>
+                                                                                          <UploadOutlined />
+                                                                                          <div style={{ marginTop: 8 }}>Upload</div>
+                                                                                </div>
+                                                                      </Upload>
+                                                            </Form.Item>
+                                                  </div>
+
+                                                  <div className="flex justify-end gap-3 mt-6">
+                                                            <Button onClick={handleAddCancel} className="mr-2">
+                                                                      Cancel
+                                                            </Button>
+                                                            <Button type="primary" htmlType="submit">
+                                                                      Add Product
+                                                            </Button>
+                                                  </div>
+                                        </Form>
+                              </Modal>
                     </div>
           );
 };

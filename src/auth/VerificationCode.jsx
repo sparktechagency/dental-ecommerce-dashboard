@@ -36,8 +36,8 @@ function VerificationCode() {
       {/* Left Column - Form */}
       <div className="w-full md:w-1/2 bg-[#171717] p-8 flex flex-col justify-center relative">
         <div className="max-w-md mx-auto w-full">
-          <h1 className="text-4xl font-bold text-white mb-2">Verification Code</h1>
-          <p className="text-gray-300 mb-8">
+          <h1 className="text-center text-3xl font-bold text-white mb-4">Verification Code</h1>
+          <p className="text-center text-[#9F9C96] mb-8">
             We have sent the verification code to your email
           </p>
 
@@ -59,7 +59,7 @@ function VerificationCode() {
 
             <button
               type="submit"
-              className="w-full bg-[#136BFB] text-white font-medium py-3 px-4 rounded-lg transition hover:bg-blue-700"
+              className="w-full bg-[#136BFB] text-white text-lg font-bold py-3 px-4 rounded-lg transition hover:bg-blue-700"
             >
               Verify Code
             </button>

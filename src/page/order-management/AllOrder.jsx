@@ -135,7 +135,7 @@ const AllOrder = () => {
                               <div className="my-5 md:my-10 flex flex-col md:flex-row gap-5 justify-between items-center">
                                         <PageHeading title="All Order" />
                                         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-                                                  <div className="relative w-full sm:w-[200px]">
+                                                  <div className="relative w-full md:w-[300px]">
                                                             <Select
                                                                       className="w-full h-[46px]"
                                                                       placeholder="Filter by status"
@@ -150,7 +150,7 @@ const AllOrder = () => {
                                                                       ]}
                                                             />
                                                   </div>
-                                                  <div className="relative w-full sm:w-[300px]">
+                                                  <div className="relative w-full md:w-[300px]">
                                                             <Input
                                                                       placeholder="Search orders..."
                                                                       value={searchText}
