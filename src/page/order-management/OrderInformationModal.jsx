@@ -134,10 +134,9 @@ export default function OrderInformationModal({ order }) {
         {/* Export Button */}
         <div className="mt-6 pt-4 border-t border-gray-200">
           <button
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+            className="w-full bg-blue-600 text-white text-lg font-medium py-3 px-6 rounded-md"
             onClick={() => console.log("Export invoice for order:", order.key)}
           >
-            <MdDownload className="w-5 h-5" />
             Export Invoice
           </button>
         </div>
