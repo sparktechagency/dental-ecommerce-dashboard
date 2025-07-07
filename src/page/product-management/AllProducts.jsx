@@ -29,6 +29,7 @@ const AllProducts = () => {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [form] = Form.useForm();
 
   const products = [
@@ -249,42 +250,28 @@ const AllProducts = () => {
     setIsAddModalVisible(true);
   };
 
-  // const handleAddCancel = () => {
-  //   setIsAddModalVisible(false);
-  // };
+  const handleDeleteClick = (product) => {
+    setSelectedProduct(product);
+    setIsDeleteModalVisible(true);
+  };
 
-  // const handleEditCancel = () => {
-  //   setIsEditModalVisible(false);
-  // };
+  const handleDeleteConfirm = async () => {
+    try {
+      // Add your delete logic here
+      // await deleteProduct(selectedProduct.id);
+      message.success("Product deleted successfully");
+      setIsDeleteModalVisible(false);
+      setSelectedProduct(null);
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      message.error("Failed to delete product");
+    }
+  };
 
-  // const onAddFinish = (values) => {
-  //   const newProduct = {
-  //     id: Math.max(...products.map((p) => p.id)) + 1,
-  //     ...values,
-  //     image: values.image?.[0]?.thumbUrl || t1, // Default image if none uploaded
-  //   };
-
-  //   console.log("New product:", newProduct);
-
-  //   message.success("Product added successfully!");
-  //   setIsAddModalVisible(false);
-  // };
-
-  // const [formData, setFormData] = useState({
-  //   productName: "",
-  //   description: "",
-  //   brand: "Squre Pharma",
-  //   category: "Endodontics",
-  //   procedureGuide: "Root canal",
-  //   availability: "In Stock",
-  // });
-
-  // const handleInputChange = (field, value) => {
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [field]: value,
-  //   }));
-  // };
+  const handleDeleteCancel = () => {
+    setIsDeleteModalVisible(false);
+    setSelectedProduct(null);
+  };
 
   return (
     <div className="p-5">
@@ -388,8 +375,11 @@ const AllProducts = () => {
               >
                 <BiEditAlt className="w-6 h-6 text-[#3b3b3b]" />
               </button>
-              <button className="border-2 border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2">
-                <IoTrashOutline className="w-6 h-6 text-[#3b3b3b]" />
+              <button
+                onClick={() => handleDeleteClick(product)}
+                className="border-2 border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2 hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition-colors"
+              >
+                <IoTrashOutline className="w-6 h-6" />
               </button>
             </div>
           </Card>
@@ -429,6 +419,40 @@ const AllProducts = () => {
           }}
         />
       )}
+      {/* Delete Confirmation Modal */}
+      <Modal
+        title="Delete Product"
+        open={isDeleteModalVisible}
+        onCancel={handleDeleteCancel}
+        onOk={handleDeleteConfirm}
+        // okText="Delete"
+        okButtonProps={{ danger: true }}
+        // cancelText="Cancel"
+        footer={null}
+      >
+        <div className="p-5">
+          <h1 className="text-4xl text-center text-[#0D0D0D]">
+            Are you sure you want to delete ?
+          </h1>
+
+          <div className="text-center py-5">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
+            >
+              Yes,Delete
+            </button>
+          </div>
+          <div className="text-center pb-5">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
+            >
+              No,Don’t Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
