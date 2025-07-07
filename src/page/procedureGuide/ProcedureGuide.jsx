@@ -1,11 +1,18 @@
 import React, { useState } from "react";
-import { Input } from "antd";
+import { Input, Modal, Form, message } from "antd";
 import PageHeading from "../../shared/PageHeading";
 import { IoSearch } from "react-icons/io5";
-import { FiSearch, FiPlus, FiEye, FiEdit3, FiTrash2 } from "react-icons/fi";
+import { FiPlus, FiEye, FiEdit3, FiTrash2, FiX } from "react-icons/fi";
 
 const ProcedureGuide = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [form] = Form.useForm();
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [currentProcedure, setCurrentProcedure] = useState(null);
+  
   const [procedures, setProcedures] = useState([
     {
       id: 1,
@@ -71,41 +78,85 @@ const ProcedureGuide = () => {
 
   const handleDelete = (id) => {
     setProcedures(procedures.filter((procedure) => procedure.id !== id));
+    message.success("Procedure deleted successfully");
+    setIsDeleteModalVisible(false);
   };
 
-  const handleView = (id) => {
-    console.log("Viewing procedure:", id);
+  const handleView = (procedure) => {
+    setCurrentProcedure(procedure);
+    setIsViewModalVisible(true);
   };
 
-  const handleEdit = (id) => {
-    console.log("Editing procedure:", id);
+  const handleEdit = (procedure) => {
+    setCurrentProcedure(procedure);
+    form.setFieldsValue({
+      title: procedure.title,
+      description: procedure.description,
+      productsIncluded: procedure.productsIncluded,
+      image: procedure.image,
+    });
+    setIsEditModalVisible(true);
   };
+
+  const handleAdd = () => {
+    form.resetFields();
+    setIsAddModalVisible(true);
+  };
+
+  const handleSave = (values) => {
+    if (currentProcedure) {
+      // Update existing procedure
+      setProcedures(
+        procedures.map((proc) =>
+          proc.id === currentProcedure.id
+            ? { ...values, id: currentProcedure.id }
+            : proc
+        )
+      );
+      message.success("Procedure updated successfully");
+      setIsEditModalVisible(false);
+    } else {
+      // Add new procedure
+      const newProcedure = {
+        ...values,
+        id: Date.now(),
+      };
+      setProcedures([...procedures, newProcedure]);
+      message.success("Procedure added successfully");
+      setIsAddModalVisible(false);
+    }
+    setCurrentProcedure(null);
+  };
+
+  const handleDeleteClick = (procedure) => {
+    setCurrentProcedure(procedure);
+    setIsDeleteModalVisible(true);
+  };
+
   return (
-    <div>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
+    <div className="p-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-5">
         <PageHeading title="Procedure Guide" />
-        <div className="flex flex-col md:flex-row justify-center items-center md:items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
           <div className="relative w-full md:w-[300px]">
             <Input
-              placeholder="Search by name..."
+              placeholder="Search by name or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               prefix={<IoSearch className="text-gray-400" />}
-              className="w-full h-[46px] px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              className="w-full h-12 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             />
           </div>
           <button
-            //   onClick={() => {
-            //     setBrandName("");
-            //     setIsAddModalVisible(true);
-            //   }}
-            className="w-full md:w-[200px] p-[10px] bg-[#136BFB] rounded text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors"
+            onClick={handleAdd}
+            className="w-full md:w-auto px-6 py-3 bg-[#136BFB] rounded-lg text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors whitespace-nowrap"
           >
             <FiPlus className="w-5 h-5" />
             Add Procedure Guide
           </button>
         </div>
       </div>
+
       {/* Procedure Cards */}
       <div className="space-y-6">
         {filteredProcedures.map((procedure) => (
@@ -113,7 +164,6 @@ const ProcedureGuide = () => {
             key={procedure.id}
             className="relative bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group"
           >
-            {/* Background Image with Overlay */}
             <div className="relative h-64 overflow-hidden">
               <img
                 src={procedure.image}
@@ -122,7 +172,6 @@ const ProcedureGuide = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
 
-              {/* Content Overlay */}
               <div className="absolute inset-0 flex flex-col justify-between p-8">
                 <div className="flex-1">
                   <h3 className="text-3xl font-bold text-white mb-3">
@@ -136,10 +185,9 @@ const ProcedureGuide = () => {
                   </p>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="flex items-center space-x-4">
                   <button
-                    onClick={() => handleView(procedure.id)}
+                    onClick={() => handleView(procedure)}
                     className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
                   >
                     <FiEye className="h-4 w-4" />
@@ -147,7 +195,7 @@ const ProcedureGuide = () => {
                   </button>
 
                   <button
-                    onClick={() => handleEdit(procedure.id)}
+                    onClick={() => handleEdit(procedure)}
                     className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
                   >
                     <FiEdit3 className="h-4 w-4" />
@@ -155,7 +203,7 @@ const ProcedureGuide = () => {
                   </button>
 
                   <button
-                    onClick={() => handleDelete(procedure.id)}
+                    onClick={() => handleDeleteClick(procedure)}
                     className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
                   >
                     <FiTrash2 className="h-4 w-4" />
@@ -169,18 +217,215 @@ const ProcedureGuide = () => {
       </div>
 
       {filteredProcedures.length === 0 && (
-        <div className="text-center py-16">
+        <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-gray-100">
           <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <FiSearch className="h-10 w-10 text-gray-400" />
+            <FiPlus className="h-10 w-10 text-gray-400" />
           </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-3">
             No procedures found
           </h3>
-          <p className="text-gray-500 text-lg">
-            Try adjusting your search terms or add new procedures.
+          <p className="text-gray-500 text-lg mb-6">
+            {searchTerm ? 'No matching procedures found. Try different search terms or ' : 'Get started by adding a new procedure guide.'}
           </p>
+          <button
+            onClick={handleAdd}
+            className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+          >
+            <FiPlus className="w-5 h-5" />
+            Add New Procedure
+          </button>
         </div>
       )}
+
+      {/* Add/Edit Procedure Modal */}
+      <Modal
+        title={currentProcedure ? "Edit Procedure" : "Add New Procedure"}
+        open={isAddModalVisible || isEditModalVisible}
+        onCancel={() => {
+          if (isAddModalVisible) setIsAddModalVisible(false);
+          if (isEditModalVisible) setIsEditModalVisible(false);
+          form.resetFields();
+          setCurrentProcedure(null);
+        }}
+        footer={null}
+        centered
+        className="max-w-2xl"
+      >
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSave}
+          className="p-2"
+        >
+          <Form.Item
+            name="title"
+            label="Procedure Title"
+            rules={[{ required: true, message: 'Please enter procedure title' }]}
+          >
+            <Input 
+              placeholder="Enter procedure title" 
+              className="h-12 rounded-lg" 
+            />
+          </Form.Item>
+          
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: 'Please enter description' }]}
+          >
+            <Input.TextArea 
+              rows={4} 
+              placeholder="Enter procedure description" 
+              className="rounded-lg"
+            />
+          </Form.Item>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <Form.Item
+              name="productsIncluded"
+              label="Number of Products"
+              rules={[{ required: true, message: 'Please enter number of products' }]}
+            >
+              <Input 
+                type="number" 
+                min={1} 
+                placeholder="Enter number of products" 
+                className="h-12 rounded-lg" 
+              />
+            </Form.Item>
+            
+            <Form.Item
+              name="image"
+              label="Image URL"
+              rules={[
+                { required: true, message: 'Please enter image URL' },
+                { type: 'url', message: 'Please enter a valid URL' }
+              ]}
+            >
+              <Input 
+                placeholder="Enter image URL" 
+                className="h-12 rounded-lg" 
+              />
+            </Form.Item>
+          </div>
+          
+          <div className="flex justify-end gap-3 mt-6">
+            <button
+              type="button"
+              onClick={() => {
+                if (isAddModalVisible) setIsAddModalVisible(false);
+                if (isEditModalVisible) setIsEditModalVisible(false);
+                form.resetFields();
+                setCurrentProcedure(null);
+              }}
+              className="px-6 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
+            >
+              {currentProcedure ? 'Update' : 'Add'} Procedure
+            </button>
+          </div>
+        </Form>
+      </Modal>
+
+      {/* View Procedure Modal */}
+      <Modal
+        title="Procedure Details"
+        open={isViewModalVisible}
+        onCancel={() => {
+          setIsViewModalVisible(false);
+          setCurrentProcedure(null);
+        }}
+        footer={null}
+        centered
+        className="max-w-3xl"
+      >
+        {currentProcedure && (
+          <div className="space-y-6">
+            <div className="relative h-64 rounded-xl overflow-hidden">
+              <img
+                src={currentProcedure.image}
+                alt={currentProcedure.title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 p-6 text-white">
+                <h2 className="text-2xl font-bold mb-2">{currentProcedure.title}</h2>
+                <p className="text-blue-200 font-medium">
+                  {currentProcedure.productsIncluded} Products Included
+                </p>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-900">Description</h3>
+              <p className="text-gray-600 leading-relaxed">
+                {currentProcedure.description}
+              </p>
+            </div>
+            
+            <div className="flex justify-end pt-4 border-t border-gray-100">
+              <button
+                onClick={() => {
+                  setIsViewModalVisible(false);
+                  setCurrentProcedure(null);
+                }}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        title="Delete Procedure"
+        open={isDeleteModalVisible}
+        onCancel={() => {
+          setIsDeleteModalVisible(false);
+          setCurrentProcedure(null);
+        }}
+        footer={null}
+        centered
+        className="max-w-md"
+      >
+        <div className="p-4">
+          <div className="text-center">
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+              <FiTrash2 className="h-6 w-6 text-red-600" />
+            </div>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Delete {currentProcedure?.title}?
+            </h3>
+            <p className="text-gray-500 mb-6">
+              Are you sure you want to delete this procedure? This action cannot be undone.
+            </p>
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={() => {
+                  setIsDeleteModalVisible(false);
+                  setCurrentProcedure(null);
+                }}
+                className="px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => currentProcedure && handleDelete(currentProcedure.id)}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
