@@ -1,19 +1,25 @@
-import React, { useState } from "react";
-import { Input, Modal, Form, message } from "antd";
+import React, { useState, useRef } from "react";
+import { Input, Modal, message } from "antd";
 import PageHeading from "../../shared/PageHeading";
 import { IoSearch } from "react-icons/io5";
-import { FiPlus, FiEye, FiEdit3, FiTrash2, FiX } from "react-icons/fi";
+import { FiPlus, FiEye, FiEdit3, FiTrash2, FiX, FiUpload } from "react-icons/fi";
 
 const ProcedureGuide = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [form] = Form.useForm();
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentProcedure, setCurrentProcedure] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  const [newProcedureData, setNewProcedureData] = useState({
+    title: "",
+    description: "",
+    productsIncluded: 1,
+  });
+  const fileInputRef = useRef(null);
   
-  const [procedures, setProcedures] = useState([
+  const procedures = [
     {
       id: 1,
       title: "Endodontic Therapy",
@@ -68,7 +74,7 @@ const ProcedureGuide = () => {
       image:
         "https://images.pexels.com/photos/6812521/pexels-photo-6812521.jpeg?auto=compress&cs=tinysrgb&w=1200",
     },
-  ]);
+  ];
 
   const filteredProcedures = procedures.filter(
     (procedure) =>
@@ -89,27 +95,56 @@ const ProcedureGuide = () => {
 
   const handleEdit = (procedure) => {
     setCurrentProcedure(procedure);
-    form.setFieldsValue({
+    setPreviewImage(procedure.image);
+    setNewProcedureData({
       title: procedure.title,
       description: procedure.description,
       productsIncluded: procedure.productsIncluded,
-      image: procedure.image,
     });
     setIsEditModalVisible(true);
   };
 
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
   const handleAdd = () => {
-    form.resetFields();
+    setNewProcedureData({
+      title: "",
+      description: "",
+      productsIncluded: 1,
+    });
+    setPreviewImage(null);
     setIsAddModalVisible(true);
   };
 
-  const handleSave = (values) => {
+  const handleSave = () => {
+    if (!newProcedureData.title.trim()) {
+      message.error("Please enter a procedure title");
+      return;
+    }
+
     if (currentProcedure) {
       // Update existing procedure
       setProcedures(
         procedures.map((proc) =>
           proc.id === currentProcedure.id
-            ? { ...values, id: currentProcedure.id }
+            ? { 
+                ...proc, 
+                ...newProcedureData, 
+                image: previewImage || proc.image 
+              }
             : proc
         )
       );
@@ -118,14 +153,16 @@ const ProcedureGuide = () => {
     } else {
       // Add new procedure
       const newProcedure = {
-        ...values,
+        ...newProcedureData,
         id: Date.now(),
+        image: previewImage || "https://via.placeholder.com/800x400?text=No+Image",
       };
       setProcedures([...procedures, newProcedure]);
       message.success("Procedure added successfully");
       setIsAddModalVisible(false);
     }
     setCurrentProcedure(null);
+    setPreviewImage(null);
   };
 
   const handleDeleteClick = (procedure) => {
@@ -244,92 +281,113 @@ const ProcedureGuide = () => {
         onCancel={() => {
           if (isAddModalVisible) setIsAddModalVisible(false);
           if (isEditModalVisible) setIsEditModalVisible(false);
-          form.resetFields();
           setCurrentProcedure(null);
+          setPreviewImage(null);
         }}
         footer={null}
         centered
-        className="max-w-2xl"
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSave}
-          className="p-2"
-        >
-          <Form.Item
-            name="title"
-            label="Procedure Title"
-            rules={[{ required: true, message: 'Please enter procedure title' }]}
-          >
-            <Input 
-              placeholder="Enter procedure title" 
-              className="h-12 rounded-lg" 
-            />
-          </Form.Item>
-          
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: 'Please enter description' }]}
-          >
-            <Input.TextArea 
-              rows={4} 
-              placeholder="Enter procedure description" 
-              className="rounded-lg"
-            />
-          </Form.Item>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <Form.Item
-              name="productsIncluded"
-              label="Number of Products"
-              rules={[{ required: true, message: 'Please enter number of products' }]}
+        <div className="p-4">
+          {/* Upload Area */}
+          <div className="mb-6">
+            <div
+              onClick={triggerFileInput}
+              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
             >
-              <Input 
-                type="number" 
-                min={1} 
-                placeholder="Enter number of products" 
-                className="h-12 rounded-lg" 
+              {previewImage ? (
+                <div className="relative">
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="max-h-40 mx-auto mb-2 rounded"
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPreviewImage(null);
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <FiX className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <FiUpload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-500 text-sm">
+                    Upload Procedure Image
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Click to upload or drag and drop
+                  </p>
+                </>
+              )}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
               />
-            </Form.Item>
-            
-            <Form.Item
-              name="image"
-              label="Image URL"
-              rules={[
-                { required: true, message: 'Please enter image URL' },
-                { type: 'url', message: 'Please enter a valid URL' }
-              ]}
-            >
-              <Input 
-                placeholder="Enter image URL" 
-                className="h-12 rounded-lg" 
+            </div>
+          </div>
+
+          {/* Form Fields */}
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Procedure Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter procedure title"
+                value={newProcedureData?.title || ''}
+                onChange={(e) => setNewProcedureData({...newProcedureData, title: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               />
-            </Form.Item>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Description
+              </label>
+              <textarea
+                rows={3}
+                placeholder="Enter procedure description"
+                value={newProcedureData?.description || ''}
+                onChange={(e) => setNewProcedureData({...newProcedureData, description: e.target.value})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Number of Products
+              </label>
+              <input
+                type="number"
+                min={1}
+                placeholder="Enter number of products"
+                value={newProcedureData?.productsIncluded || ''}
+                onChange={(e) => setNewProcedureData({...newProcedureData, productsIncluded: parseInt(e.target.value) || 1})}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
           </div>
-          
-          <div className="flex justify-end gap-3 mt-6">
-            <button
-              type="button"
-              onClick={() => {
-                if (isAddModalVisible) setIsAddModalVisible(false);
-                if (isEditModalVisible) setIsEditModalVisible(false);
-                form.resetFields();
-                setCurrentProcedure(null);
-              }}
-              className="px-6 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
-            >
-              {currentProcedure ? 'Update' : 'Add'} Procedure
-            </button>
-          </div>
-        </Form>
+
+          {/* Submit Button */}
+          <button
+            onClick={handleSave}
+            disabled={!newProcedureData?.title?.trim()}
+            className={`w-full mt-6 py-2 px-4 rounded-lg font-medium text-white ${
+              newProcedureData?.title?.trim()
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
+            } transition-colors`}
+          >
+            {currentProcedure ? 'Update' : 'Add'} Procedure
+          </button>
+        </div>
       </Modal>
 
       {/* View Procedure Modal */}
