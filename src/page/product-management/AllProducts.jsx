@@ -249,42 +249,42 @@ const AllProducts = () => {
     setIsAddModalVisible(true);
   };
 
-  const handleAddCancel = () => {
-    setIsAddModalVisible(false);
-  };
+  // const handleAddCancel = () => {
+  //   setIsAddModalVisible(false);
+  // };
 
-  const handleEditCancel = () => {
-    setIsEditModalVisible(false);
-  };
+  // const handleEditCancel = () => {
+  //   setIsEditModalVisible(false);
+  // };
 
-  const onAddFinish = (values) => {
-    const newProduct = {
-      id: Math.max(...products.map((p) => p.id)) + 1,
-      ...values,
-      image: values.image?.[0]?.thumbUrl || t1, // Default image if none uploaded
-    };
+  // const onAddFinish = (values) => {
+  //   const newProduct = {
+  //     id: Math.max(...products.map((p) => p.id)) + 1,
+  //     ...values,
+  //     image: values.image?.[0]?.thumbUrl || t1, // Default image if none uploaded
+  //   };
 
-    console.log("New product:", newProduct);
+  //   console.log("New product:", newProduct);
 
-    message.success("Product added successfully!");
-    setIsAddModalVisible(false);
-  };
+  //   message.success("Product added successfully!");
+  //   setIsAddModalVisible(false);
+  // };
 
-  const [formData, setFormData] = useState({
-    productName: "",
-    description: "",
-    brand: "Squre Pharma",
-    category: "Endodontics",
-    procedureGuide: "Root canal",
-    availability: "In Stock",
-  });
+  // const [formData, setFormData] = useState({
+  //   productName: "",
+  //   description: "",
+  //   brand: "Squre Pharma",
+  //   category: "Endodontics",
+  //   procedureGuide: "Root canal",
+  //   availability: "In Stock",
+  // });
 
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  // const handleInputChange = (field, value) => {
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [field]: value,
+  //   }));
+  // };
 
   return (
     <div className="p-5">
@@ -418,8 +418,6 @@ const AllProducts = () => {
           onUpdateProduct={async (updatedProduct) => {
             try {
               console.log("Updated product:", updatedProduct);
-              // Add your update logic here
-              // await updateProduct(updatedProduct.id, updatedProduct);
               message.success("Product updated successfully");
             } catch (error) {
               console.error("Error updating product:", error);
