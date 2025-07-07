@@ -27,6 +27,7 @@ import AllOrder from "../page/order-management/AllOrder";
 import AllProducts from "../page/product-management/AllProducts";
 import ViewProduct from "../page/product-management/ViewProduct";
 import EditProduct from "../page/product-management/EditProduct";
+import Category from "../page/category/Category";
 
 export const router = createBrowserRouter([
   {
@@ -63,6 +64,11 @@ export const router = createBrowserRouter([
       {
         path: "/edit-product/:id",
         element: <EditProduct />,
+      },
+      // Category Management
+      {
+        path: "/category",
+        element: <Category />,
       },
 
       {

@@ -38,10 +38,10 @@ export const AdminItems = [
     link: "/order/all-order",
   },
   {
-    key: "productManagement",
-    label: "Product Management",
+    key: "categoryManagement",
+    label: "Category",
     icon: MdOutlinePets,
-    link: "/product/all-product",
+    link: "/category",
   },
   {
     key: "petOwners",
