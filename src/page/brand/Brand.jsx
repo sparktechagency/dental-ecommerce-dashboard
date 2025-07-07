@@ -2,6 +2,8 @@ import { ConfigProvider, Input, Table } from "antd";
 import PageHeading from "../../shared/PageHeading";
 import { IoEyeOutline, IoSearch } from "react-icons/io5";
 import { MdBlockFlipped } from "react-icons/md";
+import { FiEdit } from "react-icons/fi";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 const Brand = () => {
   const dataSource = [
@@ -33,15 +35,16 @@ const Brand = () => {
   ];
 
   const columns = [
-    { title: "No", dataIndex: "no", key: "no" },
+    //     { title: "No", dataIndex: "no", key: "no" },
     {
       title: "Name",
       key: "userName",
-      dataIndex: "brandName"
+      dataIndex: "brandName",
     },
     {
       title: "Action",
       key: "action",
+      align: "right",
       render: (_, record) => (
         <div className="flex gap-2 justify-end">
           <button
@@ -51,7 +54,7 @@ const Brand = () => {
             //   }}
             className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
           >
-            <IoEyeOutline className="w-6 h-6 text-[#3b3b3b]" />
+            <FiEdit className="w-6 h-6 text-[#3b3b3b]" />
           </button>
           <button
             //   onClick={() => {
@@ -59,7 +62,7 @@ const Brand = () => {
             //   }}
             className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
           >
-            <MdBlockFlipped className="w-6 h-6 text-[#3b3b3b]" />
+            <RiDeleteBin6Line className="w-6 h-6 text-[#3b3b3b]" />
           </button>
         </div>
       ),
@@ -94,41 +97,40 @@ const Brand = () => {
         </div>
       </div>
       <ConfigProvider
-                                        theme={{
-                                                  components: {
-                                                            InputNumber: {
-                                                                      activeBorderColor: "#14803c",
-                                                            },
-                                                            Pagination: {
-                                                                      colorPrimaryBorder: "#3b3b3b",
-                                                                      colorBorder: "#3b3b3b",
-                                                                      colorTextPlaceholder: "#3b3b3b",
-                                                                      colorTextDisabled: "#3b3b3b",
-                                                                      colorBgTextActive: "#3b3b3b",
-                                                                      itemActiveBgDisabled: "#3b3b3b",
-                                                                      itemActiveColorDisabled: "#3b3b3b",
-                                                                      itemBg: "#3b3b3b",
-                                                                      colorBgTextHover: "#3b3b3b",
-                                                                      colorPrimary: "#3b3b3b",
-                                                                      colorPrimaryHover: "#3b3b3b",
-                                                            },
-                                                            Table: {
-                                                                      headerBg: "#3b3b3b",
-                                                                      headerColor: "#fff",
-                                                                      cellFontSize: 16,
-                                                                      headerSplitColor: "#3b3b3b",
-
-                                                            },
-                                                  },
-                                        }}
-                              >
-                                        <Table
-                                                  dataSource={dataSource}
-                                                  columns={columns}
-                                                  pagination={{ pageSize: 10 }}
-                                                  scroll={{ x: "max-content" }}
-                                        />
-                                        </ConfigProvider>
+        theme={{
+          components: {
+            InputNumber: {
+              activeBorderColor: "#14803c",
+            },
+            Pagination: {
+              colorPrimaryBorder: "#3b3b3b",
+              colorBorder: "#3b3b3b",
+              colorTextPlaceholder: "#3b3b3b",
+              colorTextDisabled: "#3b3b3b",
+              colorBgTextActive: "#3b3b3b",
+              itemActiveBgDisabled: "#3b3b3b",
+              itemActiveColorDisabled: "#3b3b3b",
+              itemBg: "#3b3b3b",
+              colorBgTextHover: "#3b3b3b",
+              colorPrimary: "#3b3b3b",
+              colorPrimaryHover: "#3b3b3b",
+            },
+            Table: {
+              headerBg: "#3b3b3b",
+              headerColor: "#fff",
+              cellFontSize: 16,
+              headerSplitColor: "#3b3b3b",
+            },
+          },
+        }}
+      >
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          pagination={{ pageSize: 10 }}
+          scroll={{ x: "max-content" }}
+        />
+      </ConfigProvider>
     </div>
   );
 };
