@@ -55,10 +55,10 @@ export const AdminItems = [
     link: "/brand",
   },
   {
-    key: "petOwners",
-    label: "Pet owners",
+    key: "procedureGuide",
+    label: "Procedure Guide",
     icon: MdOutlinePets,
-    link: "/dashboard/pet-owners",
+    link: "/procedure-guide", 
   },
   {
     key: "sellermanagement",

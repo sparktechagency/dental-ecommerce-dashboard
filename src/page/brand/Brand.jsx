@@ -131,7 +131,7 @@ const Brand = () => {
   ];
 
   return (
-    <div>
+    <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
         <PageHeading title="Brands" />
         <div className="flex flex-col md:flex-row justify-center items-center md:items-center gap-2 w-full md:w-auto">
@@ -305,7 +305,7 @@ const Brand = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   );
 };
 
