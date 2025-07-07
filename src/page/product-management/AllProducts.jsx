@@ -410,31 +410,27 @@ const AllProducts = () => {
       {isEditModalVisible && (
         <EditProduct
           isVisible={isEditModalVisible}
-          onClose={() => setIsEditModalVisible(false)}
-          product={selectedProduct}
-          onUpdateProduct={(updatedProduct) => {
-            console.log("Updated product:", updatedProduct);
+          onClose={() => {
             setIsEditModalVisible(false);
+            setSelectedProduct(null);
+          }}
+          product={selectedProduct}
+          onUpdateProduct={async (updatedProduct) => {
+            try {
+              console.log("Updated product:", updatedProduct);
+              // Add your update logic here
+              // await updateProduct(updatedProduct.id, updatedProduct);
+              message.success("Product updated successfully");
+            } catch (error) {
+              console.error("Error updating product:", error);
+              message.error("Failed to update product");
+            } finally {
+              setIsEditModalVisible(false);
+              setSelectedProduct(null);
+            }
           }}
         />
       )}
-      {/* <Modal
-        title="Edit Product"
-        open={isEditModalVisible}
-        onCancel={handleEditCancel}
-        footer={null}
-        width={700}
-      >
-        <EditProduct
-          isVisible={isEditModalVisible}
-          onClose={() => setIsEditModalVisible(false)}
-          product={selectedProduct}
-          onUpdateProduct={(updatedProduct) => {
-            console.log("Updated product:", updatedProduct);
-            setIsEditModalVisible(false);
-          }}
-        />
-      </Modal> */}
     </div>
   );
 };
