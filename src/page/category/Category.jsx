@@ -82,22 +82,25 @@ const Category = () => {
   };
 
   // Handle Edit Category
-  const handleEdit = () => {
-    editForm
-      .validateFields()
-      .then((values) => {
-        setItems(
-          items.map((item) =>
-            item.id === currentCategory.id ? { ...item, ...values } : item
-          )
-        );
-        message.success("Category updated successfully");
-        setIsEditModalVisible(false);
-        setCurrentCategory(null);
-      })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
-      });
+  const handleEditCategory = () => {
+    if (!newCategoryName.trim()) {
+      message.error('Please enter a category name');
+      return;
+    }
+
+    setItems(
+      items.map((item) =>
+        item.id === currentCategory.id 
+          ? { ...item, category: newCategoryName.trim(), image: previewImage || item.image }
+          : item
+      )
+    );
+    
+    message.success('Category updated successfully');
+    setIsEditModalVisible(false);
+    setNewCategoryName('');
+    setPreviewImage(null);
+    setCurrentCategory(null);
   };
 
   // Handle Delete Category
@@ -111,10 +114,8 @@ const Category = () => {
   // Open Edit Modal
   const openEditModal = (category) => {
     setCurrentCategory(category);
-    editForm.setFieldsValue({
-      category: category.category,
-      image: category.image,
-    });
+    setNewCategoryName(category.category);
+    setPreviewImage(category.image);
     setIsEditModalVisible(true);
   };
 
@@ -332,26 +333,87 @@ const Category = () => {
       <Modal
         title="Edit Category"
         open={isEditModalVisible}
-        onOk={handleEdit}
         onCancel={() => {
           setIsEditModalVisible(false);
+          setNewCategoryName('');
+          setPreviewImage(null);
           setCurrentCategory(null);
         }}
-        okText="Save Changes"
-        cancelText="Cancel"
+        footer={null}
+        centered
       >
-        <Form form={editForm} layout="vertical">
-          <Form.Item
-            name="category"
-            label="Category Name"
-            rules={[{ required: true, message: "Please enter category name" }]}
+        <div className="p-4">
+          {/* Upload Area */}
+          <div className="mb-6">
+            <div 
+              onClick={triggerFileInput}
+              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+            >
+              {previewImage ? (
+                <div className="relative">
+                  <img 
+                    src={previewImage} 
+                    alt="Preview" 
+                    className="max-h-40 mx-auto mb-2 rounded"
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPreviewImage(null);
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <FiX className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <FiUpload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-500 text-sm">
+                    {currentCategory?.image ? 'Change Thumbnail' : 'Upload Category Thumbnail Image'}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Click to upload or drag and drop
+                  </p>
+                </>
+              )}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
+              />
+            </div>
+          </div>
+
+          {/* Category Name Input */}
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-900 mb-2">
+              Category Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Enter category name"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            onClick={handleEditCategory}
+            disabled={!newCategoryName.trim()}
+            className={`w-full py-2 px-4 rounded-lg font-medium text-white ${
+              newCategoryName.trim()
+                ? 'bg-blue-600 hover:bg-blue-700'
+                : 'bg-gray-400 cursor-not-allowed'
+            } transition-colors`}
           >
-            <Input />
-          </Form.Item>
-          <Form.Item name="image" label="Image URL">
-            <Input placeholder="Paste image URL" />
-          </Form.Item>
-        </Form>
+            Save Changes
+          </button>
+        </div>
       </Modal>
 
       {/* Delete Confirmation Modal */}
