@@ -28,6 +28,7 @@ import AllProducts from "../page/product-management/AllProducts";
 import ViewProduct from "../page/product-management/ViewProduct";
 import EditProduct from "../page/product-management/EditProduct";
 import Category from "../page/category/Category";
+import Brand from "../page/brand/Brand";
 
 export const router = createBrowserRouter([
   {
@@ -70,7 +71,16 @@ export const router = createBrowserRouter([
         path: "/category",
         element: <Category />,
       },
+      // Brand Management
+      {
+        path: "/brand",
+        element: <Brand />,
+      },
 
+
+
+
+      
       {
         path: "/dashboard/seller-management",
         element: <SellerManagement />,

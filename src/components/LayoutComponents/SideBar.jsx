@@ -1,4 +1,9 @@
-import { MdDashboard, MdManageAccounts, MdOutlineCategory, MdOutlinePets } from "react-icons/md";
+import {
+  MdDashboard,
+  MdManageAccounts,
+  MdOutlineCategory,
+  MdOutlinePets,
+} from "react-icons/md";
 import { FaChevronRight, FaCog } from "react-icons/fa";
 import { IoIosLogOut } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -42,6 +47,12 @@ export const AdminItems = [
     label: "Category",
     icon: MdOutlinePets,
     link: "/category",
+  },
+  {
+    key: "brandManagement",
+    label: "Brand",
+    icon: MdOutlinePets,
+    link: "/brand",
   },
   {
     key: "petOwners",
@@ -148,7 +159,7 @@ const SideBar = () => {
       setSelectedKey(
         activeParent.children
           ? activeParent.children.find((child) => child.link === currentPath)
-            ?.key || activeParent.key
+              ?.key || activeParent.key
           : activeParent.key
       );
 
@@ -178,20 +189,34 @@ const SideBar = () => {
       <div className="flex-1 overflow-y-auto scrollbar-hide">
         <div className="px-4 space-y-1 pb-4">
           {AdminItems.map((item) => {
-            const isActive = selectedKey === item.key ||
-              (item.key === "settings" && item.children?.some(child => child.link === location.pathname)) ||
-              (item.key === "userManagement" && item.children?.some(child => child.link === location.pathname)) ||
-              (item.key === "creatorManagement" && item.children?.some(child => child.link === location.pathname)) ||
-              (item.key === "categoriesManagement" && item.children?.some(child => child.link === location.pathname));
+            const isActive =
+              selectedKey === item.key ||
+              (item.key === "settings" &&
+                item.children?.some(
+                  (child) => child.link === location.pathname
+                )) ||
+              (item.key === "userManagement" &&
+                item.children?.some(
+                  (child) => child.link === location.pathname
+                )) ||
+              (item.key === "creatorManagement" &&
+                item.children?.some(
+                  (child) => child.link === location.pathname
+                )) ||
+              (item.key === "categoriesManagement" &&
+                item.children?.some(
+                  (child) => child.link === location.pathname
+                ));
 
             return (
               <div key={item.key} className="mb-1">
                 <Link
-                  to={item.link || '#'}
-                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${isActive
-                    ? "bg-blue-600 text-white shadow-md"
-                    : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                    }`}
+                  to={item.link || "#"}
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-200 ${
+                    isActive
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                  }`}
                   onClick={(e) => {
                     if (item.children) {
                       e.preventDefault();
@@ -205,16 +230,20 @@ const SideBar = () => {
                   <span className="flex-1 text-left">{item.label}</span>
                   {item.children && (
                     <FaChevronRight
-                      className={`ml-2 transition-transform duration-200 ${expandedKeys.includes(item.key) ? "transform rotate-90" : ""
-                        }`}
+                      className={`ml-2 transition-transform duration-200 ${
+                        expandedKeys.includes(item.key)
+                          ? "transform rotate-90"
+                          : ""
+                      }`}
                     />
                   )}
                 </Link>
 
                 {item.children && (
                   <div
-                    className={`overflow-hidden transition-all duration-300 ${expandedKeys.includes(item.key) ? "my-2" : "m-0"
-                      }`}
+                    className={`overflow-hidden transition-all duration-300 ${
+                      expandedKeys.includes(item.key) ? "my-2" : "m-0"
+                    }`}
                     style={{
                       maxHeight: expandedKeys.includes(item.key)
                         ? `${contentRef.current[item.key]?.scrollHeight}px`
@@ -227,10 +256,11 @@ const SideBar = () => {
                         <Link
                           key={child.key}
                           to={child.link}
-                          className={`block px-3 py-2 text-sm rounded-md transition-colors duration-150 ${selectedKey === child.key
-                            ? "bg-blue-600/30 text-blue-400 font-medium"
-                            : "text-gray-400 hover:bg-gray-700/50 hover:text-gray-200"
-                            }`}
+                          className={`block px-3 py-2 text-sm rounded-md transition-colors duration-150 ${
+                            selectedKey === child.key
+                              ? "bg-blue-600/30 text-blue-400 font-medium"
+                              : "text-gray-400 hover:bg-gray-700/50 hover:text-gray-200"
+                          }`}
                           onClick={() => {
                             setSelectedKey(child.key);
                           }}

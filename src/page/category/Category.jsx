@@ -1,8 +1,15 @@
-import { Input, Modal, Form, message } from "antd";
+import { Input, Modal, message } from "antd";
 import PageHeading from "../../shared/PageHeading";
 import { IoSearch } from "react-icons/io5";
 import { useState, useRef } from "react";
-import { FiSearch, FiEdit3, FiTrash2, FiPlus, FiX, FiUpload } from "react-icons/fi";
+import {
+  FiSearch,
+  FiEdit3,
+  FiTrash2,
+  FiPlus,
+  FiX,
+  FiUpload,
+} from "react-icons/fi";
 
 const Category = () => {
   const [searchText, setSearchText] = useState("");
@@ -13,8 +20,6 @@ const Category = () => {
   const [newCategoryName, setNewCategoryName] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
   const fileInputRef = useRef(null);
-  const [form] = Form.useForm();
-  const [editForm] = Form.useForm();
 
   const [items, setItems] = useState([
     {
@@ -72,33 +77,28 @@ const Category = () => {
     item.category.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const handleSubmitCategory = () => {
-    if (newCategoryName.trim()) {
-      // Here you would typically add the new category to your data
-      console.log('New category:', newCategoryName);
-      setNewCategoryName('');
-      setIsAddModalVisible(false);
-    }
-  };
-
   // Handle Edit Category
   const handleEditCategory = () => {
     if (!newCategoryName.trim()) {
-      message.error('Please enter a category name');
+      message.error("Please enter a category name");
       return;
     }
 
     setItems(
       items.map((item) =>
-        item.id === currentCategory.id 
-          ? { ...item, category: newCategoryName.trim(), image: previewImage || item.image }
+        item.id === currentCategory.id
+          ? {
+              ...item,
+              category: newCategoryName.trim(),
+              image: previewImage || item.image,
+            }
           : item
       )
     );
-    
-    message.success('Category updated successfully');
+
+    message.success("Category updated successfully");
     setIsEditModalVisible(false);
-    setNewCategoryName('');
+    setNewCategoryName("");
     setPreviewImage(null);
     setCurrentCategory(null);
   };
@@ -127,19 +127,21 @@ const Category = () => {
 
   const handleAddCategory = () => {
     if (!newCategoryName.trim()) {
-      message.error('Please enter a category name');
+      message.error("Please enter a category name");
       return;
     }
 
     const newCategory = {
       id: Date.now(),
       category: newCategoryName.trim(),
-      image: previewImage || "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80"
+      image:
+        previewImage ||
+        "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=400&q=80",
     };
 
     setItems([...items, newCategory]);
-    message.success('Category added successfully');
-    setNewCategoryName('');
+    message.success("Category added successfully");
+    setNewCategoryName("");
     setPreviewImage(null);
     setIsAddModalVisible(false);
   };
@@ -187,8 +189,6 @@ const Category = () => {
           </button>
         </div>
       </div>
-
-      {/* Categories Grid */}
       <div className="px-5 md:px-0 my-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredItems.map((item) => (
@@ -249,7 +249,7 @@ const Category = () => {
         open={isAddModalVisible}
         onCancel={() => {
           setIsAddModalVisible(false);
-          setNewCategoryName('');
+          setNewCategoryName("");
           setPreviewImage(null);
         }}
         footer={null}
@@ -258,15 +258,15 @@ const Category = () => {
         <div className="p-4">
           {/* Upload Area */}
           <div className="mb-6">
-            <div 
+            <div
               onClick={triggerFileInput}
               className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
             >
               {previewImage ? (
                 <div className="relative">
-                  <img 
-                    src={previewImage} 
-                    alt="Preview" 
+                  <img
+                    src={previewImage}
+                    alt="Preview"
                     className="max-h-40 mx-auto mb-2 rounded"
                   />
                   <button
@@ -320,8 +320,8 @@ const Category = () => {
             disabled={!newCategoryName.trim()}
             className={`w-full py-2 px-4 rounded-lg font-medium text-white ${
               newCategoryName.trim()
-                ? 'bg-blue-600 hover:bg-blue-700'
-                : 'bg-gray-400 cursor-not-allowed'
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
             } transition-colors`}
           >
             Add Category
@@ -335,7 +335,7 @@ const Category = () => {
         open={isEditModalVisible}
         onCancel={() => {
           setIsEditModalVisible(false);
-          setNewCategoryName('');
+          setNewCategoryName("");
           setPreviewImage(null);
           setCurrentCategory(null);
         }}
@@ -345,15 +345,15 @@ const Category = () => {
         <div className="p-4">
           {/* Upload Area */}
           <div className="mb-6">
-            <div 
+            <div
               onClick={triggerFileInput}
               className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
             >
               {previewImage ? (
                 <div className="relative">
-                  <img 
-                    src={previewImage} 
-                    alt="Preview" 
+                  <img
+                    src={previewImage}
+                    alt="Preview"
                     className="max-h-40 mx-auto mb-2 rounded"
                   />
                   <button
@@ -370,7 +370,9 @@ const Category = () => {
                 <>
                   <FiUpload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-gray-500 text-sm">
-                    {currentCategory?.image ? 'Change Thumbnail' : 'Upload Category Thumbnail Image'}
+                    {currentCategory?.image
+                      ? "Change Thumbnail"
+                      : "Upload Category Thumbnail Image"}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
                     Click to upload or drag and drop
@@ -407,8 +409,8 @@ const Category = () => {
             disabled={!newCategoryName.trim()}
             className={`w-full py-2 px-4 rounded-lg font-medium text-white ${
               newCategoryName.trim()
-                ? 'bg-blue-600 hover:bg-blue-700'
-                : 'bg-gray-400 cursor-not-allowed'
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
             } transition-colors`}
           >
             Save Changes
@@ -425,14 +427,31 @@ const Category = () => {
           setIsDeleteModalVisible(false);
           setCurrentCategory(null);
         }}
-        okText="Delete"
-        cancelText="Cancel"
-        okButtonProps={{ danger: true }}
+        footer={null}
+        centered
       >
-        <p>
-          Are you sure you want to delete "{currentCategory?.category}"? This
-          action cannot be undone.
-        </p>
+        <div className="p-5">
+          <h1 className="text-4xl text-center text-[#0D0D0D]">
+            Are you sure you want to delete ?
+          </h1>
+
+          <div className="text-center py-5">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
+            >
+              Yes,Delete
+            </button>
+          </div>
+          <div className="text-center pb-5">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
+            >
+              No,Don’t Delete
+            </button>
+          </div>
+        </div>
       </Modal>
     </>
   );
