@@ -33,6 +33,7 @@ import ProcedureGuide from "../page/procedureGuide/ProcedureGuide";
 import Blog from "../page/blog/Blog";
 import ViewBlog from "../page/blog/ViewBlog";
 import Newsletter from "../page/Newsletter/Newsletter";
+import Banners from "../page/Banners/Banners";
 
 export const router = createBrowserRouter([
   {
@@ -98,6 +99,11 @@ export const router = createBrowserRouter([
       {
         path: "/newsletter",
         element: <Newsletter />,
+      },
+      // Banner
+      {
+        path: "/banner",
+        element: <Banners />,
       },
 
 
