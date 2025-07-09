@@ -31,6 +31,7 @@ import Category from "../page/category/Category";
 import Brand from "../page/brand/Brand";
 import ProcedureGuide from "../page/procedureGuide/ProcedureGuide";
 import Blog from "../page/blog/Blog";
+import ViewBlog from "../page/blog/ViewBlog";
 
 export const router = createBrowserRouter([
   {
@@ -87,6 +88,10 @@ export const router = createBrowserRouter([
       {
         path: "/blog",
         element: <Blog />,
+      },
+      {
+        path: "/view-blog/:id",
+        element: <ViewBlog />,
       },
 
 

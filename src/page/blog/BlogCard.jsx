@@ -1,15 +1,17 @@
 import React from "react";
 import { Calendar, Eye, Edit, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const BlogCard = ({
+  id,
   title,
   description,
   date,
   imageUrl,
-  onView,
   onEdit,
   onDelete,
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="bg-[#1c1c1c] rounded-lg shadow-sm overflow-hidden">
       <div className="min-h-[250px] min-w-[387px]">
@@ -33,7 +35,7 @@ export const BlogCard = ({
 
           <div className="flex items-center space-x-1">
             <button
-              onClick={onView}
+              onClick={() => navigate(`/view-blog/${id}`)}
               className="p-2 text-[#017FF4]"
               title="View"
             >

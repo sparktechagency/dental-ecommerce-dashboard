@@ -3,9 +3,10 @@ import PageHeading from "../../shared/PageHeading";
 import { FiPlus } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
 import { BlogCard } from "./BlogCard";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import { FiUpload, FiX } from "react-icons/fi";
 
-const blogsData = [
+export const blogsData = [
   {
     id: "1",
     title: "The Dental Dispatch",
@@ -64,65 +65,112 @@ const blogsData = [
 
 const Blog = () => {
   const [blogs, setBlogs] = useState(blogsData);
-  const [isViewModalVisible, setIsViewModalVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentBlog, setCurrentBlog] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
+  const fileInputRef = useRef(null);
   const [form] = Form.useForm();
 
-  const handleAddNew = () => {
-    setCurrentBlog(null);
-    form.resetFields();
-    setIsEditModalVisible(true);
+  const [newBlogData, setNewBlogData] = useState({
+    title: "",
+    description: "",
+    imageUrl: "",
+    date: new Date().toISOString().split('T')[0] // Format: YYYY-MM-DD
+  });
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result);
+        setNewBlogData(prev => ({
+          ...prev,
+          imageUrl: reader.result
+        }));
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
-  const handleView = (id) => {
-    const blog = blogs.find(blog => blog.id === id);
-    setCurrentBlog(blog);
-    setIsViewModalVisible(true);
+  const triggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+
+  const showAddModal = () => {
+    setCurrentBlog(null);
+    setPreviewImage(null);
+    setNewBlogData({
+      title: "",
+      description: "",
+      imageUrl: "",
+      date: new Date().toISOString().split('T')[0]
+    });
+    setIsAddModalVisible(true);
   };
 
   const handleEdit = (id) => {
-    const blog = blogs.find(blog => blog.id === id);
-    setCurrentBlog(blog);
-    form.setFieldsValue({
-      title: blog.title,
-      description: blog.description,
-      date: blog.date,
-      imageUrl: blog.imageUrl
-    });
-    setIsEditModalVisible(true);
+    const blogToEdit = blogs.find(blog => blog.id === id);
+    if (blogToEdit) {
+      setCurrentBlog(blogToEdit);
+      setPreviewImage(blogToEdit.imageUrl || null);
+      setNewBlogData({
+        title: blogToEdit.title,
+        description: blogToEdit.description,
+        imageUrl: blogToEdit.imageUrl,
+        date: blogToEdit.date || new Date().toISOString().split('T')[0]
+      });
+      setIsEditModalVisible(true);
+    }
   };
 
+  const handleSave = () => {
+    if (!newBlogData.title.trim()) return;
+
+    if (currentBlog) {
+      setBlogs(blogs.map(blog => 
+        blog.id === currentBlog.id 
+          ? { ...blog, ...newBlogData, id: currentBlog.id }
+          : blog
+      ));
+      message.success('Blog post updated successfully');
+    } else {
+      const newBlog = {
+        ...newBlogData,
+        id: Date.now().toString(),
+      };
+      setBlogs([...blogs, newBlog]);
+      message.success('Blog post created successfully');
+    }
+    
+    setPreviewImage(null);
+    setCurrentBlog(null);
+    setIsAddModalVisible(false);
+    setIsEditModalVisible(false);
+  };
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const filteredBlogs = blogs.filter((blog) => {
+    const searchLower = searchTerm.toLowerCase();
+    return blog.title.toLowerCase().includes(searchLower);
+  });
+
   const handleDelete = (id) => {
-    const blog = blogs.find(blog => blog.id === id);
+    const blog = blogs.find((blog) => blog.id === id);
     setCurrentBlog(blog);
     setIsDeleteModalVisible(true);
   };
 
   const confirmDelete = () => {
-    setBlogs(blogs.filter(blog => blog.id !== currentBlog.id));
+    setBlogs(blogs.filter((blog) => blog.id !== currentBlog.id));
     setIsDeleteModalVisible(false);
-    message.success('Blog post deleted successfully');
-  };
-
-  const handleSave = (values) => {
-    if (currentBlog) {
-      // Update existing blog
-      setBlogs(blogs.map(blog => 
-        blog.id === currentBlog.id ? { ...blog, ...values } : blog
-      ));
-      message.success('Blog post updated successfully');
-    } else {
-      // Add new blog
-      const newBlog = {
-        id: Date.now().toString(),
-        ...values
-      };
-      setBlogs([...blogs, newBlog]);
-      message.success('Blog post created successfully');
-    }
-    setIsEditModalVisible(false);
+    message.success("Blog post deleted successfully");
   };
 
   return (
@@ -132,127 +180,177 @@ const Blog = () => {
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
           <div className="relative w-full md:w-[300px]">
             <Input
-              placeholder="Search by name or description..."
-              // value={searchTerm}
-              // onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search by title or description..."
+              value={searchTerm}
+              onChange={handleSearch}
               prefix={<IoSearch className="text-gray-400" />}
               className="w-full h-12 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
             />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              >
+                ✕
+              </button>
+            )}
           </div>
           <button
-            onClick={handleAddNew}
+            onClick={showAddModal}
             className="w-full md:w-auto px-6 py-3 bg-[#136BFB] rounded-lg text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors whitespace-nowrap"
           >
             <FiPlus className="w-5 h-5" />
-            Add Blog
+            Add New Blog
           </button>
         </div>
       </header>
-      <section className="pt-5 pb-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {blogs.map((blog) => (
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredBlogs.length > 0 ? (
+          filteredBlogs.map((blog) => (
             <BlogCard
               key={blog.id}
               {...blog}
-              onView={() => handleView(blog.id)}
               onEdit={() => handleEdit(blog.id)}
               onDelete={() => handleDelete(blog.id)}
             />
-          ))}
-        </div>
-      </section>
-
-      {/* View Modal */}
-      <Modal
-        title="View Blog Post"
-        open={isViewModalVisible}
-        onCancel={() => setIsViewModalVisible(false)}
-        footer={[
-          <Button key="close" onClick={() => setIsViewModalVisible(false)}>
-            Close
-          </Button>
-        ]}
-      >
-        {currentBlog && (
-          <div className="space-y-4">
-            <div className="h-64 overflow-hidden rounded-lg">
-              <img
-                src={currentBlog.imageUrl}
-                alt={currentBlog.title}
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <h3 className="text-xl font-semibold text-white">{currentBlog.title}</h3>
-            <p className="text-gray-300">{currentBlog.description}</p>
-            <div className="flex items-center text-gray-400 text-sm">
-              <span>Posted on: {currentBlog.date}</span>
-            </div>
+          ))
+        ) : (
+          <div className="col-span-full text-center py-10">
+            <p className="text-gray-400">No blog posts found matching your search.</p>
           </div>
         )}
-      </Modal>
+      </div>
 
-      {/* Edit/Add Modal */}
       <Modal
         title={currentBlog ? "Edit Blog Post" : "Add New Blog Post"}
-        open={isEditModalVisible}
-        onCancel={() => setIsEditModalVisible(false)}
+        open={isAddModalVisible || isEditModalVisible}
+        onCancel={() => {
+          if (isAddModalVisible) setIsAddModalVisible(false);
+          if (isEditModalVisible) setIsEditModalVisible(false);
+          setCurrentBlog(null);
+          setPreviewImage(null);
+        }}
         footer={null}
+        centered
       >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSave}
-          initialValues={{
-            title: currentBlog?.title || '',
-            description: currentBlog?.description || '',
-            date: currentBlog?.date || new Date().toLocaleDateString('en-GB'),
-            imageUrl: currentBlog?.imageUrl || ''
-          }}
-        >
-          <Form.Item
-            name="title"
-            label="Title"
-            rules={[{ required: true, message: 'Please enter a title' }]}
-          >
-            <Input placeholder="Enter blog title" />
-          </Form.Item>
-          
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: 'Please enter a description' }]}
-          >
-            <Input.TextArea rows={4} placeholder="Enter blog description" />
-          </Form.Item>
-          
-          <Form.Item
-            name="date"
-            label="Date"
-            rules={[{ required: true, message: 'Please select a date' }]}
-          >
-            <Input type="date" />
-          </Form.Item>
-          
-          <Form.Item
-            name="imageUrl"
-            label="Image URL"
-            rules={[{ required: true, message: 'Please enter an image URL' }]}
-          >
-            <Input placeholder="Enter image URL" />
-          </Form.Item>
-          
-          <div className="flex justify-end space-x-2 mt-6">
-            <Button onClick={() => setIsEditModalVisible(false)}>
-              Cancel
-            </Button>
-            <Button type="primary" htmlType="submit">
-              {currentBlog ? 'Update' : 'Create'} Post
-            </Button>
+        <div className="p-4">
+          <div className="mb-6">
+            <div
+              onClick={triggerFileInput}
+              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+            >
+              {previewImage ? (
+                <div className="relative">
+                  <img
+                    src={previewImage}
+                    alt="Preview"
+                    className="max-h-40 mx-auto mb-2 rounded"
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPreviewImage(null);
+                      setNewBlogData(prev => ({
+                        ...prev,
+                        imageUrl: ""
+                      }));
+                    }}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                  >
+                    <FiX className="h-4 w-4" />
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <FiUpload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-500 text-sm">
+                    Upload Blog Cover Image
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    Click to upload or drag and drop
+                  </p>
+                </>
+              )}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleImageUpload}
+                accept="image/*"
+                className="hidden"
+              />
+            </div>
           </div>
-        </Form>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Blog Title <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Enter blog title"
+                value={newBlogData.title}
+                onChange={(e) =>
+                  setNewBlogData({
+                    ...newBlogData,
+                    title: e.target.value,
+                  })
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Publish Date
+              </label>
+              <input
+                type="date"
+                value={newBlogData.date}
+                onChange={(e) =>
+                  setNewBlogData({
+                    ...newBlogData,
+                    date: e.target.value,
+                  })
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Blog Content <span className="text-red-500">*</span>
+              </label>
+              <textarea
+                rows={6}
+                placeholder="Write your blog content here..."
+                value={newBlogData.description}
+                onChange={(e) =>
+                  setNewBlogData({
+                    ...newBlogData,
+                    description: e.target.value,
+                  })
+                }
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={handleSave}
+            disabled={!newBlogData.title?.trim() || !newBlogData.description?.trim()}
+            className={`w-full mt-6 py-2 px-4 rounded-lg font-medium text-white ${
+              newBlogData.title?.trim() && newBlogData.description?.trim()
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400 cursor-not-allowed"
+            } transition-colors`}
+          >
+            {currentBlog ? "Update" : "Publish"} Blog Post
+          </button>
+        </div>
       </Modal>
 
-      {/* Delete Confirmation Modal */}
       <Modal
         title="Delete Blog Post"
         open={isDeleteModalVisible}
@@ -261,17 +359,14 @@ const Blog = () => {
           <Button key="cancel" onClick={() => setIsDeleteModalVisible(false)}>
             Cancel
           </Button>,
-          <Button 
-            key="delete" 
-            type="primary" 
-            danger 
-            onClick={confirmDelete}
-          >
+          <Button key="delete" type="primary" danger onClick={confirmDelete}>
             Delete
-          </Button>
+          </Button>,
         ]}
       >
-        <p>Are you sure you want to delete the blog post "{currentBlog?.title}"?</p>
+        <p>
+          Are you sure you want to delete the blog post "{currentBlog?.title}"?
+        </p>
         <p className="text-gray-400">This action cannot be undone.</p>
       </Modal>
     </main>
