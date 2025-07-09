@@ -34,6 +34,7 @@ import Blog from "../page/blog/Blog";
 import ViewBlog from "../page/blog/ViewBlog";
 import Newsletter from "../page/Newsletter/Newsletter";
 import Banners from "../page/Banners/Banners";
+import MakeAdmin from "../page/Make Admin/MakeAdmin";
 
 export const router = createBrowserRouter([
   {
@@ -104,6 +105,11 @@ export const router = createBrowserRouter([
       {
         path: "/banner",
         element: <Banners />,
+      },
+      // Make Admin
+      {
+        path: "/make-admin",
+        element: <MakeAdmin />,
       },
 
 

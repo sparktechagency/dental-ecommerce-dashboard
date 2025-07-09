@@ -161,12 +161,6 @@ const Banners = () => {
     setIsDeleteModalVisible(true);
   };
 
-  const confirmDelete = () => {
-    setBlogs(blogs.filter((blog) => blog.id !== currentBlog.id));
-    setIsDeleteModalVisible(false);
-    message.success("Banner deleted successfully");
-  };
-
   return (
     <main>
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-5">
@@ -203,10 +197,10 @@ const Banners = () => {
         {filteredBlogs.length > 0 ? (
           filteredBlogs.map((banner) => (
             <BannerCard
-              key={banner.id}
+              key={banner?.id}
               {...banner}
-              onEdit={() => handleEdit(banner.id)}
-              onDelete={() => handleDelete(banner.id)}
+              onEdit={() => handleEdit(banner?.id)}
+              onDelete={() => handleDelete(banner?.id)}
             />
           ))
         ) : (
@@ -234,7 +228,7 @@ const Banners = () => {
           <div className="mb-5">
             <div
               onClick={triggerFileInput}
-              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
+              className="border-2 border-dashed border-gray-300 rounded-lg p-5 text-center cursor-pointer"
             >
               {previewImage ? (
                 <div className="relative">
