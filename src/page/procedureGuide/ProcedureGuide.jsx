@@ -89,12 +89,6 @@ const ProcedureGuide = () => {
       procedure.description.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleDelete = (id) => {
-    setProcedures(procedures.filter((procedure) => procedure.id !== id));
-    message.success("Procedure deleted successfully");
-    setIsDeleteModalVisible(false);
-  };
-
   const handleView = (procedure) => {
     setCurrentProcedure(procedure);
     setIsViewModalVisible(true);
