@@ -43,6 +43,12 @@ export const AdminItems = [
     link: "/order/all-order",
   },
   {
+    key: "productManagement",
+    label: "Product Management",
+    icon: MdOutlinePets,
+    link: "/product/all-product",
+  },
+  {
     key: "categoryManagement",
     label: "Category",
     icon: MdOutlinePets,
@@ -58,7 +64,13 @@ export const AdminItems = [
     key: "procedureGuide",
     label: "Procedure Guide",
     icon: MdOutlinePets,
-    link: "/procedure-guide", 
+    link: "/procedure-guide",
+  },
+  {
+    key: "blog",
+    label: "Blog",
+    icon: MdOutlinePets,
+    link: "/blog",
   },
   {
     key: "sellermanagement",

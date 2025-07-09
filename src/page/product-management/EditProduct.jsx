@@ -262,21 +262,14 @@ const EditProduct = ({ isVisible, onClose, product, onUpdateProduct }) => {
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-end space-x-3 pt-4">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  disabled={loading}
-                >
-                  Cancel
-                </button>
+              <div className="flex justify-end pt-5">
                 <button
                   type="submit"
+                  onClick={onClose}
                   className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
                   disabled={loading}
                 >
-                  {loading ? "Saving..." : "Save Changes"}
+                  {loading ? "Saving..." : "Submit"}
                 </button>
               </div>
             </div>

@@ -2,7 +2,14 @@ import React, { useState, useRef } from "react";
 import { Input, Modal, message } from "antd";
 import PageHeading from "../../shared/PageHeading";
 import { IoSearch } from "react-icons/io5";
-import { FiPlus, FiEye, FiEdit3, FiTrash2, FiX, FiUpload } from "react-icons/fi";
+import {
+  FiPlus,
+  FiEye,
+  FiEdit3,
+  FiTrash2,
+  FiX,
+  FiUpload,
+} from "react-icons/fi";
 
 const ProcedureGuide = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,7 +25,7 @@ const ProcedureGuide = () => {
     productsIncluded: 1,
   });
   const fileInputRef = useRef(null);
-  
+
   const procedures = [
     {
       id: 1,
@@ -140,10 +147,10 @@ const ProcedureGuide = () => {
       setProcedures(
         procedures.map((proc) =>
           proc.id === currentProcedure.id
-            ? { 
-                ...proc, 
-                ...newProcedureData, 
-                image: previewImage || proc.image 
+            ? {
+                ...proc,
+                ...newProcedureData,
+                image: previewImage || proc.image,
               }
             : proc
         )
@@ -155,7 +162,8 @@ const ProcedureGuide = () => {
       const newProcedure = {
         ...newProcedureData,
         id: Date.now(),
-        image: previewImage || "https://via.placeholder.com/800x400?text=No+Image",
+        image:
+          previewImage || "https://via.placeholder.com/800x400?text=No+Image",
       };
       setProcedures([...procedures, newProcedure]);
       message.success("Procedure added successfully");
@@ -172,7 +180,7 @@ const ProcedureGuide = () => {
 
   return (
     <div className="p-6">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-5">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-5">
         <PageHeading title="Procedure Guide" />
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
           <div className="relative w-full md:w-[300px]">
@@ -192,7 +200,7 @@ const ProcedureGuide = () => {
             Add Procedure Guide
           </button>
         </div>
-      </div>
+      </header>
 
       {/* Procedure Cards */}
       <div className="space-y-6">
@@ -262,7 +270,9 @@ const ProcedureGuide = () => {
             No procedures found
           </h3>
           <p className="text-gray-500 text-lg mb-6">
-            {searchTerm ? 'No matching procedures found. Try different search terms or ' : 'Get started by adding a new procedure guide.'}
+            {searchTerm
+              ? "No matching procedures found. Try different search terms or "
+              : "Get started by adding a new procedure guide."}
           </p>
           <button
             onClick={handleAdd}
@@ -341,8 +351,13 @@ const ProcedureGuide = () => {
               <input
                 type="text"
                 placeholder="Enter procedure title"
-                value={newProcedureData?.title || ''}
-                onChange={(e) => setNewProcedureData({...newProcedureData, title: e.target.value})}
+                value={newProcedureData?.title || ""}
+                onChange={(e) =>
+                  setNewProcedureData({
+                    ...newProcedureData,
+                    title: e.target.value,
+                  })
+                }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               />
             </div>
@@ -354,8 +369,13 @@ const ProcedureGuide = () => {
               <textarea
                 rows={3}
                 placeholder="Enter procedure description"
-                value={newProcedureData?.description || ''}
-                onChange={(e) => setNewProcedureData({...newProcedureData, description: e.target.value})}
+                value={newProcedureData?.description || ""}
+                onChange={(e) =>
+                  setNewProcedureData({
+                    ...newProcedureData,
+                    description: e.target.value,
+                  })
+                }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               />
             </div>
@@ -368,8 +388,13 @@ const ProcedureGuide = () => {
                 type="number"
                 min={1}
                 placeholder="Enter number of products"
-                value={newProcedureData?.productsIncluded || ''}
-                onChange={(e) => setNewProcedureData({...newProcedureData, productsIncluded: parseInt(e.target.value) || 1})}
+                value={newProcedureData?.productsIncluded || ""}
+                onChange={(e) =>
+                  setNewProcedureData({
+                    ...newProcedureData,
+                    productsIncluded: parseInt(e.target.value) || 1,
+                  })
+                }
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
               />
             </div>
@@ -385,7 +410,7 @@ const ProcedureGuide = () => {
                 : "bg-gray-400 cursor-not-allowed"
             } transition-colors`}
           >
-            {currentProcedure ? 'Update' : 'Add'} Procedure
+            {currentProcedure ? "Update" : "Add"} Procedure
           </button>
         </div>
       </Modal>
@@ -412,20 +437,24 @@ const ProcedureGuide = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
               <div className="absolute bottom-0 left-0 p-6 text-white">
-                <h2 className="text-2xl font-bold mb-2">{currentProcedure.title}</h2>
+                <h2 className="text-2xl font-bold mb-2">
+                  {currentProcedure.title}
+                </h2>
                 <p className="text-blue-200 font-medium">
                   {currentProcedure.productsIncluded} Products Included
                 </p>
               </div>
             </div>
-            
+
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-gray-900">Description</h3>
+              <h3 className="text-lg font-semibold text-gray-900">
+                Description
+              </h3>
               <p className="text-gray-600 leading-relaxed">
                 {currentProcedure.description}
               </p>
             </div>
-            
+
             <div className="flex justify-end pt-4 border-t border-gray-100">
               <button
                 onClick={() => {
@@ -453,34 +482,26 @@ const ProcedureGuide = () => {
         centered
         className="max-w-md"
       >
-        <div className="p-4">
-          <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-              <FiTrash2 className="h-6 w-6 text-red-600" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
-              Delete {currentProcedure?.title}?
-            </h3>
-            <p className="text-gray-500 mb-6">
-              Are you sure you want to delete this procedure? This action cannot be undone.
-            </p>
-            <div className="flex justify-center gap-3">
-              <button
-                onClick={() => {
-                  setIsDeleteModalVisible(false);
-                  setCurrentProcedure(null);
-                }}
-                className="px-4 py-2 border border-gray-300 rounded-lg font-medium text-gray-700 hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => currentProcedure && handleDelete(currentProcedure.id)}
-                className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
+        <div className="p-5">
+          <h1 className="text-4xl text-center text-[#0D0D0D]">
+            Are you sure you want to delete ?
+          </h1>
+
+          <div className="text-center py-5">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
+            >
+              Yes,Delete
+            </button>
+          </div>
+          <div className="text-center pb-5">
+            <button
+              onClick={() => setIsModalOpen(false)}
+              className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
+            >
+              No,Don’t Delete
+            </button>
           </div>
         </div>
       </Modal>

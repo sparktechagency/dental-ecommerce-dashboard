@@ -30,6 +30,7 @@ import EditProduct from "../page/product-management/EditProduct";
 import Category from "../page/category/Category";
 import Brand from "../page/brand/Brand";
 import ProcedureGuide from "../page/procedureGuide/ProcedureGuide";
+import Blog from "../page/blog/Blog";
 
 export const router = createBrowserRouter([
   {
@@ -81,6 +82,11 @@ export const router = createBrowserRouter([
       {
         path: "/procedure-guide",
         element: <ProcedureGuide />,
+      },
+      // Blog
+      {
+        path: "/blog",
+        element: <Blog />,
       },
 
 
