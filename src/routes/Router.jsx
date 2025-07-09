@@ -32,6 +32,7 @@ import Brand from "../page/brand/Brand";
 import ProcedureGuide from "../page/procedureGuide/ProcedureGuide";
 import Blog from "../page/blog/Blog";
 import ViewBlog from "../page/blog/ViewBlog";
+import Newsletter from "../page/Newsletter/Newsletter";
 
 export const router = createBrowserRouter([
   {
@@ -92,6 +93,11 @@ export const router = createBrowserRouter([
       {
         path: "/view-blog/:id",
         element: <ViewBlog />,
+      },
+      // Newsletter
+      {
+        path: "/newsletter",
+        element: <Newsletter />,
       },
 
 

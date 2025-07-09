@@ -78,7 +78,7 @@ const Blog = () => {
     title: "",
     description: "",
     imageUrl: "",
-    date: new Date().toISOString().split('T')[0] // Format: YYYY-MM-DD
+    date: new Date().toISOString().split("T")[0], // Format: YYYY-MM-DD
   });
 
   const handleImageUpload = (e) => {
@@ -87,9 +87,9 @@ const Blog = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result);
-        setNewBlogData(prev => ({
+        setNewBlogData((prev) => ({
           ...prev,
-          imageUrl: reader.result
+          imageUrl: reader.result,
         }));
       };
       reader.readAsDataURL(file);
@@ -107,13 +107,13 @@ const Blog = () => {
       title: "",
       description: "",
       imageUrl: "",
-      date: new Date().toISOString().split('T')[0]
+      date: new Date().toISOString().split("T")[0],
     });
     setIsAddModalVisible(true);
   };
 
   const handleEdit = (id) => {
-    const blogToEdit = blogs.find(blog => blog.id === id);
+    const blogToEdit = blogs.find((blog) => blog.id === id);
     if (blogToEdit) {
       setCurrentBlog(blogToEdit);
       setPreviewImage(blogToEdit.imageUrl || null);
@@ -121,7 +121,7 @@ const Blog = () => {
         title: blogToEdit.title,
         description: blogToEdit.description,
         imageUrl: blogToEdit.imageUrl,
-        date: blogToEdit.date || new Date().toISOString().split('T')[0]
+        date: blogToEdit.date || new Date().toISOString().split("T")[0],
       });
       setIsEditModalVisible(true);
     }
@@ -131,21 +131,23 @@ const Blog = () => {
     if (!newBlogData.title.trim()) return;
 
     if (currentBlog) {
-      setBlogs(blogs.map(blog => 
-        blog.id === currentBlog.id 
-          ? { ...blog, ...newBlogData, id: currentBlog.id }
-          : blog
-      ));
-      message.success('Blog post updated successfully');
+      setBlogs(
+        blogs.map((blog) =>
+          blog.id === currentBlog.id
+            ? { ...blog, ...newBlogData, id: currentBlog.id }
+            : blog
+        )
+      );
+      message.success("Blog post updated successfully");
     } else {
       const newBlog = {
         ...newBlogData,
         id: Date.now().toString(),
       };
       setBlogs([...blogs, newBlog]);
-      message.success('Blog post created successfully');
+      message.success("Blog post created successfully");
     }
-    
+
     setPreviewImage(null);
     setCurrentBlog(null);
     setIsAddModalVisible(false);
@@ -217,7 +219,9 @@ const Blog = () => {
           ))
         ) : (
           <div className="col-span-full text-center py-10">
-            <p className="text-gray-400">No blog posts found matching your search.</p>
+            <p className="text-gray-400">
+              No blog posts found matching your search.
+            </p>
           </div>
         )}
       </div>
@@ -251,9 +255,9 @@ const Blog = () => {
                     onClick={(e) => {
                       e.stopPropagation();
                       setPreviewImage(null);
-                      setNewBlogData(prev => ({
+                      setNewBlogData((prev) => ({
                         ...prev,
-                        imageUrl: ""
+                        imageUrl: "",
                       }));
                     }}
                     className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
@@ -339,7 +343,9 @@ const Blog = () => {
 
           <button
             onClick={handleSave}
-            disabled={!newBlogData.title?.trim() || !newBlogData.description?.trim()}
+            disabled={
+              !newBlogData.title?.trim() || !newBlogData.description?.trim()
+            }
             className={`w-full mt-6 py-2 px-4 rounded-lg font-medium text-white ${
               newBlogData.title?.trim() && newBlogData.description?.trim()
                 ? "bg-blue-600 hover:bg-blue-700"
@@ -355,19 +361,30 @@ const Blog = () => {
         title="Delete Blog Post"
         open={isDeleteModalVisible}
         onCancel={() => setIsDeleteModalVisible(false)}
-        footer={[
-          <Button key="cancel" onClick={() => setIsDeleteModalVisible(false)}>
-            Cancel
-          </Button>,
-          <Button key="delete" type="primary" danger onClick={confirmDelete}>
-            Delete
-          </Button>,
-        ]}
+        footer={null}
       >
-        <p>
-          Are you sure you want to delete the blog post "{currentBlog?.title}"?
-        </p>
-        <p className="text-gray-400">This action cannot be undone.</p>
+        <div className="p-5">
+          <h1 className="text-4xl text-center text-[#0D0D0D]">
+            Are you sure you want to delete ?
+          </h1>
+
+          <div className="text-center py-5">
+            <button
+              onClick={() => setIsDeleteModalVisible(false)}
+              className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
+            >
+              Yes,Delete
+            </button>
+          </div>
+          <div className="text-center pb-5">
+            <button
+              onClick={() => setIsDeleteModalVisible(false)}
+              className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
+            >
+              No,Don’t Delete
+            </button>
+          </div>
+        </div>
       </Modal>
     </main>
   );

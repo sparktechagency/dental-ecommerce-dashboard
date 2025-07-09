@@ -73,6 +73,12 @@ export const AdminItems = [
     link: "/blog",
   },
   {
+    key: "newsletter",
+    label: "Newsletter",
+    icon: MdOutlinePets,
+    link: "/newsletter",
+  },
+  {
     key: "sellermanagement",
     label: "Business owners",
     icon: TbHomeDollar,
