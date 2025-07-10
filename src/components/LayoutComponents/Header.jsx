@@ -53,10 +53,12 @@ const Header = () => {
 
           <div className="flex-1 flex items-center justify-end space-x-6">
             {/* Notifications */}
+            <Link to="/notification">
             <button className="p-1 text-gray-400 hover:text-white relative">
               <LuBell className="h-6 w-6" />
               <span className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
             </button>
+            </Link>
 
             {/* User dropdown */}
             <Dropdown overlay={userMenu} trigger={['click']} placement="bottomRight">

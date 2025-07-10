@@ -1,16 +1,19 @@
-import { useState } from "react";
-import { IoEyeOutline, IoSearch } from "react-icons/io5";
-import { MdBlockFlipped } from "react-icons/md";
+import { useState, useMemo } from "react";
+import { IoSearch } from "react-icons/io5";
 import PageHeading from "../../shared/PageHeading";
-import { ConfigProvider, Modal, Table } from "antd";
+import { ConfigProvider, Input, Modal, Table, Form, message, Select } from "antd";
 import UserInformation from "../user-management/UserInformation";
 import { FaTrash } from "react-icons/fa";
-// import UserInformation from "./UserInformation";
+import { FiPlus } from "react-icons/fi";
 
 const MakeAdmin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [userDetailsModal, setUserDetailsModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [form] = Form.useForm();
+
   const dataSource = [
     {
       key: "1",
@@ -49,6 +52,37 @@ const MakeAdmin = () => {
     },
   ];
 
+  const filteredDataSource = useMemo(() => {
+    if (!searchTerm) return dataSource;
+    const searchLower = searchTerm.toLowerCase();
+    return dataSource.filter(
+      (user) =>
+        user.userName.toLowerCase().includes(searchLower) ||
+        user.email.toLowerCase().includes(searchLower)
+    );
+  }, [searchTerm]);
+
+  const handleAdd = () => {
+    setIsAddModalOpen(true);
+  };
+
+  const handleAddAdmin = async () => {
+    try {
+      const values = await form.validateFields();
+      console.log("Adding admin:", values);
+      message.success("Admin added successfully");
+      setIsAddModalOpen(false);
+      form.resetFields();
+    } catch (errorInfo) {
+      console.log("Validation Failed:", errorInfo);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsAddModalOpen(false);
+    form.resetFields();
+  };
+
   const columns = [
     { title: "No", dataIndex: "no", key: "no" },
     {
@@ -82,15 +116,23 @@ const MakeAdmin = () => {
     <>
       <div className="my-5 md:my-10 flex flex-col md:flex-row gap-5 justify-between items-center">
         <PageHeading title="All Admin" />
-        <div className="relative w-full sm:w-[300px] mt-5 md:mt-0 lg:mt-0">
-          <input
-            type="text"
-            placeholder="Search Admin"
-            className="border-2 border-[#3b3b3b] py-3 pl-12 pr-[65px] outline-none w-full rounded-md"
-          />
-          <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
-            <IoSearch className="text-[1.3rem]" />
-          </span>
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
+          <div className="relative w-full md:w-[300px]">
+            <Input
+              placeholder="Search by name or email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              prefix={<IoSearch className="text-gray-400" />}
+              className="w-full h-12 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+            />
+          </div>
+          <button
+            onClick={handleAdd}
+            className="w-full md:w-auto px-6 py-3 bg-[#136BFB] rounded-lg text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors whitespace-nowrap"
+          >
+            <FiPlus className="w-5 h-5" />
+            Add New Admin
+          </button>
         </div>
       </div>
       <ConfigProvider
@@ -122,7 +164,7 @@ const MakeAdmin = () => {
         }}
       >
         <Table
-          dataSource={dataSource}
+          dataSource={filteredDataSource}
           columns={columns}
           pagination={{ pageSize: 10 }}
           scroll={{ x: "max-content" }}
@@ -136,7 +178,7 @@ const MakeAdmin = () => {
         >
           <div className="p-5">
             <h1 className="text-4xl text-center text-[#0D0D0D]">
-              Are you sure you want to block ?
+              Are you sure you want to delete this admin ?
             </h1>
 
             <div className="text-center py-5">
@@ -144,7 +186,7 @@ const MakeAdmin = () => {
                 onClick={() => setIsModalOpen(false)}
                 className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
               >
-                Yes,Block
+                Yes,Delete
               </button>
             </div>
             <div className="text-center pb-5">
@@ -152,18 +194,100 @@ const MakeAdmin = () => {
                 onClick={() => setIsModalOpen(false)}
                 className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
               >
-                No,Don’t Block
+                No,Don’t Delete
               </button>
             </div>
           </div>
         </Modal>
+
+        {/* Add Admin Modal */}
         <Modal
-          centered
-          open={userDetailsModal}
-          onCancel={() => setUserDetailsModal(false)}
-          footer={null}
+          title="Add New Admin"
+          open={isAddModalOpen}
+          onOk={handleAddAdmin}
+          onCancel={handleCancel}
+          okText="Add Admin"
+          cancelText="Cancel"
+          okButtonProps={{
+            className: "bg-[#136BFB] hover:bg-blue-600",
+            size: "large",
+          }}
+          cancelButtonProps={{
+            className:
+              "border-[#3b3b3b] text-[#3b3b3b] hover:border-[#136BFB] hover:text-[#136BFB]",
+            size: "large",
+          }}
         >
-          {selectedUser && <UserInformation user={selectedUser} />}
+          <Form form={form} layout="vertical" className="mt-6">
+            <Form.Item
+              name="name"
+              label="Full Name"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input the admin's full name!",
+                },
+              ]}
+            >
+              <Input size="large" placeholder="Enter full name" />
+            </Form.Item>
+
+            <Form.Item
+              name="email"
+              label="Email"
+              rules={[
+                {
+                  type: "email",
+                  message: "Please enter a valid email!",
+                },
+                {
+                  required: true,
+                  message: "Please input the admin's email!",
+                },
+              ]}
+            >
+              <Input size="large" placeholder="Enter email address" />
+            </Form.Item>
+
+            <Form.Item
+              name="password"
+              label="Password"
+              rules={[
+                {
+                  required: true,
+                  message: "Please input a password!",
+                },
+                {
+                  min: 6,
+                  message: "Password must be at least 6 characters!",
+                },
+              ]}
+              hasFeedback
+            >
+              <Input.Password size="large" placeholder="Enter password" />
+            </Form.Item>
+
+            <Form.Item
+              name="userType"
+              label="User Type"
+              rules={[
+                {
+                  required: true,
+                  message: "Please select user type!",
+                },
+              ]}
+            >
+              <Select
+                size="large"
+                placeholder="Select user type"
+                className="w-full"
+              >
+                <Option value="admin">Admin</Option>
+                <Option value="super_admin">Super Admin</Option>
+                <Option value="moderator">Moderator</Option>
+              </Select>
+            </Form.Item>
+          </Form>
         </Modal>
       </ConfigProvider>
     </>

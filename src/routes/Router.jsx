@@ -111,6 +111,11 @@ export const router = createBrowserRouter([
         path: "/make-admin",
         element: <MakeAdmin />,
       },
+      // Notification
+      {
+        path: "/notification",
+        element: <Notification />,
+      },
 
 
 
@@ -148,10 +153,6 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/Settings/profile",
         element: <Profile />,
-      },
-      {
-        path: "/dashboard/Settings/notification",
-        element: <Notification />,
       },
       {
         path: "/dashboard/Settings/Terms&Condition",
