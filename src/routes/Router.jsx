@@ -35,6 +35,7 @@ import ViewBlog from "../page/blog/ViewBlog";
 import Newsletter from "../page/Newsletter/Newsletter";
 import Banners from "../page/Banners/Banners";
 import MakeAdmin from "../page/Make Admin/MakeAdmin";
+import AboutUs from "../page/Settings/AboutUs";
 
 export const router = createBrowserRouter([
   {
@@ -150,6 +151,13 @@ export const router = createBrowserRouter([
         path: "/ads-promotion",
         element: <AdPromotion />,
       },
+
+      //About Us
+      
+      {
+        path: "/about-us",
+        element: <AboutUs />,
+      },
       {
         path: "/dashboard/Settings/profile",
         element: <Profile />,
@@ -161,10 +169,6 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard/Settings/PrivacyPolicy",
         element: <PrivacyPolicy />,
-      },
-      {
-        path: "/faq",
-        element: <Faq />,
       },
       {
         path: "/chat",

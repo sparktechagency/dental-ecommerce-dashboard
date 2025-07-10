@@ -34,33 +34,6 @@ export const bannersData = [
     imageUrl:
       "https://images.pexels.com/photos/3779709/pexels-photo-3779709.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
   },
-  {
-    id: "4",
-    title: "The Dental Dispatch",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3845457/pexels-photo-3845457.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-  {
-    id: "5",
-    title: "Chairside Journal",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3845810/pexels-photo-3845810.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-  {
-    id: "6",
-    title: "Smarter Smiles",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3779709/pexels-photo-3779709.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
 ];
 
 const Banners = () => {

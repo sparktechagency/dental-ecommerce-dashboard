@@ -144,6 +144,11 @@ export const AdminItems = [
         link: "/dashboard/Settings/profile",
       },
       {
+        key: "about-us",
+        label: "About Us",
+        link: "/about-us",
+      },
+      {
         key: "terms",
         label: "Terms & Condition",
         link: "/dashboard/Settings/Terms&Condition",
@@ -152,11 +157,6 @@ export const AdminItems = [
         key: "privacy",
         label: "Privacy Policy",
         link: "/dashboard/Settings/PrivacyPolicy",
-      },
-      {
-        key: "faq",
-        label: "Faq",
-        link: "/faq",
       },
     ],
   },
