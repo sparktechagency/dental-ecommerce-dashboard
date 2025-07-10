@@ -111,8 +111,8 @@ export default function AllOrder() {
                   Select: {
                     selectorBg: "#3b3b3b",
                     activeOutlineColor: "#3b3b3b",
-                    placeholderColor: "#fff",
-                    colorText: "#fff",
+                    placeholderColor: "#3b3b3b",
+                    colorText: "#FF9500",
                   },
                 },
               }}

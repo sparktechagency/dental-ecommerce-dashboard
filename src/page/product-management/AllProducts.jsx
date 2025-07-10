@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Card, Menu, Select } from "antd";
+import { Input, Card, Menu, Select, ConfigProvider } from "antd";
 import { Modal, Form, message } from "antd";
 import {
   IoSearch,
@@ -7,7 +7,6 @@ import {
   IoPencil,
   IoTrashOutline,
 } from "react-icons/io5";
-import { MdClose, MdCloudUpload, MdKeyboardArrowDown } from "react-icons/md";
 import PageHeading from "../../shared/PageHeading";
 import t1 from "../../assets/t1.png";
 import t2 from "../../assets/t2.jpg";
@@ -19,9 +18,7 @@ import { BiEditAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
-
-const { Search } = Input;
-const { Option } = Select;
+import { SearchInput } from "../../components/search/SearchInput";
 
 const AllProducts = () => {
   const [searchText, setSearchText] = useState("");
@@ -216,8 +213,6 @@ const AllProducts = () => {
       brand: "Articulite",
     },
   ];
-
-  // Extract unique categories for filter
   const categories = [...new Set(products.map((product) => product.category))];
 
   const menu = (
@@ -277,35 +272,40 @@ const AllProducts = () => {
     <div className="p-5">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <PageHeading title="All Products" />
-        <div className="flex flex-col md:flex-row justify-center items-center md:items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
           <div className="flex gap-2">
-            <div className="relative w-full md:w-[200px] h-[46px]">
-              <Input
-                placeholder="Search products..."
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                className="w-full h-[46px] pl-12 pr-4 rounded-md border-2 border-[#3b3b3b]"
-                prefix={
-                  <IoSearch
-                    className="text-gray-400 absolute left-3 top-3.5"
-                    size={20}
-                  />
-                }
-              />
+            <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
+              <SearchInput />
+              <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
+                <IoSearch className="text-[1.3rem]" />
+              </span>
             </div>
-            <Select
-              className="w-full md:w-[200px] h-[46px]"
-              placeholder="Filter by category"
-              value={categoryFilter}
-              onChange={setCategoryFilter}
-              options={[
-                { value: "all", label: "All Categories" },
-                ...categories.map((category) => ({
-                  value: category,
-                  label: category,
-                })),
-              ]}
-            />
+            <ConfigProvider
+              theme={{
+                components: {
+                  Select: {
+                    selectorBg: "#3b3b3b",
+                    activeOutlineColor: "#3b3b3b",
+                    placeholderColor: "#3b3b3b",
+                    colorText: "#FF9500",
+                  },
+                },
+              }}
+            >
+              <Select
+                className="w-full h-[46px] bg-[#3b3b3b] text-white placeholder:text-white"
+                placeholder="Filter by status"
+                value={categoryFilter}
+                onChange={setCategoryFilter}
+                options={[
+                  { value: "all", label: "All Categories" },
+                  ...categories.map((category) => ({
+                    value: category,
+                    label: category,
+                  })),
+                ]}
+              />
+            </ConfigProvider>
           </div>
           <button
             onClick={showAddModal}
