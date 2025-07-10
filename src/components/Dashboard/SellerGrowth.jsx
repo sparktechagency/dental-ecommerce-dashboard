@@ -46,7 +46,6 @@ const SellerGrowth = () => {
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
           barGap={100}
           barCategoryGap={40}
-
         >
           {/* <XAxis tickLine={false} dataKey="month" />
           <YAxis tickLine={false} /> */}

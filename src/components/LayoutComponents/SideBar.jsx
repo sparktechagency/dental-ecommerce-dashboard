@@ -168,7 +168,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full bg-[#202020]">
       <div className="p-6 mb-4">
         <img src="/logo.svg" alt="Logo" className="w-24 h-auto" />
       </div>
@@ -269,9 +269,9 @@ const SideBar = () => {
       <div className="p-4 border-t border-gray-700">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white bg- hover:bg-emerald-700 rounded-lg transition-colors duration-200"
+          className="w-full flex items-center justify-center px-5 py-3 text-sm font-bold text-white bg-[#136BFB] rounded-lg transition-colors duration-200"
         >
-          <IoIosLogOut className="w-5 h-5 mr-2" />
+          <IoIosLogOut className="w-5 h-5 mr-2 font-bold text-white" />
           <span>Log Out</span>
         </button>
       </div>

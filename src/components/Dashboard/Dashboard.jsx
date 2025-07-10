@@ -1,244 +1,91 @@
-import { FaChevronDown } from "react-icons/fa";
-import { useState } from "react";
-import dayjs from "dayjs";
-import user from "../../assets/user.svg";
-import medal from "../../assets/medal.svg";
-import profit from "../../assets/profit.svg";
-import seller from "../../assets/seller.svg";
+import { FaRegUser } from "react-icons/fa";
 import SubscriptionGrowth from "./SubscriptionGrowth";
 import SellerGrowth from "./SellerGrowth";
-import RecentSellerRequests from "./RecentSellerRequests";
-import { Modal } from "antd";
 import EarningGrowth from "./EarningGrowth";
+import { LuCircleDollarSign } from "react-icons/lu";
+import { BsBagCheck } from "react-icons/bs";
+import { MdOutlineBlock } from "react-icons/md";
+import YearDropDown from "./YearDropDown";
 
 function DashboardPage() {
-  const currentYear = dayjs().year();
-  const startYear = 1900;
-  const [selectedYear, setSelectedYear] = useState(currentYear);
-  const [isOpen, setIsOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const years = Array.from(
-    { length: currentYear - startYear + 1 },
-    (_, index) => startYear + index
-  );
-
-  const handleSelect = (year) => {
-    setSelectedYear(year);
-    setIsOpen(false);
-  };
 
   return (
-    <div className="flex flex-col">
-      <div className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-3 lg:grid-cols-4 gap-2">
-        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+    <main className="flex flex-col">
+      <section className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-3 lg:grid-cols-4 gap-2">
+        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F] border border-gray-300">
           <div className="rounded-full flex items-center justify-center mb-2 gap-2">
-            <img
-              src="./money.svg"
-              alt="User Stats Icon"
-              className="w-[40px] h-[40px]"
-            />
-            <h2 className="text-white text-2xl font-medium">
-              Total Earning
-            </h2>
+            <LuCircleDollarSign className="w-[25px] h-[25px] text-green-500" />
+            <h2 className="text-white text-2xl font-medium">Total Earning</h2>
           </div>
 
           <p className="text-[#34C759] text-4xl font-bold">
             ${new Intl.NumberFormat().format(6500)}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F] border border-gray-300">
           <div className="rounded-full flex items-center justify-center mb-2 gap-2">
-            <img
-              src="./order.svg"
-              alt="User Stats Icon"
-              className="w-[40px] h-[40px]"
-            />
-            <h2 className="text-white text-2xl font-medium">
-              Total Order
-            </h2>
+            <BsBagCheck className="w-[25px] h-[25px] text-green-500" />
+            <h2 className="text-white text-2xl font-medium">Total Order</h2>
           </div>
 
           <p className="text-[#34C759] text-4xl font-bold">
             {new Intl.NumberFormat().format(300)}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F] border border-gray-300">
           <div className="rounded-full flex items-center justify-center mb-2 gap-2">
-            <img
-              src="./user.svg"
-              alt="User Stats Icon"
-              className="w-[40px] h-[40px]"
-            />
-            <h2 className="text-white text-2xl font-medium">
-              Total User
-            </h2>
+            <FaRegUser className="w-[25px] h-[25px] text-green-500" />
+            <h2 className="text-white text-2xl font-medium">Total User</h2>
           </div>
 
           <p className="text-[#34C759] text-4xl font-bold">
             {new Intl.NumberFormat().format(6500)}
           </p>
         </div>
-        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F]">
+        <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F] border border-gray-300">
           <div className="rounded-full flex items-center justify-center mb-2 gap-2">
-            <img
-              src="./block.svg"
-              alt="User Stats Icon"
-              className="w-[40px] h-[40px]"
-            />
-            <h2 className="text-white text-2xl font-medium">
-              Blocked account
-            </h2>
+            <MdOutlineBlock className="w-[25px] h-[25px] text-green-500" />
+            <h2 className="text-white text-2xl font-medium">Blocked account</h2>
           </div>
 
           <p className="text-red-500 text-4xl font-bold">
             {new Intl.NumberFormat().format(10)}
           </p>
         </div>
-      </div>
-      {/* .............. */}
-      <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
-        <div className="w-full p-5 bg-[#707070] rounded-lg shadow-md">
+      </section>
+
+      <section className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-5 mt-5 ">
+        <div className="w-full p-5 bg-[#707070] rounded-lg shadow-md border border-gray-300">
           <div className="flex flex-col md:flex-row md:justify-between lg:justify-between items-center gap-5 my-5">
             <div>
-              <h1 className="text-xl font-semibold">User Growth</h1>
+              <h1 className="text-white text-xl font-bold">User Growth</h1>
             </div>
-            <div className="relative w-full md:w-32">
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md flex justify-between items-center bg-white transition"
-              >
-                <span className="text-[#0B704E]">{selectedYear}</span>
-                <FaChevronDown className="text-[#0B704E] w-5 h-5 ml-5" />
-              </button>
-
-              {/* Dropdown List */}
-              {isOpen && (
-                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg text-lg">
-                  {years.map((year) => (
-                    <div
-                      key={year}
-                      onClick={() => handleSelect(year)}
-                      className={`p-2 cursor-pointer hover:bg-gray-100 transition ${year === selectedYear ? "bg-gray-200" : ""
-                        }`}
-                    >
-                      {year}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <YearDropDown />
           </div>
           <SellerGrowth />
         </div>
-
-        <div className="w-full p-5 bg-[#707070] rounded-lg shadow-md">
+        <div className="w-full p-5 bg-[#707070] rounded-lg shadow-md border border-gray-300">
           <div className="flex flex-col md:flex-row md:justify-between lg:justify-between items-center gap-5 my-5">
             <div>
-              <h1 className="text-xl font-semibold">Order Growth</h1>
+              <h1 className="text-white text-xl font-semibold">Order Growth</h1>
             </div>
 
-            <div className="relative w-full md:w-32">
-              {/* Selected Year Display */}
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md flex justify-between items-center bg-white transition"
-              >
-                <span className="text-[#0B704E]">{selectedYear}</span>
-                <FaChevronDown className="text-[#0B704E] w-5 h-5 ml-5" />
-              </button>
-
-              {/* Dropdown List */}
-              {isOpen && (
-                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
-                  {years.map((year) => (
-                    <div
-                      key={year}
-                      onClick={() => handleSelect(year)}
-                      className={`p-2 cursor-pointer hover:bg-gray-100 transition ${year === selectedYear ? "bg-gray-200" : ""
-                        }`}
-                    >
-                      {year}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+            <YearDropDown />
           </div>
           <SubscriptionGrowth />
         </div>
-      </div>
-      {/* <div className="mt-5"> */}
-      <div className="w-full p-5 bg-[#707070] rounded-lg shadow-md mt-5">
-          <div className="flex flex-col md:flex-row md:justify-between lg:justify-between items-center gap-5 my-5">
-            <div>
-              <h1 className="text-xl font-semibold">Earning Growth</h1>
-            </div>
-
-            <div className="relative w-full md:w-32">
-              {/* Selected Year Display */}
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md flex justify-between items-center bg-white transition"
-              >
-                <span className="text-[#0B704E]">{selectedYear}</span>
-                <FaChevronDown className="text-[#0B704E] w-5 h-5 ml-5" />
-              </button>
-
-              {/* Dropdown List */}
-              {isOpen && (
-                <div className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-60 overflow-y-auto shadow-lg">
-                  {years.map((year) => (
-                    <div
-                      key={year}
-                      onClick={() => handleSelect(year)}
-                      className={`p-2 cursor-pointer hover:bg-gray-100 transition ${year === selectedYear ? "bg-gray-200" : ""
-                        }`}
-                    >
-                      {year}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+      </section>
+      <section className="w-full p-5 bg-[#707070] rounded-lg shadow-md mt-5 mb-10">
+        <div className="flex flex-col md:flex-row md:justify-between lg:justify-between items-center gap-5 my-5">
+          <div>
+            <h1 className="text-white text-xl font-semibold">Earning Growth</h1>
           </div>
-          <EarningGrowth />
+
+          <YearDropDown />
         </div>
-      {/* </div> */}
-      <Modal open={isModalOpen} centered onCancel={handleCancel} footer={null}>
-        <div className="p-5">
-          <h1 className="text-4xl text-center text-[#0D0D0D]">
-            Are you sure you want to block ?
-          </h1>
-
-          <div className="text-center py-5">
-            <button
-              onClick={handleOk}
-              className="bg-[#14803c] text-white font-semibold w-full py-2 rounded transition duration-200"
-            >
-              Yes,Block
-            </button>
-          </div>
-          <div className="text-center pb-5">
-            <button
-              onClick={handleOk}
-              className="text-[#14803c] border-2 border-green-600 bg-white font-semibold w-full py-2 rounded transition duration-200"
-            >
-              No,Don’t Block
-            </button>
-          </div>
-        </div>
-      </Modal>
-    </div>
+        <EarningGrowth />
+      </section>
+    </main>
   );
 }
 
