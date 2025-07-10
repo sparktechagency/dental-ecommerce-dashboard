@@ -1,14 +1,13 @@
 import { FaRegUser } from "react-icons/fa";
-import SubscriptionGrowth from "./SubscriptionGrowth";
-import SellerGrowth from "./SellerGrowth";
 import EarningGrowth from "./EarningGrowth";
 import { LuCircleDollarSign } from "react-icons/lu";
 import { BsBagCheck } from "react-icons/bs";
 import { MdOutlineBlock } from "react-icons/md";
 import YearDropDown from "./YearDropDown";
+import UserGrowth from "./UserGrowth";
+import OrderGrowth from "./OrderGrowth";
 
 function DashboardPage() {
-
   return (
     <main className="flex flex-col">
       <section className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -62,23 +61,22 @@ function DashboardPage() {
             </div>
             <YearDropDown />
           </div>
-          <SellerGrowth />
+          <UserGrowth />
         </div>
         <div className="w-full p-5 bg-[#707070] rounded-lg shadow-md border border-gray-300">
           <div className="flex flex-col md:flex-row md:justify-between lg:justify-between items-center gap-5 my-5">
             <div>
-              <h1 className="text-white text-xl font-semibold">Order Growth</h1>
+              <h1 className="text-white text-xl font-bold">Order Growth</h1>
             </div>
-
             <YearDropDown />
           </div>
-          <SubscriptionGrowth />
+          <OrderGrowth />
         </div>
       </section>
-      <section className="w-full p-5 bg-[#707070] rounded-lg shadow-md mt-5 mb-10">
-        <div className="flex flex-col md:flex-row md:justify-between lg:justify-between items-center gap-5 my-5">
+      <section className="w-full p-5 bg-[#707070] rounded-lg shadow-md mt-5 mb-10 border border-gray-300">
+        <div className="flex flex-col md:flex-row md:justify-between lg:justify-between items-center gap-5 my-5 ">
           <div>
-            <h1 className="text-white text-xl font-semibold">Earning Growth</h1>
+            <h1 className="text-white text-xl font-bold">Earning Growth</h1>
           </div>
 
           <YearDropDown />

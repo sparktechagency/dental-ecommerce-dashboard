@@ -8,8 +8,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { OrderGrowthData } from "../../../utils/data";
+import { CustomTooltip } from "./CustomTooltip";
 
-const SubscriptionGrowth = () => {
+export default function OrderGrowth() {
   const [chartHeight, setChartHeight] = useState(300);
 
   useEffect(() => {
@@ -20,44 +22,16 @@ const SubscriptionGrowth = () => {
         setChartHeight(300);
       }
     };
-
     window.addEventListener("resize", handleResize);
     handleResize();
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const data = [
-    { month: "Jan", vendors: 0 },
-    { month: "Feb", vendors: 85 },
-    { month: "Mar", vendors: 65 },
-    { month: "Apr", vendors: 75 },
-    { month: "May", vendors: 85 },
-    { month: "Jun", vendors: 95 },
-    { month: "Jul", vendors: 100 },
-    { month: "Aug", vendors: 85 },
-    { month: "Sep", vendors: 75 },
-    { month: "Oct", vendors: 65 },
-    { month: "Nov", vendors: 85 },
-    { month: "Dec", vendors: 100 },
-  ];
-
-  const CustomTooltip = ({ active, payload, label }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white text-black p-3 rounded-lg shadow-lg border border-[#B5ED90]">
-          <p className="font-medium">{`Month: ${label}`}</p>
-          <p className="font-medium text-[#5492F7]">{`Vendors: ${payload[0].value}`}</p>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
     <div className="w-full h-[300px]">
-      <ResponsiveContainer width="100%" height={chartHeight}>
+      <ResponsiveContainer width="100%" >
         <AreaChart
-          data={data}
+          data={OrderGrowthData}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
           <defs>
@@ -76,7 +50,6 @@ const SubscriptionGrowth = () => {
           <Area
             type="monotone"
             dataKey="vendors"
-            // stroke="#5492F7"
             strokeWidth={3}
             fill="url(#vendorGrowth)"
           />
@@ -84,6 +57,4 @@ const SubscriptionGrowth = () => {
       </ResponsiveContainer>
     </div>
   );
-};
-
-export default SubscriptionGrowth;
+}
