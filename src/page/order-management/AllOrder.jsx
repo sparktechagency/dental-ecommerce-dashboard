@@ -188,7 +188,7 @@ export default function AllOrder() {
                 key: selectedUser.key,
                 orderNumber: selectedUser.key,
                 status: selectedUser.status,
-                date: new Date().toLocaleDateString(), // You might want to add a date field to your data
+                date: new Date().toLocaleDateString(),
                 customerName: selectedUser.customer,
                 email: `${selectedUser.customer
                   .replace(/\s+/g, "")
@@ -196,7 +196,7 @@ export default function AllOrder() {
                 phone: `+1${Math.floor(
                   1000000000 + Math.random() * 9000000000
                 )}`,
-                address: "123 Dental St, Suite 100, New York, NY 10001", // Sample address
+                address: "123 Dental St, Suite 100, New York, NY 10001",
                 paymentMethod: "Credit Card",
                 paymentStatus:
                   selectedUser.status === "Shipped" ? "Paid" : "Unpaid",
@@ -205,7 +205,7 @@ export default function AllOrder() {
                   .map((product, index) => ({
                     id: index + 1,
                     name: product,
-                    price: Math.floor(Math.random() * 900) + 100, // Random price between 100-1000
+                    price: Math.floor(Math.random() * 900) + 100,
                     quantity: parseInt(selectedUser.qty) || 1,
                   })),
               }}

@@ -14,6 +14,7 @@ import UserInformation from "../user-management/UserInformation";
 import { FaTrash } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
 import { SearchInput } from "../../components/search/SearchInput";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 const MakeAdmin = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -109,14 +110,20 @@ const MakeAdmin = () => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <button
-          onClick={() => {
-            setIsModalOpen(true);
-          }}
-          className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
-        >
-          <FaTrash className="w-6 h-6 text-[#3b3b3b]" />
-        </button>
+        // <button
+        //   onClick={() => {
+        //     setIsModalOpen(true);
+        //   }}
+        //   className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2"
+        // >
+        //   <FaTrash className="w-6 h-6 text-[#3b3b3b]" />
+        // </button>
+      <button
+      onClick={() => openDeleteModal(record)}
+      className="border border-red-500 text-red-500 rounded-lg p-2 hover:bg-red-50 transition-colors"
+    >
+      <RiDeleteBin6Line className="w-5 h-5" />
+    </button>
       ),
     },
   ];

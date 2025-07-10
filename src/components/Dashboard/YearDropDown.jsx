@@ -2,7 +2,7 @@ import { FaChevronDown } from "react-icons/fa";
 import dayjs from "dayjs";
 import { useState } from "react";
 
-const YearDropDown = () => {
+export default function YearDropDown() {
   const currentYear = dayjs().year();
   const startYear = 2020;
   const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -44,6 +44,4 @@ const YearDropDown = () => {
       )}
     </div>
   );
-};
-
-export default YearDropDown;
+}

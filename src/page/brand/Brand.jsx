@@ -13,7 +13,7 @@ const Brand = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [currentBrand, setCurrentBrand] = useState(null);
   const [brandName, setBrandName] = useState("");
-  
+
   // Sample data - in a real app, this would come from an API
   const [brands, setBrands] = useState([
     {
@@ -36,7 +36,7 @@ const Brand = () => {
   // Filter brands based on search text
   const filteredBrands = useMemo(() => {
     if (!searchText) return brands;
-    return brands.filter(brand => 
+    return brands.filter((brand) =>
       brand.brandName.toLowerCase().includes(searchText.toLowerCase())
     );
   }, [searchText, brands]);
@@ -68,13 +68,13 @@ const Brand = () => {
     }
 
     setBrands(
-      brands.map(brand =>
-        brand.id === currentBrand.id 
+      brands.map((brand) =>
+        brand.id === currentBrand.id
           ? { ...brand, brandName: brandName.trim() }
           : brand
       )
     );
-    
+
     message.success("Brand updated successfully");
     setIsEditModalVisible(false);
     setBrandName("");
@@ -83,7 +83,7 @@ const Brand = () => {
 
   // Handle Delete Brand
   const handleDeleteBrand = () => {
-    setBrands(brands.filter(brand => brand.id !== currentBrand?.id));
+    setBrands(brands.filter((brand) => brand.id !== currentBrand?.id));
     message.success("Brand deleted successfully");
     setIsDeleteModalVisible(false);
     setCurrentBrand(null);
@@ -114,13 +114,13 @@ const Brand = () => {
       align: "right",
       render: (_, record) => (
         <div className="flex gap-2 justify-end">
-          <button 
+          <button
             onClick={() => openEditModal(record)}
             className="border border-[#3b3b3b] text-[#3b3b3b] rounded-lg p-2 hover:bg-gray-100 transition-colors"
           >
             <FiEdit className="w-5 h-5" />
           </button>
-          <button 
+          <button
             onClick={() => openDeleteModal(record)}
             className="border border-red-500 text-red-500 rounded-lg p-2 hover:bg-red-50 transition-colors"
           >
@@ -136,13 +136,13 @@ const Brand = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
         <PageHeading title="Brands" />
         <div className="flex flex-col md:flex-row justify-center items-center md:items-center gap-2 w-full md:w-auto">
-        <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
-              <SearchInput />
-              <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
-                <IoSearch className="text-[1.3rem]" />
-              </span>
-            </div>
-          <button 
+          <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
+            <SearchInput />
+            <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
+              <IoSearch className="text-[1.3rem]" />
+            </span>
+          </div>
+          <button
             onClick={() => {
               setBrandName("");
               setIsAddModalVisible(true);
@@ -278,27 +278,24 @@ const Brand = () => {
         centered
       >
         <div className="p-5">
-          <h1 className="text-xl text-center text-gray-800 mb-6">
-            Are you sure you want to delete "{currentBrand?.brandName}"?
+          <h1 className="text-4xl text-center text-[#0D0D0D]">
+            Are you sure you want to delete ?
           </h1>
-          <p className="text-center text-gray-600 mb-6">
-            This action cannot be undone.
-          </p>
-          <div className="flex flex-col space-y-3">
+
+          <div className="text-center py-5">
             <button
-              onClick={handleDeleteBrand}
-              className="w-full py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition-colors"
+              // onClick={() => setIsDeleteModalVisible(false)}
+              className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
             >
-              Yes, Delete
+              Yes,Delete
             </button>
+          </div>
+          <div className="text-center pb-5">
             <button
-              onClick={() => {
-                setIsDeleteModalVisible(false);
-                setCurrentBrand(null);
-              }}
-              className="w-full py-2 border border-gray-300 bg-white text-gray-700 font-semibold rounded hover:bg-gray-50 transition-colors"
+              // onClick={() => setIsDeleteModalVisible(false)}
+              className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
             >
-              Cancel
+              No,Don’t Delete
             </button>
           </div>
         </div>
