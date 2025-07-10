@@ -91,48 +91,6 @@ export const AdminItems = [
     link: "/make-admin",
   },
   {
-    key: "sellermanagement",
-    label: "Business owners",
-    icon: TbHomeDollar,
-    link: "/dashboard/seller-management",
-  },
-  {
-    key: "subscription",
-    label: "Subscription",
-    icon: LuBadgeCheck,
-    link: "/dashboard/subscription",
-  },
-  {
-    key: "premiumSubscribers",
-    label: "Subscribers",
-    icon: MdManageAccounts,
-    link: "/premium-subscribers",
-  },
-  {
-    key: "categorymanagement",
-    label: "Category",
-    icon: MdOutlineCategory,
-    link: "/category-management",
-  },
-  {
-    key: "bookingManagement",
-    label: "Booking Management",
-    icon: MdOutlineCategory,
-    link: "/booking-management",
-  },
-  {
-    key: "adPromotion",
-    label: "Ads Promotion",
-    icon: BiCommand,
-    link: "/ads-promotion",
-  },
-  {
-    key: "support",
-    label: "Support",
-    icon: BiCheckShield,
-    link: "/support",
-  },
-  {
     key: "settings",
     label: "Settings",
     icon: FaCog,
@@ -311,7 +269,7 @@ const SideBar = () => {
       <div className="p-4 border-t border-gray-700">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg transition-colors duration-200"
+          className="w-full flex items-center justify-center px-4 py-2.5 text-sm font-medium text-white bg- hover:bg-emerald-700 rounded-lg transition-colors duration-200"
         >
           <IoIosLogOut className="w-5 h-5 mr-2" />
           <span>Log Out</span>
