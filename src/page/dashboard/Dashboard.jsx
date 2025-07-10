@@ -1,13 +1,13 @@
 import { FaRegUser } from "react-icons/fa";
-import EarningGrowth from "./EarningGrowth";
 import { LuCircleDollarSign } from "react-icons/lu";
 import { BsBagCheck } from "react-icons/bs";
 import { MdOutlineBlock } from "react-icons/md";
-import YearDropDown from "./YearDropDown";
-import UserGrowth from "./UserGrowth";
-import OrderGrowth from "./OrderGrowth";
 
-function DashboardPage() {
+import UserGrowth from "../../components/Dashboard/UserGrowth";
+import OrderGrowth from "../../components/Dashboard/OrderGrowth";
+import EarningGrowth from "../../components/Dashboard/EarningGrowth";
+
+export default function DashboardPage() {
   return (
     <main className="flex flex-col">
       <section className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -86,5 +86,3 @@ function DashboardPage() {
     </main>
   );
 }
-
-export default DashboardPage;

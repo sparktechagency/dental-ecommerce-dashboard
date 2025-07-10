@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
-import Dashboard from "../components/Dashboard/Dashboard";
+// import Dashboard from "../components/dashboard/Dashboard";
 import Profile from "../page/Settings/Profile";
 import TermsCondition from "../page/Settings/TermsCondition";
 import PrivacyPolicy from "../page/Settings/PrivacyPolicy";
@@ -25,6 +25,7 @@ import Newsletter from "../page/Newsletter/Newsletter";
 import Banners from "../page/Banners/Banners";
 import MakeAdmin from "../page/Make Admin/MakeAdmin";
 import AboutUs from "../page/Settings/AboutUs";
+import DashboardPage from "../page/dashboard/Dashboard";
 
 export const router = createBrowserRouter([
   {
@@ -33,7 +34,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "/",
-        element: <Dashboard />,
+        element: <DashboardPage />,
       },
       // User Management
       {
