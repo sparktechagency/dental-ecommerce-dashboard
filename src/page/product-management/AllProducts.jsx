@@ -1,26 +1,20 @@
 import React, { useState } from "react";
-import { Input, Card, Menu, Select, ConfigProvider } from "antd";
+import { Card, Select, ConfigProvider } from "antd";
 import { Modal, Form, message } from "antd";
 import {
   IoSearch,
   IoEyeOutline,
-  IoPencil,
   IoTrashOutline,
 } from "react-icons/io5";
 import PageHeading from "../../shared/PageHeading";
-import t1 from "../../assets/t1.png";
-import t2 from "../../assets/t2.jpg";
-import t3 from "../../assets/t3.jpg";
-import t5 from "../../assets/t5.jpg";
-import t6 from "../../assets/t6.png";
-import t7 from "../../assets/t7.jpg";
 import { BiEditAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
 import { SearchInput } from "../../components/search/SearchInput";
+import { products } from "../../../utils/data";
 
-const AllProducts = () => {
+export default function AllProducts() {
   const [searchText, setSearchText] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState("all");
@@ -29,208 +23,7 @@ const AllProducts = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [form] = Form.useForm();
 
-  const products = [
-    {
-      id: 1,
-      image: t1,
-      name: "High-speed titanium handpiece",
-      description:
-        "High-speed titanium handpiece with quattro spray, ergonomic grip",
-      price: 500.0,
-      category: "Endodontics",
-      brand: "Panora",
-    },
-    {
-      id: 2,
-      image: t2,
-      name: "LED Curing Light – Cordless & Rechargeable",
-      description: "LED Curing Light – Cordless & Rechargeable",
-      price: 120.0,
-      category: "Restorative",
-      brand: "DentLight",
-    },
-    {
-      id: 3,
-      image: t3,
-      name: "Digital Apex Locator",
-      description: "Digital Apex Locator with Precision Sensors",
-      price: 230.0,
-      category: "Endodontics",
-      brand: "ApexPro",
-    },
-    {
-      id: 4,
-      image: t1,
-      name: "Ultrasonic Scaler – Multi-Tip Compatible",
-      description: "Ultrasonic Scaler – Multi-Tip Compatible",
-      price: 320.0,
-      category: "Periodontics",
-      brand: "SonicCare",
-    },
-    {
-      id: 5,
-      image: t5,
-      name: "Portable X-ray Unit – Battery Operated",
-      description: "Portable X-ray Unit – Battery Operated",
-      price: 750.0,
-      category: "Radiology",
-      brand: "XPro",
-    },
-    {
-      id: 6,
-      image: t6,
-      name: "Rubber Dam Kit – Complete with Clamps & Frame",
-      description: "Rubber Dam Kit – Complete with Clamps & Frame",
-      price: 80.0,
-      category: "Endodontics",
-      brand: "SealDent",
-    },
-    {
-      id: 7,
-      image: t7,
-      name: "Intraoral Camera – HD with USB Connection",
-      description: "Intraoral Camera – HD with USB Connection",
-      price: 270.0,
-      category: "Imaging",
-      brand: "ViewDent",
-    },
-    {
-      id: 8,
-      image: t1,
-      name: "Disposable Saliva Ejectors – Pack of 100",
-      description: "Disposable Saliva Ejectors – Pack of 100",
-      price: 15.0,
-      category: "General",
-      brand: "Ejecto",
-    },
-    {
-      id: 9,
-      image: t1,
-      name: "Fiber Optic Dental Handpiece – Quiet & Lightweight",
-      description: "Fiber Optic Dental Handpiece – Quiet & Lightweight",
-      price: 460.0,
-      category: "Prosthodontics",
-      brand: "BrightLite",
-    },
-    {
-      id: 10,
-      image: t2,
-      name: "Surgical Aspirator Tips – Autoclavable",
-      description: "Surgical Aspirator Tips – Autoclavable",
-      price: 25.0,
-      category: "Surgery",
-      brand: "AspiraMed",
-    },
-    {
-      id: 11,
-      image: t3,
-      name: "Dental Tray Setup Kit – 5 Instruments Included",
-      description: "Dental Tray Setup Kit – 5 Instruments Included",
-      price: 55.0,
-      category: "General",
-      brand: "KitDent",
-    },
-    {
-      id: 12,
-      image: t1,
-      name: "Implant Driver Set – Hex, Torx, Square",
-      description: "Implant Driver Set – Hex, Torx, Square",
-      price: 290.0,
-      category: "Implantology",
-      brand: "Implanta",
-    },
-    {
-      id: 13,
-      image: t5,
-      name: "Cotton Roll Dispenser – Dustproof Lid",
-      description: "Cotton Roll Dispenser – Dustproof Lid",
-      price: 18.0,
-      category: "Operatory",
-      brand: "SafeRoll",
-    },
-    {
-      id: 14,
-      image: t6,
-      name: "Air-Water Syringe Tips – Disposable, 250/box",
-      description: "Air-Water Syringe Tips – Disposable, 250/box",
-      price: 22.0,
-      category: "Operatory",
-      brand: "EZTips",
-    },
-    {
-      id: 15,
-      image: t7,
-      name: "Dental Mirror – Front Surface, Anti-Fog",
-      description: "Dental Mirror – Front Surface, Anti-Fog",
-      price: 12.0,
-      category: "Diagnostic",
-      brand: "VisionPro",
-    },
-    {
-      id: 16,
-      image: t1,
-      name: "Endo Motor with Cordless Handpiece",
-      description: "Endo Motor with Cordless Handpiece",
-      price: 610.0,
-      category: "Endodontics",
-      brand: "EndoMax",
-      description: "Impression Tray Set – Upper & Lower",
-    },
-    {
-      id: 17,
-      image: t2,
-      name: "Impression Tray Set – Upper & Lower",
-      description: "Impression Tray Set – Upper & Lower",
-      price: 40.0,
-      category: "Prosthodontics",
-      brand: "MoldDent",
-    },
-    {
-      id: 18,
-      image: t3,
-      name: "Surgical Kit for Implant Placement – Complete System",
-      description: "Surgical Kit for Implant Placement – Complete System",
-      price: 990.0,
-      category: "Surgery",
-      brand: "ImplaKit",
-    },
-    {
-      id: 19,
-      image: t1,
-      name: "Amalgam Carrier – Large Capacity",
-      description: "Amalgam Carrier – Large Capacity",
-      price: 38.0,
-      category: "Restorative",
-      brand: "CarryFill",
-    },
-    {
-      id: 20,
-      image: t5,
-      name: "Dental Articulator – Semi-Adjustable",
-      description: "Dental Articulator – Semi-Adjustable",
-      price: 310.0,
-      category: "Prosthodontics",
-      brand: "Articulite",
-    },
-  ];
   const categories = [...new Set(products.map((product) => product.category))];
-
-  const menu = (
-    <Menu>
-      <Menu.Item key="1" icon={<IoEyeOutline />}>
-        View Details
-      </Menu.Item>
-      <Menu.Item key="2" icon={<IoPencil />}>
-        Edit
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item key="3" danger icon={<IoTrashOutline />}>
-        Delete
-      </Menu.Item>
-    </Menu>
-  );
-
-  // Filter products based on search and category
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -455,6 +248,4 @@ const AllProducts = () => {
       </Modal>
     </div>
   );
-};
-
-export default AllProducts;
+}

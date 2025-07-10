@@ -10,8 +10,9 @@ import {
   FiX,
   FiUpload,
 } from "react-icons/fi";
+import { SearchInput } from "../../components/search/SearchInput";
 
-const Category = () => {
+export default function Category() {
   const [searchText, setSearchText] = useState("");
   const [isAddModalVisible, setIsAddModalVisible] = useState(false);
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
@@ -165,28 +166,21 @@ const Category = () => {
     <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
         <PageHeading title="All Category" />
-        <div className="flex flex-col md:flex-row justify-center items-center md:items-center gap-2 w-full md:w-auto">
-          <div className="relative w-full md:w-[200px] h-[46px]">
-            <Input
-              placeholder="Search category..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              className="w-full h-[46px] pl-12 pr-4 rounded-md border-2 border-[#3b3b3b]"
-              prefix={
-                <IoSearch
-                  className="text-gray-400 absolute left-3 top-3.5"
-                  size={20}
-                />
-              }
-            />
+        <div className="flex flex-col md:flex-row justify-center items-center gap-2 w-full md:w-auto">
+          <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
+            <SearchInput />
+            <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
+              <IoSearch className="text-[1.3rem]" />
+            </span>
           </div>
-
-          <button
-            onClick={() => setIsAddModalVisible(true)}
-            className="w-full md:w-[200px] p-[10px] bg-[#136BFB] rounded text-white flex items-center justify-center gap-2"
-          >
-            <FiPlus /> Add Category
-          </button>
+          <div>
+            <button
+              onClick={() => setIsAddModalVisible(true)}
+              className="w-full md:w-[200px] p-[10px] bg-[#136BFB] rounded text-white flex items-center justify-center gap-2"
+            >
+              <FiPlus /> Add Category
+            </button>
+          </div>
         </div>
       </div>
       <div className="px-5 md:px-0 my-10">
@@ -455,6 +449,4 @@ const Category = () => {
       </Modal>
     </>
   );
-};
-
-export default Category;
+}
