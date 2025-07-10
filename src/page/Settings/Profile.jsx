@@ -3,6 +3,7 @@ import { FaCamera } from "react-icons/fa";
 import EditProfile from "./EditProfile";
 import ChangePass from "./ChangePass";
 import PageHeading from "../../shared/PageHeading";
+import { Tag } from "antd";
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("editProfile");
@@ -24,14 +25,19 @@ function ProfilePage() {
                 {/* Upload Icon */}
                 <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer">
                   <label htmlFor="profilePicUpload" className="cursor-pointer">
-                    <FaCamera className="text-[#FF62BD]" />
+                    <FaCamera className="text-[#136BFB]" />
                   </label>
                   <input type="file" id="profilePicUpload" className="hidden" />
                 </div>
               </div>
             </div>
-            <div>
-              <p className="text-xl md:text-3xl font-bold">Shah Aman</p>
+            <div className="flex flex-col items-center gap-1">
+              <p className="text-xl md:text-3xl font-bold text-white">
+                Shah Aman
+              </p>
+              <p className="text-gray-100">
+                Super Admin
+              </p>
             </div>
           </div>
 
@@ -41,7 +47,7 @@ function ProfilePage() {
               onClick={() => setActiveTab("editProfile")}
               className={`cursor-pointer pb-1 ${
                 activeTab === "editProfile"
-                  ? "text-[#FF62BD] border-b-2 border-[#FF62BD]"
+                  ? "text-[#136BFB] border-b-2 border-[#136BFB]"
                   : "text-[#6A6D76]"
               }`}
             >
@@ -51,7 +57,7 @@ function ProfilePage() {
               onClick={() => setActiveTab("changePassword")}
               className={`cursor-pointer pb-1 ${
                 activeTab === "changePassword"
-                  ? "text-[#FF62BD] border-b-2 border-[#FF62BD]"
+                  ? "text-[#136BFB] border-b-2 border-[#136BFB]"
                   : "text-[#6A6D76]"
               }`}
             >
