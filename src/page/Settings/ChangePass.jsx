@@ -5,7 +5,7 @@ function ChangePass() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="bg-white px-20 w-[715px] pt-10 py-5 rounded-md">
+    <div className="bg-white px-5 md:px-20 w-full md:w-[715px] py-5 rounded-md">
       <p className="text-primary text-center font-bold text-xl mb-5">
         Change Password
       </p>

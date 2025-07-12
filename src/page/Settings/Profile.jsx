@@ -8,68 +8,61 @@ function ProfilePage() {
   const [activeTab, setActiveTab] = useState("editProfile");
 
   return (
-    <div className="overflow-y-auto">
-      <div className="px-5 pb-5 h-full">
-        <PageHeading title=" Admin Profile" />
-        <div className="mx-auto flex flex-col justify-center items-center">
+    <div className="w-full overflow-y-auto">
+      <div className="px-4 sm:px-6 lg:px-8 py-6 w-full">
+        <PageHeading title="Admin Profile" />
+        <div className="w-full md:max-w-4xl mx-auto">
           {/* Profile Picture Section */}
-          <div className="flex flex-col justify-center items-center mt-5 text-gray-800 w-[900px] mx-auto p-5 gap-5 rounded-lg">
+          <div className="flex flex-col items-center mt-4 sm:mt-6 bg-white bg-opacity-10 rounded-xl p-4 sm:p-6 w-full">
             <div className="relative">
-              <div className="w-[122px] h-[122px] bg-gray-300 rounded-full border-4 border-white shadow-xl flex justify-center items-center">
+              <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gray-300 rounded-full border-4 border-white shadow-lg sm:shadow-xl flex justify-center items-center overflow-hidden">
                 <img
                   src="https://avatar.iran.liara.run/public/44"
                   alt="profile"
-                  className="h-30 w-32 rounded-full"
+                  className="w-full h-full object-cover"
                 />
                 {/* Upload Icon */}
-                <div className="absolute bottom-2 right-2 bg-white p-2 rounded-full shadow-md cursor-pointer">
+                <div className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-white p-1.5 sm:p-2 rounded-full shadow-md cursor-pointer">
                   <label htmlFor="profilePicUpload" className="cursor-pointer">
-                    <FaCamera className="text-[#136BFB]" />
+                    <FaCamera className="text-[#136BFB] w-3 h-3 sm:w-4 sm:h-4" />
                   </label>
                   <input type="file" id="profilePicUpload" className="hidden" />
                 </div>
               </div>
             </div>
-            <div className="flex flex-col items-center gap-1">
-              <p className="text-xl md:text-3xl font-bold text-white">
-                Shah Aman
-              </p>
-              <p className="text-gray-100">
-                Super Admin
-              </p>
+            <div className="text-center mt-3 sm:mt-4">
+              <p className="text-lg sm:text-2xl font-bold text-white">Shah Aman</p>
+              <p className="text-sm sm:text-base text-gray-200">Super Admin</p>
             </div>
           </div>
 
           {/* Tab Navigation Section */}
-          <div className="flex justify-center items-center gap-5 text-md md:text-xl font-semibold my-5">
-            <p
+          <div className="flex justify-center items-center gap-3 sm:gap-5 text-sm sm:text-base md:text-lg font-medium sm:font-semibold my-4 sm:my-6">
+            <button
               onClick={() => setActiveTab("editProfile")}
-              className={`cursor-pointer pb-1 ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-md transition-colors ${
                 activeTab === "editProfile"
-                  ? "text-[#136BFB] border-b-2 border-[#136BFB]"
-                  : "text-[#6A6D76]"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-300 hover:bg-gray-700"
               }`}
             >
               Edit Profile
-            </p>
-            <p
+            </button>
+            <button
               onClick={() => setActiveTab("changePassword")}
-              className={`cursor-pointer pb-1 ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-md transition-colors ${
                 activeTab === "changePassword"
-                  ? "text-[#136BFB] border-b-2 border-[#136BFB]"
-                  : "text-[#6A6D76]"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-300 hover:bg-gray-700"
               }`}
             >
               Change Password
-            </p>
+            </button>
           </div>
 
-          {/* Tab Content Section */}
-          <div className="flex justify-center items-center p-5 rounded-md">
-            <div className="w-full max-w-3xl">
-              {activeTab === "editProfile" && <EditProfile />}
-              {activeTab === "changePassword" && <ChangePass />}
-            </div>
+          {/* Tab Content */}
+          <div className="w-full max-w-2xl mx-auto">
+            {activeTab === "editProfile" ? <EditProfile /> : <ChangePass />}
           </div>
         </div>
       </div>
