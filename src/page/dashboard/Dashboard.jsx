@@ -3,10 +3,10 @@ import { LuCircleDollarSign } from "react-icons/lu";
 import { BsBagCheck } from "react-icons/bs";
 import { MdOutlineBlock } from "react-icons/md";
 
-import UserGrowth from "../../components/Dashboard/UserGrowth";
-import OrderGrowth from "../../components/Dashboard/OrderGrowth";
-import EarningGrowth from "../../components/Dashboard/EarningGrowth";
-import YearDropDown from "../../components/Dashboard/YearDropDown";
+import UserGrowth from "../../components/dashboard/UserGrowth";
+import OrderGrowth from "../../components/dashboard/OrderGrowth";
+import EarningGrowth from "../../components/dashboard/EarningGrowth";
+import YearDropDown from "../../components/dashboard/YearDropDown";
 
 export default function DashboardPage() {
   return (

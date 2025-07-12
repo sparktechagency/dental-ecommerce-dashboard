@@ -2,15 +2,27 @@ import {
   MdDashboard,
   MdManageAccounts,
   MdOutlineCategory,
-  MdOutlinePets,
+  MdOutlineArticle,
+  MdOutlineEmail,
+  MdOutlineImage,
+  MdOutlineAdminPanelSettings,
+  MdOutlineSettings,
+  MdOutlineShoppingCart,
+  MdOutlineInventory2,
+  MdOutlineLocalOffer,
+  MdOutlineDescription,
+  MdOutlineInfo,
+  MdOutlinePrivacyTip,
+  MdOutlineQuestionAnswer,
+  MdOutlineContactEmergency
 } from "react-icons/md";
-import { FaChevronRight, FaCog } from "react-icons/fa";
-import { IoIosLogOut } from "react-icons/io";
+import { FaChevronRight, FaUserCog } from "react-icons/fa";
+import { IoIosLogOut, IoMdNotificationsOutline } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { TbHomeDollar } from "react-icons/tb";
-import { LuBadgeCheck } from "react-icons/lu";
-import { BiCheckShield, BiCommand } from "react-icons/bi";
+import { LuBadgeCheck, LuFileText } from "react-icons/lu";
+import { BiCheckShield, BiCommand, BiCategoryAlt, BiNews } from "react-icons/bi";
 
 export const AdminItems = [
   {
@@ -20,102 +32,115 @@ export const AdminItems = [
     link: "/",
   },
   {
-    key: "userManagement",
-    label: "User management",
-    icon: FaCog,
+    key: "user-management",
+    label: "User Management",
+    icon: MdManageAccounts,
     children: [
       {
         key: "all-user",
         label: "All User",
         link: "/user/all-user",
+        icon: MdManageAccounts,
       },
       {
         key: "sign-up-request",
         label: "Sign Up Request",
         link: "/user/sign-up-request",
+        icon: LuBadgeCheck,
       },
     ],
   },
   {
-    key: "orderManagement",
+    key: "order-management",
     label: "Order Management",
-    icon: MdOutlinePets,
+    icon: MdOutlineShoppingCart,
     link: "/order/all-order",
   },
   {
-    key: "productManagement",
+    key: "product-management",
     label: "Product Management",
-    icon: MdOutlinePets,
+    icon: MdOutlineInventory2,
     link: "/product/all-product",
   },
   {
-    key: "categoryManagement",
+    key: "category",
     label: "Category",
-    icon: MdOutlinePets,
+    icon: BiCategoryAlt,
     link: "/category",
   },
   {
-    key: "brandManagement",
+    key: "brand",
     label: "Brand",
-    icon: MdOutlinePets,
+    icon: MdOutlineLocalOffer,
     link: "/brand",
   },
   {
-    key: "procedureGuide",
+    key: "procedure-guide",
     label: "Procedure Guide",
-    icon: MdOutlinePets,
+    icon: MdOutlineDescription,
     link: "/procedure-guide",
   },
   {
     key: "blog",
     label: "Blog",
-    icon: MdOutlinePets,
+    icon: MdOutlineArticle,
     link: "/blog",
   },
   {
     key: "newsletter",
     label: "Newsletter",
-    icon: MdOutlinePets,
+    icon: MdOutlineEmail,
     link: "/newsletter",
   },
   {
     key: "banner",
     label: "Banner",
-    icon: MdOutlinePets,
+    icon: MdOutlineImage,
     link: "/banner",
   },
   {
     key: "make-admin",
     label: "Make Admin",
-    icon: MdOutlinePets,
+    icon: MdOutlineAdminPanelSettings,
     link: "/make-admin",
   },
   {
     key: "settings",
     label: "Settings",
-    icon: FaCog,
+    icon: MdOutlineSettings,
     link: "/dashboard/Settings/profile",
     children: [
       {
         key: "profile",
         label: "Profile",
         link: "/dashboard/Settings/profile",
+        icon: FaUserCog
       },
       {
         key: "about-us",
         label: "About Us",
         link: "/about-us",
+        icon: MdOutlineInfo
       },
       {
         key: "terms",
         label: "Terms & Condition",
         link: "/dashboard/Settings/Terms&Condition",
+        icon: LuFileText
       },
       {
-        key: "privacy",
+        key: "privacy-policy",
         label: "Privacy Policy",
-        link: "/dashboard/Settings/PrivacyPolicy",
+        link: "/dashboard/Settings/Privacy&Policy",
+        icon: MdOutlinePrivacyTip
       },
+      {
+        key: "contact-us",
+        label: "Contact Us",
+        link: "/dashboard/Settings/ContactUs",
+        icon: MdOutlineContactEmergency
+      },
+     
     ],
   },
 ];
@@ -183,15 +208,7 @@ const SideBar = () => {
                 item.children?.some(
                   (child) => child.link === location.pathname
                 )) ||
-              (item.key === "userManagement" &&
-                item.children?.some(
-                  (child) => child.link === location.pathname
-                )) ||
-              (item.key === "creatorManagement" &&
-                item.children?.some(
-                  (child) => child.link === location.pathname
-                )) ||
-              (item.key === "categoriesManagement" &&
+              (item.key === "user-management" &&
                 item.children?.some(
                   (child) => child.link === location.pathname
                 ));
@@ -253,6 +270,7 @@ const SideBar = () => {
                             setSelectedKey(child.key);
                           }}
                         >
+                          <child.icon className="w-5 h-5 mr-2 flex-shrink-0" />
                           {child.label}
                         </Link>
                       ))}
