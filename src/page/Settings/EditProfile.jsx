@@ -1,6 +1,6 @@
 function EditProfile() {
           return (
-            <div className="bg-white px-5 md:px-20 w-full md:w-[715px] py-5 rounded-md">
+            <section className="bg-white px-5 md:px-20 w-full md:w-[715px] py-5 rounded-md">
               <p className="text-[#0D0D0D] text-center font-bold text-2xl mb-5">
                 Edit Your Profile
               </p>
@@ -48,7 +48,7 @@ function EditProfile() {
                   </button>
                 </div>
               </form>
-            </div>
+            </section>
           );
         }
         

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 
-const Notification = () => {
+export default function Notification() {
   const [notifications, setNotifications] = useState([
     {
       id: "1",
@@ -103,12 +103,12 @@ const Notification = () => {
   };
 
   return (
-    <div className="py-4 max-h-[70vh] overflow-y-auto">
+    <div className="py-5 overflow-y-auto">
       {notifications.length > 0 ? (
         notifications.map((notification) => (
           <div
             key={notification.id}
-            className="relative p-3 bg-white border rounded-lg mb-3"
+            className="relative p-2 bg-white border rounded-lg mb-3"
           >
             <button
               onClick={() => handleDismiss(notification.id)}
@@ -144,4 +144,3 @@ const Notification = () => {
   );
 };
 
-export default Notification;
