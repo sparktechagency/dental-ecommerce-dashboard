@@ -136,8 +136,8 @@ const Banners = () => {
   };
 
   return (
-    <main>
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-5">
+    <main className="pb-10">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
         <PageHeading title="Banners" />
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
         <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
@@ -156,7 +156,7 @@ const Banners = () => {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredBlogs.length > 0 ? (
           filteredBlogs.map((banner) => (
             <BannerCard
@@ -173,7 +173,7 @@ const Banners = () => {
             </p>
           </div>
         )}
-      </div>
+      </section>
 
       <Modal
         title={currentBlog ? "Edit Banner" : "Add New Banner"}

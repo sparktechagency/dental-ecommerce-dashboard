@@ -174,16 +174,16 @@ const ProcedureGuide = () => {
   };
 
   return (
-    <div className="p-6">
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-5">
+    <main className="pb-10">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-2">
         <PageHeading title="Procedure Guide" />
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
-        <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
-              <SearchInput />
-              <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
-                <IoSearch className="text-[1.3rem]" />
-              </span>
-            </div>
+          <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
+            <SearchInput />
+            <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
+              <IoSearch className="text-[1.3rem]" />
+            </span>
+          </div>
           <button
             onClick={handleAdd}
             className="w-full md:w-auto px-6 py-3 bg-[#136BFB] rounded-lg text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors whitespace-nowrap"
@@ -195,13 +195,13 @@ const ProcedureGuide = () => {
       </header>
 
       {/* Procedure Cards */}
-      <div className="space-y-6">
+      <div className="space-y-5 flex flex-col gap-5">
         {filteredProcedures.map((procedure) => (
           <div
             key={procedure.id}
             className="relative bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group"
           >
-            <div className="relative h-64 overflow-hidden">
+            <div className="relative h-[20rem] md:h-[25rem] overflow-hidden">
               <img
                 src={procedure.image}
                 alt={procedure.title}
@@ -222,10 +222,10 @@ const ProcedureGuide = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center space-x-4">
+                <div className="flex gap-2 mt-5">
                   <button
                     onClick={() => handleView(procedure)}
-                    className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white md:px-6 px-3 md:py-3 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
                   >
                     <FiEye className="h-4 w-4" />
                     <span>View</span>
@@ -233,7 +233,7 @@ const ProcedureGuide = () => {
 
                   <button
                     onClick={() => handleEdit(procedure)}
-                    className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white md:px-6 px-3 md:py-3 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
                   >
                     <FiEdit3 className="h-4 w-4" />
                     <span>Edit</span>
@@ -241,7 +241,7 @@ const ProcedureGuide = () => {
 
                   <button
                     onClick={() => handleDeleteClick(procedure)}
-                    className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
+                    className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white md:px-6 px-3 md:py-3 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
                   >
                     <FiTrash2 className="h-4 w-4" />
                     <span>Delete</span>
@@ -497,7 +497,7 @@ const ProcedureGuide = () => {
           </div>
         </div>
       </Modal>
-    </div>
+    </main>
   );
 };
 

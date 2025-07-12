@@ -9,7 +9,7 @@ function AboutUs() {
   );
 
   return (
-    <div className="p-5">
+    <main>
       <PageHeading title="About Us" />
 
       <div className=" bg-white rounded shadow p-5 h-full mt-5">
@@ -28,7 +28,7 @@ function AboutUs() {
           Save changes
         </button>
       </div>
-    </div>
+    </main>
   );
 }
 

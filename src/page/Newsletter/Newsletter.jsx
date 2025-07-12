@@ -11,7 +11,7 @@ function Newsletter() {
   return (
     <div className="p-5 min-h-screen">
       <PageHeading title="Newsletter" />
-      <div className=" bg-white rounded shadow p-5 h-full max-h-[calc(100vh-200px)] pt-10">
+      <div className=" bg-white rounded shadow p-5 h-full mt-5">
         <ReactQuill
           style={{ padding: "10px" }}
           theme="snow"

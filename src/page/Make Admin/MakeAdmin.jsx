@@ -165,33 +165,31 @@ const MakeAdmin = () => {
             Table: {
               headerBg: "#3b3b3b",
               headerColor: "#fff",
-              cellFontSize: 14,
+              cellFontSize: 16,
               headerSplitColor: "#3b3b3b",
-              rowHoverBg: "#f5f5f5",
             },
             Pagination: {
-              colorPrimary: "#136BFB",
-              colorPrimaryHover: "#0e56d6",
-              colorText: "#3b3b3b",
+              colorPrimaryBorder: "#3b3b3b",
+              colorBorder: "#3b3b3b",
+              colorTextPlaceholder: "#3b3b3b",
+              colorTextDisabled: "#3b3b3b",
+              colorBgTextActive: "#3b3b3b",
+              itemActiveBgDisabled: "#3b3b3b",
+              itemActiveColorDisabled: "#3b3b3b",
+              itemBg: "#3b3b3b",
+              colorBgTextHover: "#3b3b3b",
+              colorPrimary: "#3b3b3b",
+              colorPrimaryHover: "#3b3b3b",
             },
           },
         }}
       >
-        <div className="bg-white rounded-lg shadow">
-          <Table
-            dataSource={filteredDataSource}
-            columns={columns}
-            pagination={{
-              pageSize: 8,
-              showSizeChanger: false,
-              showTotal: (total) => `Total ${total} admins`,
-              className: "px-4 py-2"
-            }}
-            rowKey="key"
-            scroll={{ x: true }}
-            className="admin-table"
-          />
-        </div>
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          pagination={{ pageSize: 10 }}
+          scroll={{ x: "max-content" }}
+        />
       </ConfigProvider>
 
       {/* Delete Confirmation Modal */}

@@ -178,7 +178,7 @@ const Blog = () => {
 
   return (
     <main>
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-5">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-2">
         <PageHeading title="Blog" />
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
           <div className="relative w-full mt-5 md:mt-0 lg:mt-0">

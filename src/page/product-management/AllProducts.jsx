@@ -58,8 +58,8 @@ export default function AllProducts() {
   };
 
   return (
-    <>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <main className="pb-10">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <PageHeading title="All Products" />
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
           <div className="flex flex-col md:flex-row gap-2">
@@ -103,7 +103,7 @@ export default function AllProducts() {
             + Add Product
           </button>
         </div>
-      </div>
+      </header>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-5">
         {filteredProducts.map((product) => (
@@ -242,6 +242,6 @@ export default function AllProducts() {
           </div>
         </div>
       </Modal>
-    </>
+    </main>
   );
 }

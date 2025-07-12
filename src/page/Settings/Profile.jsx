@@ -3,7 +3,6 @@ import { FaCamera } from "react-icons/fa";
 import EditProfile from "./EditProfile";
 import ChangePass from "./ChangePass";
 import PageHeading from "../../shared/PageHeading";
-import { Tag } from "antd";
 
 function ProfilePage() {
   const [activeTab, setActiveTab] = useState("editProfile");

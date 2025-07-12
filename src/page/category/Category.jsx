@@ -163,27 +163,26 @@ export default function Category() {
   };
 
   return (
-    <>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
+    <main className="pb-10">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
         <PageHeading title="All Category" />
-        <div className="flex flex-col md:flex-row justify-center items-center gap-2 w-full md:w-auto">
+        <div className="flex flex-col md:flex-row justify-center items-center md:items-center gap-2 w-full md:w-auto">
           <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
             <SearchInput />
             <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
               <IoSearch className="text-[1.3rem]" />
             </span>
           </div>
-          <div>
             <button
               onClick={() => setIsAddModalVisible(true)}
-              className="w-full md:w-[200px] p-[10px] bg-[#136BFB] rounded text-white flex items-center justify-center gap-2"
+              className="w-full md:w-[200px] p-[10px] bg-[#136BFB] rounded text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors"
             >
-              <FiPlus /> Add Category
+              <FiPlus className="w-5 h-5" />
+              Add Category
             </button>
-          </div>
         </div>
-      </div>
-      <div className="px-5 md:px-0 my-10">
+      </header>
+      <div className="px-5 md:px-0">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredItems.map((item) => (
             <div
@@ -447,6 +446,6 @@ export default function Category() {
           </div>
         </div>
       </Modal>
-    </>
+    </main>
   );
 }
