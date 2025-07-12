@@ -312,7 +312,7 @@ export default function SignUpRequest() {
 
   return (
     <>
-      <div className="my-5 md:my-10 flex flex-col md:flex-row gap-5 justify-between items-center">
+      <div className="my-5 md:my-10 flex flex-col md:flex-row gap-2 md:gap-5 justify-between items-start md:items-center">
         <PageHeading title="Sign Up Request" />
         <div className="relative w-full sm:w-[300px] mt-5 md:mt-0 lg:mt-0">
           <SearchInput />

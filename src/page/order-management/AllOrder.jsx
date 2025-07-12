@@ -101,7 +101,7 @@ export default function AllOrder() {
 
   return (
     <>
-      <div className="my-5 md:my-10 flex flex-col md:flex-row gap-5 justify-between items-center">
+      <div className="my-5 md:my-10 flex flex-col md:flex-row gap-2 md:gap-5 justify-between items-start md:items-center">
         <PageHeading title="All Order" />
         <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <div className="relative w-full md:w-[300px]">

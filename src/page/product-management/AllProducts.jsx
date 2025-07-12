@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { Card, Select, ConfigProvider } from "antd";
 import { Modal, Form, message } from "antd";
-import {
-  IoSearch,
-  IoEyeOutline,
-  IoTrashOutline,
-} from "react-icons/io5";
+import { IoSearch, IoEyeOutline, IoTrashOutline } from "react-icons/io5";
 import PageHeading from "../../shared/PageHeading";
 import { BiEditAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
@@ -62,11 +58,11 @@ export default function AllProducts() {
   };
 
   return (
-    <div className="p-5">
+    <>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <PageHeading title="All Products" />
         <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row gap-2">
             <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
               <SearchInput />
               <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
@@ -246,6 +242,6 @@ export default function AllProducts() {
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   );
 }

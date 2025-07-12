@@ -37,11 +37,13 @@ export default function Header() {
             </Link>
 
             <div className="flex items-center space-x-3 cursor-pointer group">
+              <Link to="/dashboard/Settings/profile">
               <img
                 src="https://avatar.iran.liara.run/public/44"
                 alt="profile"
                 className="h-10 w-10 rounded-full"
               />
+              </Link>
               <div className="hidden md:block">
                 <p className="text-sm font-medium text-gray-200 group-hover:text-white">
                   Shah Aman
@@ -55,6 +57,7 @@ export default function Header() {
 
       {/* Mobile Sidebar */}
       <Drawer
+      
         title={
           <div className="flex items-center justify-center py-4">
             <img src="/logo.svg" alt="Logo" className="h-8" />

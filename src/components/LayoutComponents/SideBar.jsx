@@ -1,7 +1,6 @@
 import {
   MdDashboard,
   MdManageAccounts,
-  MdOutlineCategory,
   MdOutlineArticle,
   MdOutlineEmail,
   MdOutlineImage,
@@ -11,18 +10,12 @@ import {
   MdOutlineInventory2,
   MdOutlineLocalOffer,
   MdOutlineDescription,
-  MdOutlineInfo,
-  MdOutlinePrivacyTip,
-  MdOutlineQuestionAnswer,
-  MdOutlineContactEmergency
 } from "react-icons/md";
-import { FaChevronRight, FaUserCog } from "react-icons/fa";
-import { IoIosLogOut, IoMdNotificationsOutline } from "react-icons/io";
+import { FaChevronRight } from "react-icons/fa";
+import { IoIosLogOut } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { TbHomeDollar } from "react-icons/tb";
-import { LuBadgeCheck, LuFileText } from "react-icons/lu";
-import { BiCheckShield, BiCommand, BiCategoryAlt, BiNews } from "react-icons/bi";
+import { BiCategoryAlt } from "react-icons/bi";
 
 export const AdminItems = [
   {
@@ -40,13 +33,13 @@ export const AdminItems = [
         key: "all-user",
         label: "All User",
         link: "/user/all-user",
-        icon: MdManageAccounts,
+        // icon: MdManageAccounts,
       },
       {
         key: "sign-up-request",
         label: "Sign Up Request",
         link: "/user/sign-up-request",
-        icon: LuBadgeCheck,
+        // icon: LuBadgeCheck,
       },
     ],
   },
@@ -114,31 +107,31 @@ export const AdminItems = [
         key: "profile",
         label: "Profile",
         link: "/dashboard/Settings/profile",
-        icon: FaUserCog
+        // icon: FaUserCog
       },
       {
         key: "about-us",
         label: "About Us",
         link: "/about-us",
-        icon: MdOutlineInfo
+        // icon: MdOutlineInfo
       },
       {
         key: "terms",
         label: "Terms & Condition",
         link: "/dashboard/Settings/Terms&Condition",
-        icon: LuFileText
+        // icon: LuFileText
       },
       {
         key: "privacy-policy",
         label: "Privacy Policy",
-        link: "/dashboard/Settings/Privacy&Policy",
-        icon: MdOutlinePrivacyTip
+        link: "/dashboard/Settings/PrivacyPolicy",
+        // icon: MdOutlinePrivacyTip
       },
       {
         key: "contact-us",
         label: "Contact Us",
         link: "/dashboard/Settings/ContactUs",
-        icon: MdOutlineContactEmergency
+        // icon: MdOutlineContactEmergency
       },
      
     ],
@@ -270,7 +263,6 @@ const SideBar = () => {
                             setSelectedKey(child.key);
                           }}
                         >
-                          <child.icon className="w-5 h-5 mr-2 flex-shrink-0" />
                           {child.label}
                         </Link>
                       ))}
