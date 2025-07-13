@@ -23,6 +23,15 @@ select option {
   color: #fff;
   padding: 10px;
 }
+.custom-drawer .ant-drawer-header {
+  border: none;
+  padding: 0;
+}
+
+.custom-drawer .ant-drawer-body {
+  padding: 0;
+  background-color: #202020;
+}
 
 
 
