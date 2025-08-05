@@ -27,7 +27,7 @@ const EditProduct = ({ isVisible, onClose, product, onUpdateProduct }) => {
         procedureGuide: product.procedureGuide || "Root canal",
         availability: product.availability || "In Stock",
         price: product.price || "",
-        image: product.image || null,
+        image: product.images?.[0] || product.image || null, // Use first image from images array or single image
       });
     }
   }, [product]);
