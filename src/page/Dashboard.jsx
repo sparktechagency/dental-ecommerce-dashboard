@@ -2,11 +2,14 @@ import { FaRegUser } from "react-icons/fa";
 import { LuCircleDollarSign } from "react-icons/lu";
 import { BsBagCheck } from "react-icons/bs";
 import { MdOutlineBlock } from "react-icons/md";
-
-import UserGrowth from "../../components/dashboard/UserGrowth";
-import OrderGrowth from "../../components/dashboard/OrderGrowth";
-import EarningGrowth from "../../components/dashboard/EarningGrowth";
-import YearDropDown from "../../components/dashboard/YearDropDown";
+import YearDropDown from "../components/YearDropDown";
+import UserGrowth from "../components/UserGrowth";
+import OrderGrowth from "../components/OrderGrowth";
+import EarningGrowth from "../components/EarningGrowth";
+// import UserGrowth from "../components/dashboard/UserGrowth";
+// import OrderGrowth from "../components/OrderGrowth";
+// import EarningGrowth from "../components/EarningGrowth";
+// import YearDropDown from "../components/YearDropDown";
 
 export default function DashboardPage() {
   return (

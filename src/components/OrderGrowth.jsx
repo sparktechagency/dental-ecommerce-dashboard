@@ -8,8 +8,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { OrderGrowthData } from "../../../utils/data";
+import { OrderGrowthData } from "../../utils/data";
 import { CustomTooltip } from "./CustomTooltip";
+
 
 export default function OrderGrowth() {
   const [chartHeight, setChartHeight] = useState(300);

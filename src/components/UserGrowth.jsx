@@ -7,7 +7,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { userData } from "../../../utils/data";
+import { userData } from "../../utils/data";
 import { CustomTooltip } from "./CustomTooltip";
 
 export default function UserGrowth() {

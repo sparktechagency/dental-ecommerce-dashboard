@@ -9,7 +9,7 @@ import {
   YAxis,
 } from "recharts";
 import { CustomTooltip } from "./CustomTooltip";
-import { EarningGrowthData } from "../../../utils/data";
+import { EarningGrowthData } from "../../utils/data";
 
 const EarningGrowth = () => {
   const [chartHeight, setChartHeight] = useState(300);

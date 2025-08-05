@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import { Drawer } from "antd";
 import { FaBars, FaChevronRight } from "react-icons/fa";
-import { AdminItems } from "./SideBar";
+import { MdDashboard, MdManageAccounts, MdOutlineAdminPanelSettings, MdOutlineArticle, MdOutlineDescription, MdOutlineEmail, MdOutlineImage, MdOutlineInventory2, MdOutlineLocalOffer, MdOutlineSettings, MdOutlineShoppingCart } from "react-icons/md";
+import { BiCategoryAlt } from "react-icons/bi";
+// import { AdminItems } from "../SideBar";
 
 export default function Header() {
   const [selectedKey, setSelectedKey] = useState("dashboard");
@@ -16,6 +18,128 @@ export default function Header() {
       prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
     );
   };
+
+
+const AdminItems = [
+    {
+      key: "dashboard",
+      label: "Dashboard",
+      icon: MdDashboard,
+      link: "/",
+    },
+    {
+      key: "user-management",
+      label: "User Management",
+      icon: MdManageAccounts,
+      children: [
+        {
+          key: "all-user",
+          label: "All User",
+          link: "/user/all-user",
+          // icon: MdManageAccounts,
+        },
+        {
+          key: "sign-up-request",
+          label: "Sign Up Request",
+          link: "/user/sign-up-request",
+          // icon: LuBadgeCheck,
+        },
+      ],
+    },
+    {
+      key: "order-management",
+      label: "Order Management",
+      icon: MdOutlineShoppingCart,
+      link: "/order/all-order",
+    },
+    {
+      key: "product-management",
+      label: "Product Management",
+      icon: MdOutlineInventory2,
+      link: "/product/all-product",
+    },
+    {
+      key: "category",
+      label: "Category",
+      icon: BiCategoryAlt,
+      link: "/category",
+    },
+    {
+      key: "brand",
+      label: "Brand",
+      icon: MdOutlineLocalOffer,
+      link: "/brand",
+    },
+    {
+      key: "procedure-guide",
+      label: "Procedure Guide",
+      icon: MdOutlineDescription,
+      link: "/procedure-guide",
+    },
+    {
+      key: "blog",
+      label: "Blog",
+      icon: MdOutlineArticle,
+      link: "/blog",
+    },
+    {
+      key: "newsletter",
+      label: "Newsletter",
+      icon: MdOutlineEmail,
+      link: "/newsletter",
+    },
+    {
+      key: "banner",
+      label: "Banner",
+      icon: MdOutlineImage,
+      link: "/banner",
+    },
+    {
+      key: "make-admin",
+      label: "Make Admin",
+      icon: MdOutlineAdminPanelSettings,
+      link: "/make-admin",
+    },
+    {
+      key: "settings",
+      label: "Settings",
+      icon: MdOutlineSettings,
+      link: "/dashboard/Settings/profile",
+      children: [
+        {
+          key: "profile",
+          label: "Profile",
+          link: "/dashboard/Settings/profile",
+          // icon: FaUserCog
+        },
+        {
+          key: "about-us",
+          label: "About Us",
+          link: "/about-us",
+          // icon: MdOutlineInfo
+        },
+        {
+          key: "terms",
+          label: "Terms & Condition",
+          link: "/dashboard/Settings/Terms&Condition",
+          // icon: LuFileText
+        },
+        {
+          key: "privacy-policy",
+          label: "Privacy Policy",
+          link: "/dashboard/Settings/PrivacyPolicy",
+          // icon: MdOutlinePrivacyTip
+        },
+        {
+          key: "contact-us",
+          label: "Contact Us",
+          link: "/dashboard/Settings/ContactUs",
+          // icon: MdOutlineContactEmergency
+        },
+       
+      ],
+    },
+  ];
 
   return (
     <>
