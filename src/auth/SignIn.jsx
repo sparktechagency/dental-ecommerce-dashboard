@@ -1,25 +1,33 @@
 import { useState } from "react";
 import { IoEyeOffOutline, IoEyeOutline, IoClose } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Form, Input, Button, Checkbox, message } from "antd";
+import { useLoginAdminMutation } from "../page/redux/api/userApi";
+import { useDispatch } from "react-redux";
+import { setToken } from "../page/redux/features/auth/authSlice";
 
 function SignIn() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
   const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleCheckboxChange = (event) => {
-    setIsChecked(event.target.checked);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loginAdmin, { isLoading }] = useLoginAdminMutation();
+  const onFinish = async (values) => {
+    console.log("Form Values:", values);
+    try {
+      const payload = await loginAdmin(values).unwrap();
+      console.log(payload);
+      if (payload) {
+        dispatch(setToken(payload?.data?.accessToken));
+        message.success(payload?.message);
+        navigate("/");
+      } else {
+        message.error(payload?.message);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      message.error(error?.data?.message || "Server is down");
+    } finally {
+    }
   };
 
   return (
@@ -27,71 +35,87 @@ function SignIn() {
       {/* Left Column - Form */}
       <div className="w-full md:w-1/2 bg-[#171717] p-8 flex flex-col justify-center relative">
         <div className="max-w-md mx-auto w-full">
-          <h1 className="text-center text-3xl font-bold text-white mb-2">Welcome Back !</h1>
-          <p className="text-center text-[#9F9C96] mb-8">Please enter your email and password to continue</p>
+          <h1 className="text-center text-3xl font-bold text-white mb-2">
+            Welcome Back !
+          </h1>
+          <p className="text-center text-[#9F9C96] mb-8">
+            Please enter your email and password to continue
+          </p>
 
-          <form className="space-y-6">
-            <div>
-              <label className="block text-white font-bold text-lg mb-2">Email</label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
+          <Form
+            name="signin"
+            layout="vertical"
+            onFinish={onFinish}
+            className="space-y-6"
+          >
+            {/* Email */}
+            <Form.Item
+              label={
+                <span className="text-white font-bold text-lg">Email</span>
+              }
+              name="email"
+              rules={[
+                { required: true, message: "Please enter your email!" },
+                { type: "email", message: "Enter a valid email!" },
+              ]}
+            >
+              <Input
                 placeholder="Enter your email"
-                className="w-full px-4 py-3 bg-[#2D2D2D] text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition"
-                required
+                className="bg-[#2D2D2D] text-white border-gray-600 rounded-lg"
               />
-            </div>
+            </Form.Item>
 
-            <div>
-              <label className="block text-white font-bold text-lg mb-2">Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-3 bg-[#2D2D2D] text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none pr-12"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-                >
-                  {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
-                </button>
-              </div>
-            </div>
+            {/* Password */}
+            <Form.Item
+              label={
+                <span className="text-white font-bold text-lg">Password</span>
+              }
+              name="password"
+              rules={[
+                { required: true, message: "Please enter your password!" },
+              ]}
+            >
+              <Input.Password
+                placeholder="Enter your password"
+                iconRender={(visible) =>
+                  visible ? (
+                    <IoEyeOffOutline className="text-gray-400" />
+                  ) : (
+                    <IoEyeOutline className="text-gray-400" />
+                  )
+                }
+                className="bg-[#2D2D2D] text-white border-gray-600 rounded-lg"
+                visibilityToggle={{
+                  visible: showPassword,
+                  onVisibleChange: setShowPassword,
+                }}
+              />
+            </Form.Item>
 
+            {/* Remember & Forgot */}
             <div className="flex items-center justify-between">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={isChecked}
-                  onChange={handleCheckboxChange}
-                  className="h-4 w-4 text-blue-600 rounded border-gray-600 focus:ring-blue-500"
-                />
-                <span className="ml-2 text-gray-300">Remember Me</span>
-              </label>
-              <Link to="/forget-password" className="text-red-500 hover:underline text-sm">
+              <Form.Item name="remember" valuePropName="checked" noStyle>
+                <Checkbox className="text-gray-300">Remember Me</Checkbox>
+              </Form.Item>
+              <Link
+                to="/forget-password"
+                className="text-red-500 hover:underline text-sm"
+              >
                 Forgot Password?
               </Link>
             </div>
 
-
-            <Link to="/">
-              <button
-                type="submit"
-                className="w-full bg-[#136BFB] text-white font-bold py-3 px-4 rounded-lg transition mt-5"
+            {/* Submit */}
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="w-full font-bold py-3 rounded-lg mt-5"
               >
                 Log In
-              </button>
-            </Link>
-
-          </form>
+              </Button>
+            </Form.Item>
+          </Form>
         </div>
       </div>
 

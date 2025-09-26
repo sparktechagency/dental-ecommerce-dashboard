@@ -27,11 +27,12 @@ import AboutUs from "../page/Settings/AboutUs";
 // import DashboardPage from "../page/dashboard/Dashboard";
 import ContactUs from "../page/Settings/ContactUs";
 import DashboardPage from "../page/Dashboard";
+import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <DashboardLayout />,
+    element: <ProtectedRoute><DashboardLayout /></ProtectedRoute>,
     children: [
       {
         path: "/",
