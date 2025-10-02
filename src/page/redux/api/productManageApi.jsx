@@ -52,6 +52,161 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
+
+
+
+    getBrands: builder.query({
+      query: () => {
+        return {
+          url: `/brands`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+
+
+    addBrands: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/brands",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+
+
+    deleteBrands: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/brands/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+
+
+    updateBrands: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/brands/${id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+
+
+
+    
+    getProcedure: builder.query({
+      query: () => {
+        return {
+          url: `/procedures`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+
+
+    addProcedure: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/procedures",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+
+
+    deleteProcedure: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/procedures/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+
+
+    updateProcedure: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/procedures/${id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+
+
+
+
+    getProducts: builder.query({
+      query: () => {
+        return {
+          url: `/products`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+
+
+    addProducts: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/products",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+
+
+    deleteProducts: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/products/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+
+
+    updateProducts: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/products/${id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
   }),
 });
 
@@ -59,7 +214,12 @@ export const {
   useAddCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
-  useGetCategroyAllQuery
+  useGetCategroyAllQuery,
+  useGetBrandsQuery,
+  useAddBrandsMutation,
+  useUpdateBrandsMutation,useDeleteBrandsMutation,
+  useAddProcedureMutation,useGetProcedureQuery,useUpdateProcedureMutation,useDeleteProcedureMutation,
+  useAddProductsMutation,useGetProductsQuery,useUpdateProductsMutation,useDeleteProductsMutation
 } = category;
 
 

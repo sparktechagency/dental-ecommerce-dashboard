@@ -19,7 +19,7 @@ import Category from "../page/category/Category";
 import Brand from "../page/brand/Brand";
 import ProcedureGuide from "../page/procedureGuide/ProcedureGuide";
 import Blog from "../page/blog/Blog";
-import ViewBlog from "../page/blog/ViewBlog";
+
 import Newsletter from "../page/Newsletter/Newsletter";
 import Banners from "../page/Banners/Banners";
 import MakeAdmin from "../page/Make Admin/MakeAdmin";
@@ -85,10 +85,7 @@ export const router = createBrowserRouter([
         path: "/blog",
         element: <Blog />,
       },
-      {
-        path: "/view-blog/:id",
-        element: <ViewBlog />,
-      },
+   
       // Newsletter
       {
         path: "/newsletter",

@@ -1,183 +1,53 @@
-import { Input, Modal, Form, Button, message } from "antd";
-import PageHeading from "../../shared/PageHeading";
-import { FiPlus } from "react-icons/fi";
-import { IoSearch } from "react-icons/io5";
-import { BlogCard } from "./BlogCard";
-import { useState, useRef } from "react";
-import { FiUpload, FiX } from "react-icons/fi";
+import { Calendar, Eye, Edit, Trash2 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import PageHeading from "../../shared/PageHeading"; 
 import { SearchInput } from "../../components/search/SearchInput";
-
-export const blogsData = [
-  {
-    id: "1",
-    title: "The Dental Dispatch",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3845457/pexels-photo-3845457.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-  {
-    id: "2",
-    title: "Chairside Journal",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3845810/pexels-photo-3845810.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-  {
-    id: "3",
-    title: "Smarter Smiles",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3779709/pexels-photo-3779709.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-  {
-    id: "4",
-    title: "The Dental Dispatch",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3845457/pexels-photo-3845457.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-  {
-    id: "5",
-    title: "Chairside Journal",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3845810/pexels-photo-3845810.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-  {
-    id: "6",
-    title: "Smarter Smiles",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3779709/pexels-photo-3779709.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-];
+import { IoSearch } from "react-icons/io5";
+import { FiPlus } from "react-icons/fi";
+import AddBlog from "./AddBlog";
+import { useState } from "react";
+import { useGetBlogQuery } from "../redux/api/blogApi";
+import { Modal, message } from "antd";
+import { imageUrl } from "../redux/api/baseApi";
+import EditBlog from "./EditBlog";
 
 const Blog = () => {
-  const [blogs, setBlogs] = useState(blogsData);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const { data: blogData } = useGetBlogQuery();
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [viewModal, setViewModal] = useState(false);
   const [currentBlog, setCurrentBlog] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
-  const fileInputRef = useRef(null);
-  const [form] = Form.useForm();
-
-  const [newBlogData, setNewBlogData] = useState({
-    title: "",
-    description: "",
-    imageUrl: "",
-    date: new Date().toISOString().split("T")[0], // Format: YYYY-MM-DD
-  });
-
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-        setNewBlogData((prev) => ({
-          ...prev,
-          imageUrl: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
-
+  const navigate = useNavigate();
+const [selectedBlogs, setSelectedCategory] = useState(null);
   const showAddModal = () => {
     setCurrentBlog(null);
-    setPreviewImage(null);
-    setNewBlogData({
-      title: "",
-      description: "",
-      imageUrl: "",
-      date: new Date().toISOString().split("T")[0],
+    setOpenAddModal(true);
+  };
+
+  const handleEdit = (blog) => {
+setSelectedCategory(blog);
+    setEditModal(true);
+  };
+
+  const handleDelete = (blog) => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this blog?",
+      okText: "Yes",
+      cancelText: "No",
+      onOk: () => {
+        // API call for delete
+        message.success("Blog deleted successfully!");
+      },
     });
-    setIsAddModalVisible(true);
   };
 
-  const handleEdit = (id) => {
-    const blogToEdit = blogs.find((blog) => blog.id === id);
-    if (blogToEdit) {
-      setCurrentBlog(blogToEdit);
-      setPreviewImage(blogToEdit.imageUrl || null);
-      setNewBlogData({
-        title: blogToEdit.title,
-        description: blogToEdit.description,
-        imageUrl: blogToEdit.imageUrl,
-        date: blogToEdit.date || new Date().toISOString().split("T")[0],
-      });
-      setIsEditModalVisible(true);
-    }
-  };
 
-  const handleSave = () => {
-    if (!newBlogData.title.trim()) return;
-
-    if (currentBlog) {
-      setBlogs(
-        blogs.map((blog) =>
-          blog.id === currentBlog.id
-            ? { ...blog, ...newBlogData, id: currentBlog.id }
-            : blog
-        )
-      );
-      message.success("Blog post updated successfully");
-    } else {
-      const newBlog = {
-        ...newBlogData,
-        id: Date.now().toString(),
-      };
-      setBlogs([...blogs, newBlog]);
-      message.success("Blog post created successfully");
-    }
-
-    setPreviewImage(null);
-    setCurrentBlog(null);
-    setIsAddModalVisible(false);
-    setIsEditModalVisible(false);
-  };
-
-  const handleSearch = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const filteredBlogs = blogs.filter((blog) => {
-    const searchLower = searchTerm.toLowerCase();
-    return blog.title.toLowerCase().includes(searchLower);
-  });
-
-  const handleDelete = (id) => {
-    const blog = blogs.find((blog) => blog.id === id);
+  const handleView = (blog) => {
     setCurrentBlog(blog);
-    setIsDeleteModalVisible(true);
+    setViewModal(true);
   };
-
-  const confirmDelete = () => {
-    setBlogs(blogs.filter((blog) => blog.id !== currentBlog.id));
-    setIsDeleteModalVisible(false);
-    message.success("Blog post deleted successfully");
-  };
-
   return (
-    <main>
+    <main className="p-6">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-2">
         <PageHeading title="Blog" />
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
@@ -198,183 +68,102 @@ const Blog = () => {
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredBlogs.length > 0 ? (
-          filteredBlogs.map((blog) => (
-            <BlogCard
-              key={blog.id}
-              {...blog}
-              onEdit={() => handleEdit(blog.id)}
-              onDelete={() => handleDelete(blog.id)}
-            />
+        {blogData?.data.length > 0 ? (
+          blogData.data.map((blog) => (
+            <div
+              key={blog._id}
+              className="bg-[#1c1c1c] rounded-lg shadow-sm overflow-hidden"
+            >
+              <div className="min-h-[250px] min-w-[387px]">
+                <img
+                  src={`${imageUrl}${blog.imageUrl[0]}`}
+                  alt={blog.title}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <div className="p-5">
+                <div>
+                  <h3 className="text-white text-xl font-semibold mb-2">
+                    {blog.title}
+                  </h3>
+                  <p className="text-[#9F9C96] text-sm line-clamp-2">
+                    {blog.content}
+                  </p>
+                </div>
+                <div className="flex items-center justify-between mt-5">
+                  <div className="flex items-center text-[#9F9C96] text-sm">
+                    <Calendar className="w-4 h-4 mr-2" />
+                    {new Date(blog.createdAt).toLocaleDateString()}
+                  </div>
+
+                  <div className="flex items-center space-x-1">
+                    <button
+                      onClick={() => handleView(blog)}
+                      className="p-2 text-[#017FF4]"
+                      title="View"
+                    >
+                      <Eye className="w-5 h-5" />
+                    </button>
+                    <button
+                      onClick={() => handleEdit(blog)}
+                      className="p-2 text-[#017FF4]"
+                      title="Edit"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(blog)}
+                      className="p-2 text-red-600"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           ))
         ) : (
           <div className="col-span-full text-center py-10">
-            <p className="text-gray-400">
-              No blog posts found matching your search.
-            </p>
+            <p className="text-gray-400">No blog posts available.</p>
           </div>
         )}
       </div>
 
+      {/* Add/Edit Modal */}
+      <AddBlog
+        openAddModal={openAddModal}
+        setOpenAddModal={setOpenAddModal}
+        currentBlog={currentBlog}
+      />
+
+      <EditBlog editModal={editModal}
+        setEditModal={setEditModal}
+        selectedBlogs={selectedBlogs}></EditBlog>
+
+      {/* View Modal */}
       <Modal
-        title={currentBlog ? "Edit Blog Post" : "Add New Blog Post"}
-        open={isAddModalVisible || isEditModalVisible}
-        onCancel={() => {
-          if (isAddModalVisible) setIsAddModalVisible(false);
-          if (isEditModalVisible) setIsEditModalVisible(false);
-          setCurrentBlog(null);
-          setPreviewImage(null);
-        }}
+        open={viewModal}
+        title={currentBlog?.title}
+        onCancel={() => setViewModal(false)}
         footer={null}
+        width={700}
         centered
       >
-        <div className="p-4">
-          <div className="mb-6">
-            <div
-              onClick={triggerFileInput}
-              className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer"
-            >
-              {previewImage ? (
-                <div className="relative">
-                  <img
-                    src={previewImage}
-                    alt="Preview"
-                    className="max-h-40 mx-auto mb-2 rounded"
-                  />
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setPreviewImage(null);
-                      setNewBlogData((prev) => ({
-                        ...prev,
-                        imageUrl: "",
-                      }));
-                    }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                  >
-                    <FiX className="h-4 w-4" />
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <FiUpload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500 text-sm">
-                    Upload Blog Cover Image
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Click to upload or drag and drop
-                  </p>
-                </>
-              )}
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-              />
-            </div>
+        {currentBlog && (
+          <div>
+            <img
+              src={`${imageUrl}${currentBlog.imageUrl[0]}`}
+              alt={currentBlog.title}
+              className="w-full h-64 object-cover mb-4 rounded-md"
+            />
+            <p className="text-black">{currentBlog.content}</p>
+            <p className="mt-2 text-gray-500">
+              Published on:{" "}
+              {new Date(currentBlog.createdAt).toLocaleDateString()}
+            </p>
           </div>
-
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                Blog Title <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                placeholder="Enter blog title"
-                value={newBlogData.title}
-                onChange={(e) =>
-                  setNewBlogData({
-                    ...newBlogData,
-                    title: e.target.value,
-                  })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                Publish Date
-              </label>
-              <input
-                type="date"
-                value={newBlogData.date}
-                onChange={(e) =>
-                  setNewBlogData({
-                    ...newBlogData,
-                    date: e.target.value,
-                  })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-900 mb-2">
-                Blog Content <span className="text-red-500">*</span>
-              </label>
-              <textarea
-                rows={6}
-                placeholder="Write your blog content here..."
-                value={newBlogData.description}
-                onChange={(e) =>
-                  setNewBlogData({
-                    ...newBlogData,
-                    description: e.target.value,
-                  })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-              />
-            </div>
-          </div>
-
-          <button
-            onClick={handleSave}
-            disabled={
-              !newBlogData.title?.trim() || !newBlogData.description?.trim()
-            }
-            className={`w-full mt-6 py-2 px-4 rounded-lg font-medium text-white ${
-              newBlogData.title?.trim() && newBlogData.description?.trim()
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-gray-400 cursor-not-allowed"
-            } transition-colors`}
-          >
-            {currentBlog ? "Update" : "Publish"} Blog Post
-          </button>
-        </div>
-      </Modal>
-
-      <Modal
-        title="Delete Blog Post"
-        open={isDeleteModalVisible}
-        onCancel={() => setIsDeleteModalVisible(false)}
-        footer={null}
-      >
-        <div className="p-5">
-          <h1 className="text-4xl text-center text-[#0D0D0D]">
-            Are you sure you want to delete ?
-          </h1>
-
-          <div className="text-center py-5">
-            <button
-              onClick={() => setIsDeleteModalVisible(false)}
-              className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
-            >
-              Yes,Delete
-            </button>
-          </div>
-          <div className="text-center pb-5">
-            <button
-              onClick={() => setIsDeleteModalVisible(false)}
-              className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
-            >
-              No,Don’t Delete
-            </button>
-          </div>
-        </div>
+        )}
       </Modal>
     </main>
   );

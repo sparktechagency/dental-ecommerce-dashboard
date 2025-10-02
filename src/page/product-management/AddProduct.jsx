@@ -1,230 +1,217 @@
-// AddProduct.jsx
 import React, { useState } from "react";
-import { Modal } from "antd";
-import { MdCloudUpload, MdKeyboardArrowDown } from "react-icons/md";
+import { Modal, Form, Input, Select, Upload, Button, message } from "antd";
+import { useAddProductsMutation, useGetBrandsQuery, useGetCategroyAllQuery, useGetProcedureQuery } from "../redux/api/productManageApi";
 
-const AddProduct = ({ isVisible, onClose, onAddProduct }) => {
-  const [formData, setFormData] = useState({
-    productName: "",
-    description: "",
-    brand: "Squre Pharma",
-    category: "Endodontics",
-    procedureGuide: "Root canal",
-    availability: "In Stock",
-  });
+const { Option } = Select;
 
-  const [mainImage, setMainImage] = useState(null);
-
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
-
-  const handleImageUpload = (event, isMain = true) => {
-    const file = event.target.files[0];
-    if (file) {
+const onPreview = async (file) => {
+  let src = file.url;
+  if (!src) {
+    src = await new Promise((resolve) => {
       const reader = new FileReader();
-      reader.onload = (e) => {
-        if (isMain) {
-          setMainImage(e.target.result);
-        }
-      };
-      reader.readAsDataURL(file);
-    }
+      reader.readAsDataURL(file.originFileObj);
+      reader.onload = () => resolve(reader.result);
+    });
+  }
+  const image = new Image();
+  image.src = src;
+  const imgWindow = window.open(src);
+  imgWindow?.document.write(image.outerHTML);
+};
+
+const AddProduct = ({ openAddModal, setOpenAddModal }) => {
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const { data: brands } = useGetBrandsQuery();
+  const { data: category } = useGetCategroyAllQuery();
+  const { data: procedure } = useGetProcedureQuery();
+
+  const [addProduct] = useAddProductsMutation();
+
+  const onChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add any validation here
-    onAddProduct({ ...formData, image: mainImage });
+  // ✅ Submit Form
+  const handleSubmit = async (values) => {
+  try {
+    setLoading(true);
+
+    const formData = new FormData();
+
+    // Append images as an array using `image[]`
+    fileList.forEach((file) => {
+      formData.append("image[]", file.originFileObj); // Use `image[]` to indicate an array
+    });
+
+    // Other fields
+    formData.append("name", values.name);
+    formData.append("description", values.description);
+    formData.append("price", values.price);
+    formData.append("stock", values.stock);
+    formData.append("brand", values.brand);
+    formData.append("category", values.category);
+    formData.append("procedure", values.procedure);
+    formData.append("availability", values.availability);
+
+    const res = await addProduct(formData).unwrap();
+    message.success(res.message || "Product added successfully!");
+    setOpenAddModal(false);
+    form.resetFields();
+    setFileList([]);
+    setLoading(false);
+  } catch (error) {
+    console.error(error);
+    message.error(error?.data?.message || "Failed to add product");
+    setLoading(false);
+  }
+};
+
+  const handleCancel = () => {
+    setOpenAddModal(false);
+    form.resetFields();
+    setFileList([]);
   };
 
   return (
     <Modal
       title="Add New Product"
-      open={isVisible}
-      onCancel={onClose}
+      open={openAddModal}
+      onCancel={handleCancel}
       footer={null}
       width={700}
+      centered
     >
-      <div className="max-w-4xl mx-auto">
-        <form onSubmit={handleSubmit} className="p-2">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-            {/* Left Side - Image Upload */}
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-700">
-                  Upload Product Thumbnail Image
-                </label>
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="main-image-upload"
-                  />
-                  <label
-                    htmlFor="main-image-upload"
-                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all duration-200"
-                  >
-                    {mainImage ? (
-                      <img
-                        src={mainImage}
-                        alt="Main product"
-                        className="w-full h-full object-cover rounded-xl"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center space-y-3">
-                        <MdCloudUpload className="w-12 h-12 text-gray-400" />
-                        <span className="text-gray-500 font-medium">
-                          Upload Product Thumbnail Image
-                        </span>
-                      </div>
-                    )}
-                  </label>
-                </div>
-              </div>
-            </div>
+      <Form
+        layout="vertical"
+        form={form}
+        onFinish={handleSubmit}
+        className="p-2 space-y-4"
+      >
+        {/* Images */}
+        <Form.Item label="Photos">
+          <Upload
+            listType="picture-card"
+            fileList={fileList}
+            onChange={onChange}
+            onPreview={onPreview}
+            multiple
+          >
+            {fileList.length < 5 && "+ Upload"} {/* max 5 images */}
+          </Upload>
+        </Form.Item>
 
-            {/* Right Side - Form Fields */}
-            <div className="space-y-5">
-              {/* Product Name */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Product Name
-                </label>
-                <input
-                  type="text"
-                  value={formData.productName}
-                  onChange={(e) =>
-                    handleInputChange("productName", e.target.value)
-                  }
-                  placeholder="Type here"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-                />
-              </div>
+        {/* Product Name */}
+        <Form.Item
+          label="Product Name"
+          name="name"
+          rules={[{ required: true, message: "Please enter product name!" }]}
+        >
+          <Input placeholder="Enter product name" size="large" />
+        </Form.Item>
 
-              {/* Description */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) =>
-                    handleInputChange("description", e.target.value)
-                  }
-                  placeholder="Type here"
-                  rows={4}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none"
-                />
-              </div>
+        {/* Description */}
+        <Form.Item
+          label="Description"
+          name="description"
+          rules={[{ required: true, message: "Please enter description!" }]}
+        >
+          <Input.TextArea rows={4} placeholder="Enter description" size="large" />
+        </Form.Item>
 
-              {/* Select Brand */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Select Brand
-                </label>
-                <div className="relative">
-                  <select
-                    value={formData.brand}
-                    onChange={(e) => handleInputChange("brand", e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
-                  >
-                    <option value="Squre Pharma">Squre Pharma</option>
-                    <option value="Panora">Panora</option>
-                    <option value="MedTech">MedTech</option>
-                    <option value="DentalCare">DentalCare</option>
-                  </select>
-                  <MdKeyboardArrowDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
+        {/* Price */}
+        <Form.Item
+          label="Price"
+          name="price"
+          rules={[{ required: true, message: "Please enter price!" }]}
+        >
+          <Input type="number" placeholder="Enter price" size="large" />
+        </Form.Item>
 
-              {/* Select Category */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Select Category
-                </label>
-                <div className="relative">
-                  <select
-                    value={formData.category}
-                    onChange={(e) =>
-                      handleInputChange("category", e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
-                  >
-                    <option value="Endodontics">Endodontics</option>
-                    <option value="Orthodontics">Orthodontics</option>
-                    <option value="Periodontics">Periodontics</option>
-                    <option value="Oral Surgery">Oral Surgery</option>
-                  </select>
-                  <MdKeyboardArrowDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
+        {/* Stock */}
+        <Form.Item
+          label="Stock"
+          name="stock"
+          rules={[{ required: true, message: "Please enter stock!" }]}
+        >
+          <Input type="number" placeholder="Enter stock" size="large" />
+        </Form.Item>
 
-              {/* Select Procedure Guide */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Select Procedure guide
-                </label>
-                <div className="relative">
-                  <select
-                    value={formData.procedureGuide}
-                    onChange={(e) =>
-                      handleInputChange("procedureGuide", e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
-                  >
-                    <option value="Root canal">Root canal</option>
-                    <option value="Crown placement">Crown placement</option>
-                    <option value="Tooth extraction">Tooth extraction</option>
-                    <option value="Dental implant">Dental implant</option>
-                  </select>
-                  <MdKeyboardArrowDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
+        {/* Brand */}
+        <Form.Item
+          label="Select Brand"
+          name="brand"
+          rules={[{ required: true, message: "Please select a brand!" }]}
+        >
+          <Select placeholder="Select brand" size="large">
+            {brands?.data?.map((b) => (
+              <Option key={b._id} value={b._id}>
+                {b.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
 
-              {/* Availability */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Availability
-                </label>
-                <div className="relative">
-                  <select
-                    value={formData.availability}
-                    onChange={(e) =>
-                      handleInputChange("availability", e.target.value)
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
-                  >
-                    <option value="In Stock">In Stock</option>
-                    <option value="Out of Stock">Out of Stock</option>
-                    <option value="Limited Stock">Limited Stock</option>
-                    <option value="Pre-order">Pre-order</option>
-                  </select>
-                  <MdKeyboardArrowDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* Category */}
+        <Form.Item
+          label="Select Category"
+          name="category"
+          rules={[{ required: true, message: "Please select a category!" }]}
+        >
+          <Select placeholder="Select category" size="large">
+            {category?.data?.map((c) => (
+              <Option key={c._id} value={c._id}>
+                {c.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
 
-          {/* Submit Button */}
-          <div className="flex justify-end mt-5 pt-5">
-            <button
-              type="submit"
-              className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
-      </div>
+        {/* Procedure */}
+        <Form.Item
+          label="Procedure Guide"
+          name="procedure"
+          rules={[{ required: true, message: "Please select a procedure!" }]}
+        >
+          <Select placeholder="Select procedure" size="large">
+            {procedure?.data?.map((p) => (
+              <Option key={p._id} value={p._id}>
+                {p.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        {/* Availability */}
+        <Form.Item
+          label="Availability"
+          name="availability"
+          rules={[{ required: true, message: "Please select availability!" }]}
+        >
+          <Select placeholder="Select availability" size="large">
+            <Option value="In Stock">In Stock</Option>
+            <Option value="Out of Stock">Out of Stock</Option>
+            <Option value="Limited Stock">Limited Stock</Option>
+            <Option value="Pre-order">Pre-order</Option>
+          </Select>
+        </Form.Item>
+
+        {/* Submit */}
+        <div className="flex justify-end">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            className="px-6 py-2 text-base font-semibold rounded-lg"
+          >
+            Submit
+          </Button>
+        </div>
+      </Form>
     </Modal>
   );
 };
 
 export default AddProduct;
-
