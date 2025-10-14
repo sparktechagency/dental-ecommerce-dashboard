@@ -2,8 +2,6 @@ import { baseApi } from "./baseApi";
 
 const category = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-
-
     getCategroyAll: builder.query({
       query: () => {
         return {
@@ -13,8 +11,6 @@ const category = baseApi.injectEndpoints({
       },
       providesTags: ["updateProfile"],
     }),
-
-
 
     addCategory: builder.mutation({
       query: (data) => {
@@ -27,8 +23,6 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-
-
     deleteCategory: builder.mutation({
       query: (id) => {
         return {
@@ -38,8 +32,6 @@ const category = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
-
-
 
     updateCategory: builder.mutation({
       query: ({ data, id }) => {
@@ -52,9 +44,6 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-
-
-
     getBrands: builder.query({
       query: () => {
         return {
@@ -64,8 +53,6 @@ const category = baseApi.injectEndpoints({
       },
       providesTags: ["updateProfile"],
     }),
-
-
 
     addBrands: builder.mutation({
       query: (data) => {
@@ -78,8 +65,6 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-
-
     deleteBrands: builder.mutation({
       query: (id) => {
         return {
@@ -89,8 +74,6 @@ const category = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
-
-
 
     updateBrands: builder.mutation({
       query: ({ data, id }) => {
@@ -103,10 +86,6 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-
-
-
-    
     getProcedure: builder.query({
       query: () => {
         return {
@@ -116,8 +95,6 @@ const category = baseApi.injectEndpoints({
       },
       providesTags: ["updateProfile"],
     }),
-
-
 
     addProcedure: builder.mutation({
       query: (data) => {
@@ -130,8 +107,6 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-
-
     deleteProcedure: builder.mutation({
       query: (id) => {
         return {
@@ -141,8 +116,6 @@ const category = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
-
-
 
     updateProcedure: builder.mutation({
       query: ({ data, id }) => {
@@ -155,10 +128,6 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-
-
-
-
     getProducts: builder.query({
       query: () => {
         return {
@@ -169,7 +138,24 @@ const category = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
-
+    getSingleProducts: builder.query({
+      query: ({ id }) => {
+        return {
+          url: `/products/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+    getSingleProductsUrl: builder.query({
+      query: ({ productId }) => {
+        return {
+          url: `/products/byid/${productId}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
 
     addProducts: builder.mutation({
       query: (data) => {
@@ -182,8 +168,6 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-
-
     deleteProducts: builder.mutation({
       query: (id) => {
         return {
@@ -193,8 +177,6 @@ const category = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
-
-
 
     updateProducts: builder.mutation({
       query: ({ data, id }) => {
@@ -207,6 +189,62 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
+
+
+
+
+
+ getBanner: builder.query({
+      query: () => {
+        return {
+          url: `/sliders`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+   
+
+    addBanner: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/sliders",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    deleteBanner: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/sliders/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    updateBanner: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/sliders/${id}`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+
+
+
+
+
+
+
   }),
 });
 
@@ -217,20 +255,18 @@ export const {
   useGetCategroyAllQuery,
   useGetBrandsQuery,
   useAddBrandsMutation,
-  useUpdateBrandsMutation,useDeleteBrandsMutation,
-  useAddProcedureMutation,useGetProcedureQuery,useUpdateProcedureMutation,useDeleteProcedureMutation,
-  useAddProductsMutation,useGetProductsQuery,useUpdateProductsMutation,useDeleteProductsMutation
+  useUpdateBrandsMutation,
+  useDeleteBrandsMutation,
+  useAddProcedureMutation,
+  useGetProcedureQuery,
+  useUpdateProcedureMutation,
+  useDeleteProcedureMutation,
+  useAddProductsMutation,
+  useGetSingleProductsUrlQuery,
+  useGetSingleProductsQuery,
+  useGetProductsQuery,
+  useUpdateProductsMutation,
+  useDeleteProductsMutation,
+  useAddBannerMutation,
+  useDeleteBannerMutation,useGetBannerQuery,useUpdateBannerMutation
 } = category;
-
-
-
-
-
-
-
-
-
-
-
-
-

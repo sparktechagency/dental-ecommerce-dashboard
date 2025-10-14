@@ -7,7 +7,7 @@ import PageHeading from "../../shared/PageHeading";
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
 import { SearchInput } from "../../components/search/SearchInput";
-import { useGetProductsQuery } from "../redux/api/productManageApi";
+import { useDeleteProductsMutation, useGetProductsQuery } from "../redux/api/productManageApi";
 import { imageUrl } from "../redux/api/baseApi";
 
 export default function AllProducts() {
@@ -16,35 +16,28 @@ export default function AllProducts() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [form] = Form.useForm();
 
-  // ✅ API Call
   const { data: getAllProducts, isLoading, isError } = useGetProductsQuery();
+const [deleteData] = useDeleteProductsMutation()
 
-  // ✅ Product Data from API
   const products = getAllProducts?.data || [];
+  console.log(products)
 
-  // ✅ Add Modal Open
   const showAddModal = () => {
     form.resetFields();
     setOpenAddModal(true);
   };
 
-  // ✅ Edit Product
   const handleEdit = (product) => {
     setSelectedProduct(product);
     setEditModal(true);
   };
-
-  // ✅ Delete Product
-  const handleDelete = (id) => {
-    Modal.confirm({
-      title: "Are you sure you want to delete this product?",
-      okText: "Yes",
-      cancelText: "No",
-      onOk: () => {
-        message.success("Product deleted successfully!");
-        // এখানে চাইলে delete API hit করতে পারো
-      },
-    });
+  const handleDelete = async (id) => {
+    try {
+      const res = await deleteData(id).unwrap();
+      message.success(res?.message);
+    } catch (err) {
+      message.error(err?.data?.message);
+    }
   };
 
   if (isLoading)
@@ -76,12 +69,15 @@ export default function AllProducts() {
           </div>
 
           {/* Add Product Button */}
-          <button
+          <div>
+            <button
             onClick={showAddModal}
             className="w-full md:w-[200px] p-[10px] bg-[#136BFB] rounded text-white"
           >
             + Add Product
           </button>
+          </div>
+ 
         </div>
       </header>
 
@@ -89,7 +85,7 @@ export default function AllProducts() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {products.map((product) => (
           <Card
-            key={product._id}
+            key={product?._id}
             className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300"
             bodyStyle={{
               flex: 1,
@@ -100,8 +96,8 @@ export default function AllProducts() {
             cover={
               <div className="h-48 bg-gray-50 flex items-center justify-center">
                 <img
-                  alt={product.name}
-                  src={`${imageUrl}${product.imageUrl[0]}`}
+                  alt={product?.name}
+                  src={`${imageUrl}${product?.images[0]}`}
                   className="h-full w-full object-contain p-4"
                 />
               </div>
@@ -109,30 +105,30 @@ export default function AllProducts() {
           >
             <div className="flex-grow flex flex-col">
               <h1 className="font-medium text-gray-900 line-clamp-2 h-10">
-                {product.name}
+                {product?.name}
               </h1>
               <h3 className="font-medium text-[#9F9C96] line-clamp-2 h-14">
-                {product.description}
+                {product?.description}
               </h3>
 
               <div className="mt-auto pt-2">
                 <div className="flex justify-between items-center">
                   <span className="text-lg font-bold text-[#136BFB]">
-                    ${product.price?.toFixed(2)}
+                    ${product?.price?.toFixed(2)}
                   </span>
                   <p className="m-0 text-[#29A366] font-semibold">
-                    {product.brand?.name}
+                    {product?.brand?.name}
                   </p>
                 </div>
                 <p className="m-0 text-[#9F9C96]">
-                  {product.category || "Uncategorized"}
+                  {product?.category?.name }
                 </p>
               </div>
             </div>
 
             {/* Actions */}
             <div className="flex justify-start gap-2 mt-4">
-              <Link to={`/view-product/${product._id}`}>
+              <Link to={`/view-product/${product?.productId}`}>
                 <button
                   className="border-2 border-[#3b3b3b] rounded-lg p-2 hover:bg-gray-100 transition"
                   title="View Details"
@@ -150,7 +146,7 @@ export default function AllProducts() {
               </button>
 
               <button
-                onClick={() => handleDelete(product._id)}
+               onClick={() => handleDelete(product?._id)}
                 className="border-2 border-[#3b3b3b] rounded-lg p-2 hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition"
                 title="Delete"
               >
@@ -161,13 +157,11 @@ export default function AllProducts() {
         ))}
       </div>
 
-      {/* Add Product Modal */}
       <AddProduct
         openAddModal={openAddModal}
         setOpenAddModal={setOpenAddModal}
       />
 
-      {/* Edit Product Modal */}
       <EditProduct
         editModal={editModal}
         setEditModal={setEditModal}

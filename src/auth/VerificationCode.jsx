@@ -1,82 +1,102 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { IoClose } from "react-icons/io5";
+import OTPInput from "react-otp-input";
+import { message } from "antd";
+import { useVerifyOtpMutation } from "../page/redux/api/userApi";
 
 function VerificationCode() {
-  const [code, setCode] = useState(new Array(5).fill(""));
+  const [otp, setOtp] = useState("");
+  const [verifyOtp] = useVerifyOtpMutation();
   const navigate = useNavigate();
 
-  const handleChange = (value, index) => {
-    if (!isNaN(value)) {
-      const newCode = [...code];
-      newCode[index] = value;
-      setCode(newCode);
+  const handleVerify = async () => {
+    const data = {
+      otp: Number(otp),
+      email: localStorage.getItem("email"),
+    };
 
-      // Move to next input
-      if (value && index < 4) {
-        document.getElementById(`code-${index + 1}`).focus();
-      }
+    if (!otp || otp.length < 6) {
+      return message.warning("Please enter the 6-digit code");
     }
-  };
 
-  const handleKeyDown = (e, index) => {
-    if (e.key === 'Backspace' && !code[index] && index > 0) {
-      // Move to previous input on backspace
-      document.getElementById(`code-${index - 1}`).focus();
+    try {
+      const response = await verifyOtp(data).unwrap();
+      message.success(response?.message);
+      navigate("/reset-password");
+    } catch (error) {
+      console.error(error);
+      message.error(error?.data?.message || "Invalid verification code");
     }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate("/reset-password");
   };
 
   return (
     <div className="flex min-h-screen bg-white">
-      {/* Left Column - Form */}
-      <div className="w-full md:w-1/2 bg-[#171717] p-8 flex flex-col justify-center relative">
+      {/* Left Column - Verification Form */}
+      <div className="w-full md:w-1/2 bg-[#171717] p-8 flex flex-col justify-center">
         <div className="max-w-md mx-auto w-full">
-          <h1 className="text-center text-3xl font-bold text-white mb-4">Verification Code</h1>
+          <h1 className="text-center text-3xl font-bold text-white mb-4">
+            Verification Code
+          </h1>
           <p className="text-center text-[#9F9C96] mb-8">
-            We have sent the verification code to your email
+            We have sent the verification code to your email.
           </p>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="flex justify-between max-w-md mx-auto mb-8">
-              {code.map((digit, index) => (
+          {/* OTP Input */}
+          <div className="flex justify-center mb-6">
+            <OTPInput
+              value={otp}
+              onChange={setOtp}
+              numInputs={6}
+              renderSeparator={<span className="mx-1" />}
+              renderInput={(props) => (
                 <input
-                  key={index}
-                  id={`code-${index}`}
-                  type="text"
-                  maxLength="1"
-                  value={digit}
-                  onChange={(e) => handleChange(e.target.value, index)}
-                  onKeyDown={(e) => handleKeyDown(e, index)}
-                  className="w-14 h-14 text-2xl text-center bg-[#2D2D2D] text-white border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  {...props}
+                  className="w-[40px] h-16 text-center bg-white text-lg border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  style={{ width: "40px", height: "50px" }}
                 />
-              ))}
-            </div>
+              )}
+            />
+          </div>
 
-            <button
-              type="submit"
-              className="w-full bg-[#136BFB] text-white text-lg font-bold py-3 px-4 rounded-lg transition hover:bg-blue-700"
+          {/* Verify Button */}
+          <button
+            onClick={handleVerify}
+            className="w-full py-2 bg-[#D17C51] text-white font-semibold rounded-md hover:bg-[#b96940] transition-all duration-200"
+          >
+            Verify Code
+          </button>
+
+          {/* Resend Section */}
+          <p className="text-center mt-4 text-sm text-white">
+            Didn’t receive the email?{" "}
+            <span
+              // onClick={handleResend}
+              className="text-[#D17C51] cursor-pointer font-medium hover:underline"
             >
-              Verify Code
-            </button>
-          </form>
+              Resend
+            </span>
+          </p>
         </div>
       </div>
 
       {/* Right Column - Illustration */}
       <div className="hidden md:flex md:w-1/2 bg-[#162236] items-center justify-center relative">
         <div className="absolute top-4 right-4">
-          <Link to="/signin" className="text-white hover:bg-blue-700 p-2 rounded-full inline-block">
+          <Link
+            to="/signin"
+            className="text-white hover:bg-blue-700 p-2 rounded-full inline-block"
+          >
             <IoClose size={24} />
           </Link>
         </div>
         <div className="text-center px-12">
           <div className="w-[400px] h-[400px] mx-auto">
-            <img src="/otp.svg" alt="Verification" className="w-full h-full object-contain" />
+            <img
+              src="/otp.svg"
+              alt="Verification"
+              className="w-full h-full object-contain"
+            />
           </div>
         </div>
       </div>

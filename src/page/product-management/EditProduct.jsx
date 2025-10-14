@@ -1,282 +1,259 @@
-// In EditProduct.jsx
 import React, { useState, useEffect } from "react";
-import { message } from "antd";
-import { MdCloudUpload, MdKeyboardArrowDown } from "react-icons/md";
+import { Modal, Form, Input, Select, Upload, Button, message } from "antd";
+import {
+  useGetBrandsQuery,
+  useGetCategroyAllQuery,
+  useGetProcedureQuery,
+  useUpdateProductsMutation,
+} from "../redux/api/productManageApi";
+import { PlusOutlined } from "@ant-design/icons";
+import { imageUrl } from "../redux/api/baseApi";
 
-const EditProduct = ({ isVisible, onClose, product, onUpdateProduct }) => {
+const { Option } = Select;
+
+const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
+  const [form] = Form.useForm();
+  const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    productName: "",
-    description: "",
-    brand: "Squre Pharma",
-    category: "Endodontics",
-    procedureGuide: "Root canal",
-    availability: "In Stock",
-    price: "",
-    image: null,
-  });
 
-  // Initialize form with product data when component mounts or product prop changes
+  const { data: brands } = useGetBrandsQuery();
+  const { data: category } = useGetCategroyAllQuery();
+  const { data: procedure } = useGetProcedureQuery();
+  const [updateProduct] = useUpdateProductsMutation();
+
+  // ✅ useEffect to set default values
   useEffect(() => {
-    if (product) {
-      setFormData({
-        productName: product.name || "",
-        description: product.description || "",
-        brand: product.brand || "Squre Pharma",
-        category: product.category || "Endodontics",
-        procedureGuide: product.procedureGuide || "Root canal",
-        availability: product.availability || "In Stock",
-        price: product.price || "",
-        image: product.images?.[0] || product.image || null, // Use first image from images array or single image
+    if (selectedProduct && editModal) {
+      form.setFieldsValue({
+        name: selectedProduct.name,
+        description: selectedProduct.description,
+        price: selectedProduct.price,
+        stock: selectedProduct.stock,
+        brand: selectedProduct?.brand?._id,
+        category: selectedProduct?.category?._id,
+        procedure: selectedProduct?.procedure?._id,
+        availability: selectedProduct.availability,
       });
-    }
-  }, [product]);
 
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+      if (selectedProduct.images?.length) {
+        const mappedImages = selectedProduct.images.map((url, index) => ({
+          uid: `existing-${index}`,
+          name: `image-${index + 1}.png`,
+          status: "done",
+          url: `${imageUrl}${url}`,
+        }));
+        setFileList(mappedImages);
+      }
+    }
+  }, [selectedProduct, editModal, form]);
+
+  // ✅ Handle upload and remove
+  const handleUploadChange = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
   };
 
-  const handleImageUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFormData((prev) => ({ ...prev, image: e.target.result }));
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleRemove = (file) => {
+    setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-
+  // ✅ Submit form data
+  const handleSubmit = async (values) => {
     try {
-      await onUpdateProduct({
-        ...formData,
-        id: product.id,
+      setLoading(true);
+      const formData = new FormData();
+
+      // Separate existing and new images
+      const existingImages = fileList
+        .filter((file) => file.url)
+        .map((file) => file.url.replace(imageUrl, ""));
+
+      const newImages = fileList.filter((file) => file.originFileObj);
+
+      // ✅ append product data
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("price", values.price);
+      formData.append("stock", values.stock);
+      formData.append("brand", values.brand);
+      formData.append("category", values.category);
+      formData.append("procedure", values.procedure);
+      formData.append("availability", values.availability);
+
+    
+      formData.append("images", JSON.stringify(existingImages));
+
+ 
+      newImages.forEach((file) => {
+        formData.append("images", file.originFileObj);
       });
+
+    
+      const res = await updateProduct({
+        id: selectedProduct._id,
+        data: formData,
+      }).unwrap();
+
+      message.success(res.message || "Product updated successfully!");
+      setEditModal(false);
+      form.resetFields();
+      setFileList([]);
     } catch (error) {
-      console.error("Error updating product:", error);
-      message.error("Failed to update product");
+      console.error(error);
+      message.error(error?.data?.message || "Something went wrong!");
     } finally {
       setLoading(false);
     }
   };
 
-  if (!isVisible) return null;
+  // ✅ Handle Cancel
+  const handleCancel = () => {
+    setEditModal(false);
+    form.resetFields();
+    setFileList([]);
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Edit Product</h1>
-          <button 
-            onClick={onClose}
-            className="text-gray-500 hover:text-gray-700"
-            aria-label="Close"
+    <Modal
+      title="Edit Product"
+      open={editModal}
+      onCancel={handleCancel}
+      footer={null}
+      width={700}
+      centered
+    >
+      <Form
+        layout="vertical"
+        form={form}
+        onFinish={handleSubmit}
+        className="p-2 space-y-4"
+      >
+        {/* Photos */}
+        <Form.Item label="Photos">
+          <Upload
+            listType="picture-card"
+            fileList={fileList}
+            onChange={handleUploadChange}
+            onRemove={handleRemove}
+            beforeUpload={() => false}
+            multiple
           >
-            ✕
-          </button>
+            {fileList.length >= 10 ? null : (
+              <div>
+                <PlusOutlined />
+                <div>Add Image</div>
+              </div>
+            )}
+          </Upload>
+        </Form.Item>
+
+        {/* Product Name */}
+        <Form.Item
+          label="Product Name"
+          name="name"
+          rules={[{ required: true, message: "Please enter product name!" }]}
+        >
+          <Input placeholder="Enter product name" size="large" />
+        </Form.Item>
+
+        {/* Description */}
+        <Form.Item
+          label="Description"
+          name="description"
+          rules={[{ required: true, message: "Please enter description!" }]}
+        >
+          <Input.TextArea rows={4} placeholder="Enter description" size="large" />
+        </Form.Item>
+
+        {/* Price */}
+        <Form.Item
+          label="Price"
+          name="price"
+          rules={[{ required: true, message: "Please enter price!" }]}
+        >
+          <Input type="number" placeholder="Enter price" size="large" />
+        </Form.Item>
+
+        {/* Stock */}
+        <Form.Item
+          label="Stock"
+          name="stock"
+          rules={[{ required: true, message: "Please enter stock!" }]}
+        >
+          <Input type="number" placeholder="Enter stock" size="large" />
+        </Form.Item>
+
+        {/* Brand */}
+        <Form.Item
+          label="Select Brand"
+          name="brand"
+          rules={[{ required: true, message: "Please select a brand!" }]}
+        >
+          <Select placeholder="Select brand" size="large">
+            {brands?.data?.map((b) => (
+              <Option key={b._id} value={b._id}>
+                {b.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        {/* Category */}
+        <Form.Item
+          label="Select Category"
+          name="category"
+          rules={[{ required: true, message: "Please select a category!" }]}
+        >
+          <Select placeholder="Select category" size="large">
+            {category?.data?.map((c) => (
+              <Option key={c._id} value={c._id}>
+                {c.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        {/* Procedure */}
+        <Form.Item
+          label="Procedure Guide"
+          name="procedure"
+          rules={[{ required: true, message: "Please select a procedure!" }]}
+        >
+          <Select placeholder="Select procedure" size="large">
+            {procedure?.data?.map((p) => (
+              <Option key={p._id} value={p._id}>
+                {p.name}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        {/* Availability */}
+        <Form.Item
+          label="Availability"
+          name="availability"
+          rules={[{ required: true, message: "Please select availability!" }]}
+        >
+          <Select placeholder="Select availability" size="large">
+            <Option value="In Stock">In Stock</Option>
+            <Option value="Out of Stock">Out of Stock</Option>
+            <Option value="Limited Stock">Limited Stock</Option>
+            <Option value="Pre-order">Pre-order</Option>
+          </Select>
+        </Form.Item>
+
+        {/* Submit Button */}
+        <div className="flex justify-end">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={loading}
+            className="px-6 py-2 text-base font-semibold rounded-lg"
+          >
+            Update
+          </Button>
         </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Left Side - Image Upload */}
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <label className="block text-sm font-medium text-gray-700">
-                  Product Image
-                </label>
-                <div className="relative">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageUpload}
-                    className="hidden"
-                    id="product-image-upload"
-                  />
-                  <label
-                    htmlFor="product-image-upload"
-                    className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all duration-200"
-                  >
-                    {formData.image ? (
-                      <img
-                        src={formData.image}
-                        alt="Product"
-                        className="w-full h-full object-cover rounded-xl"
-                      />
-                    ) : (
-                      <div className="flex flex-col items-center justify-center space-y-3">
-                        <MdCloudUpload className="w-12 h-12 text-gray-400" />
-                        <span className="text-gray-500 font-medium">
-                          Upload Product Image
-                        </span>
-                        <span className="text-xs text-gray-400">
-                          Click to upload or drag and drop
-                        </span>
-                      </div>
-                    )}
-                  </label>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Side - Form Fields */}
-            <div className="space-y-5">
-              {/* Product Name */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Product Name
-                </label>
-                <input
-                  type="text"
-                  value={formData.productName}
-                  onChange={(e) =>
-                    handleInputChange("productName", e.target.value)
-                  }
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-                  required
-                />
-              </div>
-
-              {/* Description */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Description
-                </label>
-                <textarea
-                  value={formData.description}
-                  onChange={(e) =>
-                    handleInputChange("description", e.target.value)
-                  }
-                  rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-none"
-                  required
-                />
-              </div>
-
-              {/* Price */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Price
-                </label>
-                <input
-                  type="number"
-                  value={formData.price}
-                  onChange={(e) => handleInputChange("price", e.target.value)}
-                  step="0.01"
-                  min="0"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
-                  required
-                />
-              </div>
-
-              {/* Select Brand */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Brand
-                </label>
-                <div className="relative">
-                  <select
-                    value={formData.brand}
-                    onChange={(e) => handleInputChange("brand", e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
-                  >
-                    <option value="Squre Pharma">Squre Pharma</option>
-                    <option value="Panora">Panora</option>
-                    <option value="MedTech">MedTech</option>
-                    <option value="DentalCare">DentalCare</option>
-                  </select>
-                  <MdKeyboardArrowDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Select Category */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Category
-                </label>
-                <div className="relative">
-                  <select
-                    value={formData.category}
-                    onChange={(e) =>
-                      handleInputChange("category", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
-                  >
-                    <option value="Endodontics">Endodontics</option>
-                    <option value="Orthodontics">Orthodontics</option>
-                    <option value="Periodontics">Periodontics</option>
-                    <option value="Oral Surgery">Oral Surgery</option>
-                  </select>
-                  <MdKeyboardArrowDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Select Procedure Guide */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Procedure Guide
-                </label>
-                <div className="relative">
-                  <select
-                    value={formData.procedureGuide}
-                    onChange={(e) =>
-                      handleInputChange("procedureGuide", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
-                  >
-                    <option value="Root canal">Root canal</option>
-                    <option value="Crown placement">Crown placement</option>
-                    <option value="Tooth extraction">Tooth extraction</option>
-                    <option value="Dental implant">Dental implant</option>
-                  </select>
-                  <MdKeyboardArrowDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Availability */}
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">
-                  Availability
-                </label>
-                <div className="relative">
-                  <select
-                    value={formData.availability}
-                    onChange={(e) =>
-                      handleInputChange("availability", e.target.value)
-                    }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 appearance-none bg-white"
-                  >
-                    <option value="In Stock">In Stock</option>
-                    <option value="Out of Stock">Out of Stock</option>
-                    <option value="Limited Stock">Limited Stock</option>
-                    <option value="Pre-order">Pre-order</option>
-                  </select>
-                  <MdKeyboardArrowDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex justify-end pt-5">
-                <button
-                  type="submit"
-                  onClick={onClose}
-                  className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
-                  disabled={loading}
-                >
-                  {loading ? "Saving..." : "Submit"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
+      </Form>
+    </Modal>
   );
 };
 

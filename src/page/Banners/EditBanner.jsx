@@ -1,7 +1,12 @@
 import { Form, Input, message, Modal, Spin, Upload } from "antd";
 import React, { useEffect, useState } from "react";
-import { useAddProcedureMutation, useUpdateProcedureMutation } from "../redux/api/productManageApi";
+import {
+  useAddProcedureMutation,
+  useUpdateBannerMutation,
+  useUpdateProcedureMutation,
+} from "../redux/api/productManageApi";
 import { imageUrl } from "../redux/api/baseApi";
+
 
 const onPreview = async (file) => {
   let src = file.url;
@@ -17,11 +22,11 @@ const onPreview = async (file) => {
   const imgWindow = window.open(src);
   imgWindow?.document.write(image.outerHTML);
 };
-const EditProcedure = ({ editModal, setEditModal, selectedProcedure }) => {
-    console.log(selectedProcedure)
+const EditBanner = ({ editModal, setEditModal, selectedProcedure }) => {
+  console.log(selectedProcedure);
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
-  const [updateProcedure] = useUpdateProcedureMutation();
+  const [updateProcedure] = useUpdateBannerMutation();
   const [loading, setLoading] = useState(false);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
@@ -59,10 +64,12 @@ const EditProcedure = ({ editModal, setEditModal, selectedProcedure }) => {
       fileList.forEach((file) => {
         formData.append("image", file.originFileObj);
       });
-      formData.append("description", values.description);
-      formData.append("name", values.name);
+     
 
-      const res = await updateProcedure({  id:selectedProcedure?._id,data:formData});
+      const res = await updateProcedure({
+        id: selectedProcedure?._id,
+        data: formData,
+      });
       console.log(res);
       message.success(res.data.message);
       setLoading(false);
@@ -79,18 +86,16 @@ const EditProcedure = ({ editModal, setEditModal, selectedProcedure }) => {
   };
 
   return (
-  <Modal
-  centered
-  open={editModal}
-  onCancel={handleCancel}
-  footer={null}
-  width={500}
-  title="Update Procedure"
->
-
+    <Modal
+      centered
+      open={editModal}
+      onCancel={handleCancel}
+      footer={null}
+      width={500}
+    >
       <div className="">
         <div>
-          <div className="font-bold text-center mb-7">Update Procedure</div>
+          <div className="font-bold text-center mb-7">Update Banner</div>
 
           <Form
             form={form}
@@ -98,32 +103,9 @@ const EditProcedure = ({ editModal, setEditModal, selectedProcedure }) => {
             onFinish={handleSubmit}
             className="px-2"
           >
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[{ required: true, message: "Please input name!" }]}
-            >
-              <Input
-                placeholder="Enter title"
-                style={{ height:"40px" }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Description"
-              name="description"
-              rules={[{ required: true, message: "Please input Description!" }]}
-            >
-              <Input.TextArea
-                placeholder="Enter Description"
-                
-              />
-            </Form.Item>
-
-
             <Form.Item label="Photos">
               <Upload
-                 style={{width:'100%' , height:'160px'}}
+                style={{ width: "100%", height: "160px" }}
                 listType="picture-card"
                 fileList={fileList}
                 onChange={onChange}
@@ -151,4 +133,4 @@ const EditProcedure = ({ editModal, setEditModal, selectedProcedure }) => {
   );
 };
 
-export default EditProcedure;
+export default EditBanner;

@@ -12,7 +12,7 @@ const useApi = baseApi.injectEndpoints({
       },
     }),
     getUserAll: builder.query({
-      query: ({searchTerm,page,limit}) => {
+      query: ({ searchTerm, page, limit }) => {
         return {
           url: `/normal-user/get-all-user?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
           method: "GET",
@@ -32,7 +32,7 @@ const useApi = baseApi.injectEndpoints({
     forgotPassword: builder.mutation({
       query: (email) => {
         return {
-          url: "/auth/forget-password",
+          url: "/auth/forgot",
           method: "POST",
           body: email,
         };
@@ -41,7 +41,7 @@ const useApi = baseApi.injectEndpoints({
     verifyOtp: builder.mutation({
       query: (data) => {
         return {
-          url: "/auth/verify-reset-otp",
+          url: "/auth/verify-otp",
           method: "POST",
           body: data,
         };
@@ -117,5 +117,5 @@ export const {
   useGetHostUserQuery,
   useBlockUserHostMutation,
   useResentHitMutation,
-  useGetUserAllQuery
+  useGetUserAllQuery,
 } = useApi;

@@ -29,6 +29,7 @@ import ContactUs from "../page/Settings/ContactUs";
 import DashboardPage from "../page/Dashboard";
 import ProtectedRoute from "../protectedRoute/ProtectedRoute";
 
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -57,6 +58,7 @@ export const router = createBrowserRouter([
         path: "/product/all-product",
         element: <AllProducts />,
       },
+     
       {
         path: "/view-product/:id",
         element: <ViewProduct />,

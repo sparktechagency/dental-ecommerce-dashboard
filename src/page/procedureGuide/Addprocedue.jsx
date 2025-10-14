@@ -62,15 +62,15 @@ const Addprocedue = ({ openAddModal, setOpenAddModal }) => {
 
   return (
     <Modal
-      centered
-      open={openAddModal}
-      onCancel={handleCancel}
-      footer={null}
-      width={600}
-    >
-      <div className="mb-20 mt-4">
-        <div>
-          <div className="font-bold text-center mb-11">+ Add Procedure</div>
+         centered
+         open={openAddModal}
+         onCancel={handleCancel}
+         footer={null}
+         width={500}
+       >
+         <div className=" ">
+           <div>
+          <div className="font-bold text-center mb-7">+ Add Procedure</div>
 
           <Form
             form={form}
@@ -103,6 +103,7 @@ const Addprocedue = ({ openAddModal, setOpenAddModal }) => {
 
             <Form.Item label="Photos">
               <Upload
+                 style={{width:'100%' , height:'160px'}}
                 listType="picture-card"
                 fileList={fileList}
                 onChange={onChange}

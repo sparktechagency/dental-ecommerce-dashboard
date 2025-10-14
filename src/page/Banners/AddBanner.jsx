@@ -1,7 +1,6 @@
 import { Form, Input, message, Modal, Spin, Upload } from "antd";
-import React, { useEffect, useState } from "react";
-import { useAddProcedureMutation, useUpdateProcedureMutation } from "../redux/api/productManageApi";
-import { imageUrl } from "../redux/api/baseApi";
+import React, { useState } from "react";
+import { useAddBannerMutation, useAddProcedureMutation } from "../redux/api/productManageApi";
 
 const onPreview = async (file) => {
   let src = file.url;
@@ -17,36 +16,19 @@ const onPreview = async (file) => {
   const imgWindow = window.open(src);
   imgWindow?.document.write(image.outerHTML);
 };
-const EditProcedure = ({ editModal, setEditModal, selectedProcedure }) => {
-    console.log(selectedProcedure)
+const AddBanner = ({ openAddModal, setOpenAddModal }) => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
-  const [updateProcedure] = useUpdateProcedureMutation();
+  const [addProcedure] = useAddBannerMutation();
   const [loading, setLoading] = useState(false);
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
-  useEffect(() => {
-    if (selectedProcedure) {
-      form.setFieldsValue({
-        name: selectedProcedure?.name,
-        description: selectedProcedure?.description,
-      });
 
-      setFileList([
-        {
-          uid: "-1",
-          name: "category-image.png",
-          status: "done",
-          url: `${imageUrl}${selectedProcedure?.imageUrl}`,
-        },
-      ]);
-    }
-  }, [selectedProcedure, form]);
   const handleCancel = () => {
     form.resetFields();
     setFileList([]);
-    setEditModal(false);
+    setOpenAddModal(false);
   };
 
   const handleSubmit = async (values) => {
@@ -59,71 +41,47 @@ const EditProcedure = ({ editModal, setEditModal, selectedProcedure }) => {
       fileList.forEach((file) => {
         formData.append("image", file.originFileObj);
       });
-      formData.append("description", values.description);
-      formData.append("name", values.name);
 
-      const res = await updateProcedure({  id:selectedProcedure?._id,data:formData});
+      const res = await addProcedure(formData);
       console.log(res);
       message.success(res.data.message);
       setLoading(false);
-      setEditModal(false);
+      setOpenAddModal(false);
     } catch (error) {
       setLoading(false);
       console.error(error);
       message.error(message?.data?.error);
-      setEditModal(false);
+      setOpenAddModal(false);
     } finally {
       setLoading(false);
-      setEditModal(false);
+      setOpenAddModal(false);
     }
   };
 
   return (
-  <Modal
-  centered
-  open={editModal}
-  onCancel={handleCancel}
-  footer={null}
-  width={500}
-  title="Update Procedure"
->
-
-      <div className="">
+    <Modal
+      centered
+      open={openAddModal}
+      onCancel={handleCancel}
+      footer={null}
+      width={500}
+    >
+      <div className=" ">
         <div>
-          <div className="font-bold text-center mb-7">Update Procedure</div>
+          <div className="font-bold text-center mb-7">+ Add Banner</div>
 
           <Form
             form={form}
             layout="vertical"
             onFinish={handleSubmit}
-            className="px-2"
+            className=""
           >
-            <Form.Item
-              label="Name"
-              name="name"
-              rules={[{ required: true, message: "Please input name!" }]}
-            >
-              <Input
-                placeholder="Enter title"
-                style={{ height:"40px" }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="Description"
-              name="description"
-              rules={[{ required: true, message: "Please input Description!" }]}
-            >
-              <Input.TextArea
-                placeholder="Enter Description"
-                
-              />
-            </Form.Item>
+          
 
 
             <Form.Item label="Photos">
               <Upload
-                 style={{width:'100%' , height:'160px'}}
+              style={{width:'100%' , height:'160px'}}
                 listType="picture-card"
                 fileList={fileList}
                 onChange={onChange}
@@ -151,4 +109,4 @@ const EditProcedure = ({ editModal, setEditModal, selectedProcedure }) => {
   );
 };
 
-export default EditProcedure;
+export default AddBanner;

@@ -1,6 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 import { Modal, Form, Input, Select, Upload, Button, message } from "antd";
-import { useAddProductsMutation, useGetBrandsQuery, useGetCategroyAllQuery, useGetProcedureQuery } from "../redux/api/productManageApi";
+import {
+  useAddProductsMutation,
+  useGetBrandsQuery,
+  useGetCategroyAllQuery,
+  useGetProcedureQuery,
+} from "../redux/api/productManageApi";
 
 const { Option } = Select;
 
@@ -36,38 +42,46 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
 
   // ✅ Submit Form
   const handleSubmit = async (values) => {
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const formData = new FormData();
+      const formData = new FormData();
 
-    // Append images as an array using `image[]`
-    fileList.forEach((file) => {
-      formData.append("image[]", file.originFileObj); // Use `image[]` to indicate an array
-    });
+      // Append images as an array using `image[]`
+      fileList.forEach((file) => {
+        formData.append("images", file.originFileObj); 
+      });
+      // ✅ Generate unique productId
+      const productId = uuidv4(); 
 
-    // Other fields
-    formData.append("name", values.name);
-    formData.append("description", values.description);
-    formData.append("price", values.price);
-    formData.append("stock", values.stock);
-    formData.append("brand", values.brand);
-    formData.append("category", values.category);
-    formData.append("procedure", values.procedure);
-    formData.append("availability", values.availability);
+      // Append productId to formData
+      formData.append("productId", productId);
+      // Other fields
 
-    const res = await addProduct(formData).unwrap();
-    message.success(res.message || "Product added successfully!");
-    setOpenAddModal(false);
-    form.resetFields();
-    setFileList([]);
-    setLoading(false);
-  } catch (error) {
-    console.error(error);
-    message.error(error?.data?.message || "Failed to add product");
-    setLoading(false);
-  }
-};
+      formData.append("name", values.name);
+      formData.append("description", values.description);
+      formData.append("price", values.price);
+      formData.append("stock", values.stock);
+      formData.append("brand", values.brand);
+      formData.append("category", values.category);
+      formData.append("procedure", values.procedure);
+      formData.append("availability", values.availability);
+      formData.append(
+        "productUrl",
+        `http://10.10.20.48:3000/product/${productId}`
+      );
+      const res = await addProduct(formData).unwrap();
+      message.success(res.message || "Product added successfully!");
+      setOpenAddModal(false);
+      form.resetFields();
+      setFileList([]);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      message.error(error?.data?.message || "Failed to add product");
+      setLoading(false);
+    }
+  };
 
   const handleCancel = () => {
     setOpenAddModal(false);
@@ -99,7 +113,7 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
             onPreview={onPreview}
             multiple
           >
-            {fileList.length < 5 && "+ Upload"} {/* max 5 images */}
+            {fileList.length < 5 && "+ Upload"}
           </Upload>
         </Form.Item>
 
@@ -118,7 +132,11 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
           name="description"
           rules={[{ required: true, message: "Please enter description!" }]}
         >
-          <Input.TextArea rows={4} placeholder="Enter description" size="large" />
+          <Input.TextArea
+            rows={4}
+            placeholder="Enter description"
+            size="large"
+          />
         </Form.Item>
 
         {/* Price */}

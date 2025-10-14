@@ -1,138 +1,42 @@
 import { Input, Modal, message } from "antd";
 import PageHeading from "../../shared/PageHeading";
-import { FiPlus } from "react-icons/fi";
+import { FiPlus, FiUpload, FiX } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
 import { useState, useRef } from "react";
-import { FiUpload, FiX } from "react-icons/fi";
-import { BannerCard } from "./BannerCard";
 import { SearchInput } from "../../components/search/SearchInput";
-
-export const bannersData = [
-  {
-    id: "1",
-    title: "The Dental Dispatch",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3845457/pexels-photo-3845457.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-  {
-    id: "2",
-    title: "Chairside Journal",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3845810/pexels-photo-3845810.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-  {
-    id: "3",
-    title: "Smarter Smiles",
-    description:
-      "Stay ahead with expert insights, clinical tips, and the latest product updates for modern dental professionals.",
-    date: "20/05/2025",
-    imageUrl:
-      "https://images.pexels.com/photos/3779709/pexels-photo-3779709.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&fit=crop",
-  },
-];
+import AddBanner from "./AddBanner";
+import {
+  useDeleteBannerMutation,
+  useGetBannerQuery,
+} from "../redux/api/productManageApi";
+import { imageUrl } from "../redux/api/baseApi";
+import EditBanner from "./EditBanner";
 
 const Banners = () => {
-  const [blogs, setBlogs] = useState(bannersData);
+  const [openAddModal, setOpenAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const { data: bannerData } = useGetBannerQuery();
+  console.log(bannerData);
+  const [deleteData] = useDeleteBannerMutation();
   const [searchTerm, setSearchTerm] = useState("");
-  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
-  const [currentBlog, setCurrentBlog] = useState(null);
-  const [previewImage, setPreviewImage] = useState(null);
-  const fileInputRef = useRef(null);
-  const [newBlogData, setNewBlogData] = useState({
-    title: "",
-    imageUrl: "",
-  });
+  const [selectedProcedure, setSelectedProcedure] = useState(null);
 
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-        setNewBlogData((prev) => ({
-          ...prev,
-          imageUrl: reader.result,
-        }));
-      };
-      reader.readAsDataURL(file);
+  const handleEdit = (record) => {
+    setSelectedProcedure(record);
+    setEditModal(true);
+  };
+
+  const handleDeleteClick = async (id) => {
+    try {
+      const res = await deleteData(id).unwrap();
+      message.success(res?.message);
+    } catch (err) {
+      message.error(err?.data?.message);
     }
-  };
-
-  const triggerFileInput = () => {
-    fileInputRef.current?.click();
-  };
-
-  const showAddModal = () => {
-    setCurrentBlog(null);
-    setPreviewImage(null);
-    setNewBlogData({
-      title: "",
-      imageUrl: "",
-    });
-    setIsAddModalVisible(true);
-  };
-
-  const handleEdit = (id) => {
-    const blogToEdit = blogs.find((blog) => blog.id === id);
-    if (blogToEdit) {
-      setCurrentBlog(blogToEdit);
-      setPreviewImage(blogToEdit.imageUrl || null);
-      setNewBlogData({
-        title: blogToEdit.title,
-        imageUrl: blogToEdit.imageUrl,
-      });
-      setIsEditModalVisible(true);
-    }
-  };
-
-  const handleSave = () => {
-    if (!newBlogData.title.trim()) return;
-
-    if (currentBlog) {
-      setBlogs(
-        blogs.map((blog) =>
-          blog.id === currentBlog.id
-            ? { ...blog, ...newBlogData, id: currentBlog.id }
-            : blog
-        )
-      );
-      message.success("Banner updated successfully");
-    } else {
-      const newBlog = {
-        ...newBlogData,
-        id: Date.now().toString(),
-      };
-      setBlogs([...blogs, newBlog]);
-      message.success("Banner created successfully");
-    }
-
-    setPreviewImage(null);
-    setCurrentBlog(null);
-    setIsAddModalVisible(false);
-    setIsEditModalVisible(false);
   };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-  };
-
-  const filteredBlogs = blogs.filter((blog) => {
-    const searchLower = searchTerm.toLowerCase();
-    return blog.title.toLowerCase().includes(searchLower);
-  });
-
-  const handleDelete = (id) => {
-    const blog = blogs.find((blog) => blog.id === id);
-    setCurrentBlog(blog);
-    setIsDeleteModalVisible(true);
   };
 
   return (
@@ -140,14 +44,14 @@ const Banners = () => {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-5">
         <PageHeading title="Banners" />
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
-        <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
-              <SearchInput />
-              <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
-                <IoSearch className="text-[1.3rem]" />
-              </span>
-            </div>
+          <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
+            <SearchInput onChange={handleSearch} value={searchTerm} />
+            <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
+              <IoSearch className="text-[1.3rem]" />
+            </span>
+          </div>
           <button
-            onClick={showAddModal}
+            onClick={() => setOpenAddModal(true)}
             className="w-full md:w-auto px-6 py-3 bg-[#136BFB] rounded-lg text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors whitespace-nowrap"
           >
             <FiPlus className="w-5 h-5" />
@@ -156,15 +60,35 @@ const Banners = () => {
         </div>
       </header>
 
+      {/* === Banner Grid === */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredBlogs.length > 0 ? (
-          filteredBlogs.map((banner) => (
-            <BannerCard
-              key={banner?.id}
-              {...banner}
-              onEdit={() => handleEdit(banner?.id)}
-              onDelete={() => handleDelete(banner?.id)}
-            />
+        {bannerData?.data?.length > 0 ? (
+          bannerData?.data.map((banner) => (
+            <div
+              key={banner.id}
+              className="rounded-lg shadow-sm overflow-hidden border border-gray-200 p-3"
+            >
+              <img
+                src={`${imageUrl}${banner.imageUrl}`}
+                alt={"asdf"}
+                className="w-full h-[160px] object-cover rounded-md"
+              />
+
+              <div className="flex items-center justify-between mt-5">
+                <button
+                  onClick={() => handleDeleteClick(banner?._id)}
+                  className="px-5 py-2 text-[#FF3B30] font-semibold border border-[#FF3B30] rounded-lg hover:bg-[#FF3B30] hover:text-white transition"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => handleEdit(banner)}
+                  className="px-5 py-2 bg-[#017FF4] text-white font-semibold border border-[#017FF4] rounded-lg hover:bg-[#0167D3] transition"
+                >
+                  Edit
+                </button>
+              </div>
+            </div>
           ))
         ) : (
           <div className="col-span-full text-center py-10">
@@ -175,111 +99,15 @@ const Banners = () => {
         )}
       </section>
 
-      <Modal
-        title={currentBlog ? "Edit Banner" : "Add New Banner"}
-        open={isAddModalVisible || isEditModalVisible}
-        onCancel={() => {
-          if (isAddModalVisible) setIsAddModalVisible(false);
-          if (isEditModalVisible) setIsEditModalVisible(false);
-          setCurrentBlog(null);
-          setPreviewImage(null);
-        }}
-        footer={null}
-        centered
-      >
-        <div className="p-5">
-          <div className="mb-5">
-            <div
-              onClick={triggerFileInput}
-              className="border-2 border-dashed border-gray-300 rounded-lg p-5 text-center cursor-pointer"
-            >
-              {previewImage ? (
-                <div className="relative">
-                  <img
-                    src={previewImage}
-                    alt="Preview"
-                    className="max-h-40 mx-auto mb-2 rounded"
-                  />
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setPreviewImage(null);
-                      setNewBlogData((prev) => ({
-                        ...prev,
-                        imageUrl: "",
-                      }));
-                    }}
-                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                  >
-                    <FiX className="h-4 w-4" />
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <FiUpload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500 text-sm">
-                    Upload Blog Cover Image
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Click to upload or drag and drop
-                  </p>
-                </>
-              )}
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-              />
-            </div>
-          </div>
-
-          <button
-            onClick={handleSave}
-            disabled={
-              !newBlogData.title?.trim() || !newBlogData.description?.trim()
-            }
-            className={`w-full mt-6 py-2 px-4 rounded-lg font-medium text-white ${
-              newBlogData.title?.trim() && newBlogData.description?.trim()
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-gray-400 cursor-not-allowed"
-            } transition-colors`}
-          >
-            {currentBlog ? "Update" : "Publish"} Banner
-          </button>
-        </div>
-      </Modal>
-
-      <Modal
-        title="Delete Banner"
-        open={isDeleteModalVisible}
-        onCancel={() => setIsDeleteModalVisible(false)}
-        footer={null}
-      >
-        <div className="p-5">
-          <h1 className="text-4xl text-center text-[#0D0D0D]">
-            Are you sure you want to delete ?
-          </h1>
-
-          <div className="text-center py-5">
-            <button
-              onClick={() => setIsDeleteModalVisible(false)}
-              className="bg-[#3b3b3b] text-white font-semibold w-full py-2 rounded transition duration-200"
-            >
-              Yes,Delete
-            </button>
-          </div>
-          <div className="text-center pb-5">
-            <button
-              onClick={() => setIsDeleteModalVisible(false)}
-              className="text-[#3b3b3b] border-2 border-[#3b3b3b] bg-white font-semibold w-full py-2 rounded transition duration-200"
-            >
-              No,Don’t Delete
-            </button>
-          </div>
-        </div>
-      </Modal>
+      <AddBanner
+        openAddModal={openAddModal}
+        setOpenAddModal={setOpenAddModal}
+      ></AddBanner>
+      <EditBanner
+        editModal={editModal}
+        setEditModal={setEditModal}
+        selectedProcedure={selectedProcedure}
+      ></EditBanner>
     </main>
   );
 };
