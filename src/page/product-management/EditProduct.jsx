@@ -1,5 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Form, Input, Select, Upload, Button, message } from "antd";
+'use client';
+
+import React, { useState, useEffect, useCallback } from "react";
+import {
+  Modal,
+  Form,
+  Input,
+  Select,
+  Upload,
+  Button,
+  message,
+  Spin,
+} from "antd";
 import {
   useGetBrandsQuery,
   useGetCategroyAllQuery,
@@ -15,17 +26,21 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [originalValues, setOriginalValues] = useState({}); // <-- original data
 
   const { data: brands } = useGetBrandsQuery();
   const { data: category } = useGetCategroyAllQuery();
   const { data: procedure } = useGetProcedureQuery();
   const [updateProduct] = useUpdateProductsMutation();
 
-  // ✅ useEffect to set default values
+  /* ------------------------------------------------------------------ *
+   *  1. Fill form + keep original values when modal opens
+   * ------------------------------------------------------------------ */
   useEffect(() => {
     if (selectedProduct && editModal) {
-      form.setFieldsValue({
+      const init = {
         name: selectedProduct.name,
+        productCode: selectedProduct.productCode,
         description: selectedProduct.description,
         price: selectedProduct.price,
         stock: selectedProduct.stock,
@@ -33,21 +48,26 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
         category: selectedProduct?.category?._id,
         procedure: selectedProduct?.procedure?._id,
         availability: selectedProduct.availability,
-      });
+      };
 
+      form.setFieldsValue(init);
+      setOriginalValues(init);                     // <-- keep copy
+      // existing images
       if (selectedProduct.images?.length) {
-        const mappedImages = selectedProduct.images.map((url, index) => ({
-          uid: `existing-${index}`,
-          name: `image-${index + 1}.png`,
+        const mapped = selectedProduct.images.map((url, i) => ({
+          uid: `existing-${i}`,
+          name: `image-${i + 1}.png`,
           status: "done",
           url: `${imageUrl}${url}`,
         }));
-        setFileList(mappedImages);
+        setFileList(mapped);
       }
     }
   }, [selectedProduct, editModal, form]);
 
-  // ✅ Handle upload and remove
+  /* ------------------------------------------------------------------ *
+   *  2. Upload handling (unchanged)
+   * ------------------------------------------------------------------ */
   const handleUploadChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
@@ -56,38 +76,67 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
     setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
   };
 
-  // ✅ Submit form data
-  const handleSubmit = async (values) => {
+  /* ------------------------------------------------------------------ *
+   *  3. Build a **partial** FormData – only changed fields
+   * ------------------------------------------------------------------ */
+  const buildPartialFormData = useCallback(() => {
+    const current = form.getFieldsValue(); // values from the form
+    const formData = new FormData();
+
+    let hasChanges = false;
+
+    // ---- text / select fields -------------------------------------------------
+    const fields = [
+      "name",
+      "description",
+      "price",
+      "stock",
+      "brand",
+      "productCode",
+      "category",
+      "procedure",
+      "availability",
+    ];
+
+    fields.forEach((key) => {
+      if (current[key] !== originalValues[key]) {
+        formData.append(key, current[key]);
+        hasChanges = true;
+      }
+    });
+
+    // ---- images --------------------------------------------------------------
+    //  • keep existing URLs (they are not changed)
+    const existingUrls = fileList
+      .filter((f) => f.url)
+      .map((f) => f.url.replace(imageUrl, ""));
+
+    //  • new files (they are always a change)
+    const newFiles = fileList.filter((f) => f.originFileObj);
+
+    if (existingUrls.length) {
+      formData.append("images", JSON.stringify(existingUrls));
+    }
+    newFiles.forEach((f) => {
+      formData.append("images", f.originFileObj);
+      hasChanges = true;
+    });
+
+    return { formData, hasChanges };
+  }, [form, originalValues, fileList]);
+
+  /* ------------------------------------------------------------------ *
+   *  4. Submit – only if something changed
+   * ------------------------------------------------------------------ */
+  const handleSubmit = async () => {
     try {
+      await form.validateFields(); // Antd validation
+
+      const { formData, hasChanges } = buildPartialFormData();
+
+      
+
       setLoading(true);
-      const formData = new FormData();
-
-      // Separate existing and new images
-      const existingImages = fileList
-        .filter((file) => file.url)
-        .map((file) => file.url.replace(imageUrl, ""));
-
-      const newImages = fileList.filter((file) => file.originFileObj);
-
-      // ✅ append product data
-      formData.append("name", values.name);
-      formData.append("description", values.description);
-      formData.append("price", values.price);
-      formData.append("stock", values.stock);
-      formData.append("brand", values.brand);
-      formData.append("category", values.category);
-      formData.append("procedure", values.procedure);
-      formData.append("availability", values.availability);
-
-    
-      formData.append("images", JSON.stringify(existingImages));
-
- 
-      newImages.forEach((file) => {
-        formData.append("images", file.originFileObj);
-      });
-
-    
       const res = await updateProduct({
         id: selectedProduct._id,
         data: formData,
@@ -97,37 +146,42 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
       setEditModal(false);
       form.resetFields();
       setFileList([]);
-    } catch (error) {
-      console.error(error);
-      message.error(error?.data?.message || "Something went wrong!");
+    } catch (err) {
+      console.error(err);
+      message.error(err?.data?.message || "Failed to update product.");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✅ Handle Cancel
+  /* ------------------------------------------------------------------ *
+   *  5. Cancel
+   * ------------------------------------------------------------------ */
   const handleCancel = () => {
     setEditModal(false);
     form.resetFields();
     setFileList([]);
   };
 
+  /* ------------------------------------------------------------------ *
+   *  Render
+   * ------------------------------------------------------------------ */
   return (
     <Modal
       title="Edit Product"
       open={editModal}
       onCancel={handleCancel}
       footer={null}
-      width={700}
+      width={720}
       centered
     >
       <Form
         layout="vertical"
         form={form}
         onFinish={handleSubmit}
-        className="p-2 space-y-4"
+        className="space-y-4"
       >
-        {/* Photos */}
+        {/* ---------- Photos ---------- */}
         <Form.Item label="Photos">
           <Upload
             listType="picture-card"
@@ -136,57 +190,60 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
             onRemove={handleRemove}
             beforeUpload={() => false}
             multiple
+            className="w-full"
           >
             {fileList.length >= 10 ? null : (
               <div>
                 <PlusOutlined />
-                <div>Add Image</div>
+                <div className="mt-1">Add Image</div>
               </div>
             )}
           </Upload>
         </Form.Item>
 
-        {/* Product Name */}
+        {/* ---------- Form fields ---------- */}
         <Form.Item
           label="Product Name"
           name="name"
-          rules={[{ required: true, message: "Please enter product name!" }]}
+          rules={[{ required: true, message: "Enter product name!" }]}
         >
           <Input placeholder="Enter product name" size="large" />
         </Form.Item>
 
-        {/* Description */}
         <Form.Item
           label="Description"
           name="description"
-          rules={[{ required: true, message: "Please enter description!" }]}
+          rules={[{ required: true, message: "Enter description!" }]}
         >
           <Input.TextArea rows={4} placeholder="Enter description" size="large" />
         </Form.Item>
-
-        {/* Price */}
+    <Form.Item
+          label="Product Code"
+          name="productCode"
+          rules={[{ required: true, message: "Enter product Code!" }]}
+        >
+          <Input placeholder="Enter product Code" size="large" />
+        </Form.Item>
         <Form.Item
           label="Price"
           name="price"
-          rules={[{ required: true, message: "Please enter price!" }]}
+          rules={[{ required: true, message: "Enter price!" }]}
         >
           <Input type="number" placeholder="Enter price" size="large" />
         </Form.Item>
 
-        {/* Stock */}
         <Form.Item
           label="Stock"
           name="stock"
-          rules={[{ required: true, message: "Please enter stock!" }]}
+          rules={[{ required: true, message: "Enter stock!" }]}
         >
           <Input type="number" placeholder="Enter stock" size="large" />
         </Form.Item>
 
-        {/* Brand */}
         <Form.Item
           label="Select Brand"
           name="brand"
-          rules={[{ required: true, message: "Please select a brand!" }]}
+          rules={[{ required: true, message: "Select a brand!" }]}
         >
           <Select placeholder="Select brand" size="large">
             {brands?.data?.map((b) => (
@@ -197,11 +254,10 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
           </Select>
         </Form.Item>
 
-        {/* Category */}
         <Form.Item
           label="Select Category"
           name="category"
-          rules={[{ required: true, message: "Please select a category!" }]}
+          rules={[{ required: true, message: "Select a category!" }]}
         >
           <Select placeholder="Select category" size="large">
             {category?.data?.map((c) => (
@@ -212,11 +268,10 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
           </Select>
         </Form.Item>
 
-        {/* Procedure */}
         <Form.Item
           label="Procedure Guide"
           name="procedure"
-          rules={[{ required: true, message: "Please select a procedure!" }]}
+          rules={[{ required: true, message: "Select a procedure!" }]}
         >
           <Select placeholder="Select procedure" size="large">
             {procedure?.data?.map((p) => (
@@ -227,11 +282,10 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
           </Select>
         </Form.Item>
 
-        {/* Availability */}
         <Form.Item
           label="Availability"
           name="availability"
-          rules={[{ required: true, message: "Please select availability!" }]}
+          rules={[{ required: true, message: "Select availability!" }]}
         >
           <Select placeholder="Select availability" size="large">
             <Option value="In Stock">In Stock</Option>
@@ -241,15 +295,19 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
           </Select>
         </Form.Item>
 
-        {/* Submit Button */}
+        {/* ---------- Submit ---------- */}
         <div className="flex justify-end">
           <Button
             type="primary"
             htmlType="submit"
             loading={loading}
-            className="px-6 py-2 text-base font-semibold rounded-lg"
+            className="w-full h-11 text-base font-medium"
+            style={{
+              background: loading ? "#93c5fd" : "#3b82f6",
+              border: "none",
+            }}
           >
-            Update
+            {loading ? "Updating…" : "Update"}
           </Button>
         </div>
       </Form>

@@ -12,26 +12,109 @@ const category = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
-    getUser: builder.query({
-      query: () => {
+    getOrder: builder.query({
+      query: ({ search, page, limit, status }) => {
         return {
-          url: `/normal-user/get-all-user`,
+          url: `/orders?search=${search}&page=${page}&limit=${limit}&status=${status}`,
           method: "GET",
         };
       },
       providesTags: ["updateProfile"],
+    }),
+
+    updateOrder: builder.mutation({
+      query: ({ data, id }) => {
+        return {
+          url: `/orders/${id}/status`,
+          method: "PATCH",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
     }),
 
     getUserAll: builder.query({
-      query: ({ page, limit }) => {
+      query: ({ page, limit, search }) => {
         return {
-          url: `/normal-user/get-all-user?page=${page}&limit=${limit}`,
+          url: `/users?search=${search}&page=${page}&limit=${limit}`,
           method: "GET",
         };
       },
       providesTags: ["updateProfile"],
     }),
 
+    getPrivecy: builder.query({
+      query: () => {
+        return {
+          url: `/pages/by-key/privacy`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    getTerms: builder.query({
+      query: () => {
+        return {
+          url: `/pages/by-key/terms`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    getAbout: builder.query({
+      query: () => {
+        return {
+          url: `/pages/by-key/about`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    updateTerms: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/pages/by-key/terms`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    updatePrivecy: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/pages/by-key/privacy`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    updateAbout: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/pages/by-key/about`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    blockUnblock: builder.mutation({
+      query: ({ id }) => {
+        return {
+          url: `/users/${id}/toggle-block`,
+          method: "PATCH",
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
     getUserGrowth: builder.query({
       query: (year) => {
         return {
@@ -42,12 +125,10 @@ const category = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
-    
-
     getBanner: builder.query({
-      query: ({searchTerm,page,limit}) => {
+      query: () => {
         return {
-          url: `/banner/get-all?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
+          url: `/sliders`,
           method: "GET",
         };
       },
@@ -57,7 +138,7 @@ const category = baseApi.injectEndpoints({
     addBanner: builder.mutation({
       query: (data) => {
         return {
-          url: "/banner/create",
+          url: "/sliders",
           method: "POST",
           body: data,
         };
@@ -67,7 +148,7 @@ const category = baseApi.injectEndpoints({
     updateBanner: builder.mutation({
       query: ({ data, id }) => {
         return {
-          url: `/banner/update/${id}`,
+          url: `/sliders/${id}`,
           method: "PATCH",
           body: data,
         };
@@ -75,95 +156,60 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-     deleteBanner: builder.mutation({
+    deleteBanner: builder.mutation({
       query: (id) => {
         return {
-          url: `/banner/delete/${id}`,
+          url: `/sliders/${id}`,
           method: "DELETE",
         };
       },
       invalidatesTags: ["updateProfile"],
     }),
-getFaq: builder.query({
-            query: () => {
-                return {
-                    url: `/manage/get-faq`,
-                    method: "GET",
-                };
-            },
-            providesTags: ["updateProfile"],
-        }),
 
-        addFaq: builder.mutation({
-            query: (data) => {
-                return {
-                    url: "/manage/add-faq",
-                    method: "POST",
-                    body: data,
-                };
-            },
-            invalidatesTags: ["updateProfile"],
-        }),
-
-
-        updateFaq: builder.mutation({
-            query: ({ data, id }) => {
-                return {
-                    url: `/manage/edit-faq/${id}`,
-                    method: "PATCH",
-                    body: data,
-                };
-            },
-            invalidatesTags: ["updateProfile"],
-        }),
-
-
-        deleteFaq: builder.mutation({
-            query: (id) => {
-                return {
-                    url: `/manage/delete-faq/${id}`,
-                    method: 'DELETE'
-                }
-            },
-            invalidatesTags: ['updateProfile']
-        }),
-
-
-
-
-    getTermsConditions: builder.query({
+    getFaq: builder.query({
       query: () => {
         return {
-          url: "/manage/get-terms-conditions",
+          url: `/manage/get-faq`,
           method: "GET",
         };
       },
-      providesTags: ["terms"],
+      providesTags: ["updateProfile"],
     }),
-    postTermsCondition: builder.mutation({
+
+    addFaq: builder.mutation({
       query: (data) => {
         return {
-          url: "/manage/add-terms-conditions",
+          url: "/manage/add-faq",
           method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ["terms"],
+      invalidatesTags: ["updateProfile"],
     }),
 
-    getPrivecy: builder.query({
-      query: () => {
+    updateFaq: builder.mutation({
+      query: ({ data, id }) => {
         return {
-          url: "/manage/get-privacy-policy",
-          method: "GET",
+          url: `/manage/edit-faq/${id}`,
+          method: "PATCH",
+          body: data,
         };
       },
-      providesTags: ["terms"],
+      invalidatesTags: ["updateProfile"],
     }),
 
+    deleteFaq: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/manage/delete-faq/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
 
     getReports: builder.query({
-      query: ({searchTerm,page,limit}) => {
+      query: ({ searchTerm, page, limit }) => {
         return {
           url: `/report/all-reports?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
           method: "GET",
@@ -172,15 +218,79 @@ getFaq: builder.query({
       providesTags: ["terms"],
     }),
 
-    postPrivecy: builder.mutation({
+    getContactUs: builder.query({
+      query: () => {
+        return {
+          url: `/contact-info`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    addEmail: builder.mutation({
       query: (data) => {
         return {
-          url: "/manage/add-privacy-policy",
+          url: "/contact-info/emails",
           method: "POST",
           body: data,
         };
       },
-      invalidatesTags: ["terms"],
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    addPhones: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/contact-info/phones",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    addNewsletter: builder.mutation({
+      query: (data) => {
+        return {
+          url: "/newsletter/send",
+          method: "POST",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    deleteEmail: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/contact-info/emails`,
+          method: "DELETE",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+
+    deletePhone: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/contact-info/phones`,
+          method: "DELETE",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
+    updateSocialLink: builder.mutation({
+      query: (data) => {
+        return {
+          url: `/contact-info/update`,
+          method: "PUT",
+          body: data,
+        };
+      },
+      invalidatesTags: ["updateProfile"],
     }),
   }),
 });
@@ -188,19 +298,31 @@ getFaq: builder.query({
 export const {
   useGetCountQuery,
   useGetUserGrowthQuery,
-  useGetUserQuery,
+  useGetTermsQuery,
+  useGetAboutQuery,
+
   useGetFaqQuery,
   useAddFaqMutation,
   useDeleteFaqMutation,
   useUpdateFaqMutation,
-  usePostTermsConditionMutation,
-  useGetTermsConditionsQuery,
+  useUpdateAboutMutation,
+  useUpdatePrivecyMutation,
+  useUpdateTermsMutation,
   useGetPrivecyQuery,
-  usePostPrivecyMutation,
+  useGetContactUsQuery,
   useGetUserAllQuery,
   useAddBannerMutation,
   useGetBannerQuery,
   useUpdateBannerMutation,
   useDeleteBannerMutation,
-  useGetReportsQuery
+  useGetReportsQuery,
+  useBlockUnblockMutation,
+  useAddEmailMutation,
+  useAddPhonesMutation,
+  useDeleteEmailMutation,
+  useDeletePhoneMutation,
+  useUpdateSocialLinkMutation,
+  useGetOrderQuery,
+  useUpdateOrderMutation,
+  useAddNewsletterMutation
 } = category;

@@ -40,7 +40,7 @@ const AddBlog = ({ openAddModal, setOpenAddModal }) => {
       const formData = new FormData();
 
       fileList.forEach((file) => {
-        formData.append("image", file.originFileObj);
+        formData.append("images", file.originFileObj);
       });
       formData.append("content", values.description);
       formData.append("title", values.name);
@@ -49,11 +49,13 @@ const AddBlog = ({ openAddModal, setOpenAddModal }) => {
       console.log(res);
       message.success(res.data.message);
       setLoading(false);
+       form.resetFields();
+    setFileList([]);
       setOpenAddModal(false);
     } catch (error) {
       setLoading(false);
       console.error(error);
-      message.error(message?.data?.error);
+      message.error(error?.message);
       setOpenAddModal(false);
     } finally {
       setLoading(false);

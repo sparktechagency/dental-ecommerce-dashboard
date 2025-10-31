@@ -16,6 +16,8 @@ import { IoIosLogOut } from "react-icons/io";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { BiCategoryAlt } from "react-icons/bi";
+import { useDispatch } from "react-redux";
+import { logout } from "../page/redux/features/auth/authSlice";
 
 export const AdminItems = [
   {
@@ -35,12 +37,12 @@ export const AdminItems = [
         link: "/user/all-user",
         // icon: MdManageAccounts,
       },
-      {
-        key: "sign-up-request",
-        label: "Sign Up Request",
-        link: "/user/sign-up-request",
-        // icon: LuBadgeCheck,
-      },
+      // {
+      //   key: "sign-up-request",
+      //   label: "Sign Up Request",
+      //   link: "/user/sign-up-request",
+      //   // icon: LuBadgeCheck,
+      // },
     ],
   },
   {
@@ -91,12 +93,12 @@ export const AdminItems = [
     icon: MdOutlineImage,
     link: "/banner",
   },
-  {
-    key: "make-admin",
-    label: "Make Admin",
-    icon: MdOutlineAdminPanelSettings,
-    link: "/make-admin",
-  },
+  // {
+  //   key: "make-admin",
+  //   label: "Make Admin",
+  //   icon: MdOutlineAdminPanelSettings,
+  //   link: "/make-admin",
+  // },
   {
     key: "settings",
     label: "Settings",
@@ -145,6 +147,9 @@ const SideBar = () => {
   const navigate = useNavigate();
   const contentRef = useRef({});
 
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const currentPath = location.pathname;
 
@@ -182,6 +187,7 @@ const SideBar = () => {
   };
 
   const handleLogout = () => {
+     dispatch(logout());
     navigate("/login");
   };
 

@@ -1,107 +1,115 @@
-import { useState } from "react";
-import { IoEyeOffOutline, IoEyeOutline, IoClose } from "react-icons/io5";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Form, Input, Button, Row, Col, Typography, message } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone, CloseOutlined } from "@ant-design/icons";
+import { useResetPasswordMutation } from "../page/redux/api/userApi";
+import { Link, useNavigate } from "react-router-dom";
 
-function ResetPassword() {
-  const [formData, setFormData] = useState({
-    password: "",
-    confirm_password: "",
-  });
-  const [showPassword, setShowPassword] = useState(false);
-  const [isChecked, setIsChecked] = useState(false);
+const { Title, Text } = Typography;
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+const ResetPassword = () => {
+  const [resetPass] = useResetPasswordMutation();
+  const navigate = useNavigate();
+  const resetToken = localStorage.getItem("resetToken");
 
-  const handleCheckboxChange = (event) => {
-    setIsChecked(event.target.checked);
+  const onFinish = async (values) => {
+    const payload = {
+      resetToken,
+      newPassword: values.password,
+    };
+
+    try {
+      const res = await resetPass(payload).unwrap();
+      message.success("Password reset successfully!");
+      navigate("/welcome");
+    } catch (err) {
+      message.error(err?.data?.message || "Something went wrong!");
+    }
   };
 
   return (
-    <div className="flex min-h-screen bg-white">
-      {/* Left Column - Form */}
-      <div className="w-full md:w-1/2 bg-[#171717] p-8 flex flex-col justify-center relative">
-        <div className="max-w-md mx-auto w-full">
-          <h1 className="text-center text-3xl font-bold text-white mb-4">Reset Password</h1>
-          <p className="text-center text-[#9F9C96] mb-8">Your password must be 8-10 character long.</p>
+    <Row className="min-h-screen bg-white">
+      {/* Left Section */}
+      <Col xs={24} md={12} className="bg-[#171717] flex justify-center items-center p-8">
+        <div className="max-w-md w-full">
+          <Title level={2} className="text-white text-center mb-2">
+            Reset Password
+          </Title>
+          <Text className="block text-center text-[#9F9C96] mb-8">
+            Your password must be 8-10 characters long.
+          </Text>
 
-          <form className="space-y-6">
-            <div>
-              <label className="block text-gray-300 text-sm mb-2">Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Enter your password"
-                  className="w-full px-4 py-3 bg-[#2D2D2D] text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none pr-12"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-                >
-                  {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="block text-gray-300 text-sm mb-2">Confirm Password</label>
-              <div className="relative">
-                <input
-                  type={showPassword ? "text" : "password"}
-                  name="confirm_password"
-                  value={formData.confirm_password}
-                  onChange={handleChange}
-                  placeholder="Enter your confirm password"
-                  className="w-full px-4 py-3 bg-[#2D2D2D] text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none pr-12"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
-                >
-                  {showPassword ? <IoEyeOffOutline size={20} /> : <IoEyeOutline size={20} />}
-                </button>
-              </div>
-            </div>
+          <Form layout="vertical" onFinish={onFinish}>
+            {/* Password */}
+            <Form.Item
+              label={<span className="text-gray-300">Password</span>}
+              name="password"
+              rules={[{ required: true, message: "Please enter your password!" }]}
+            >
+              <Input.Password
+                placeholder="Enter your password"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+                className="bg-[#2D2D2D] text-white border-gray-600 rounded-lg"
+              />
+            </Form.Item>
 
-            <Link to="/welcome">
-              <button
-                type="submit"
-                className="w-full bg-[#136BFB] text-white text-lg font-bold py-3 px-4 rounded-lg transition mt-5"
+            {/* Confirm Password */}
+            <Form.Item
+              label={<span className="text-gray-300">Confirm Password</span>}
+              name="confirm_password"
+              dependencies={["password"]}
+              rules={[
+                { required: true, message: "Please confirm your password!" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("password") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(
+                      new Error("Passwords do not match!")
+                    );
+                  },
+                }),
+              ]}
+            >
+              <Input.Password
+                placeholder="Enter your confirm password"
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+                className="bg-[#2D2D2D] text-white border-gray-600 rounded-lg"
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                block
+                className="bg-[#136BFB] text-white font-semibold py-3 rounded-lg mt-5"
               >
                 Confirm
-              </button>
-            </Link>
-
-          </form>
+              </Button>
+            </Form.Item>
+          </Form>
         </div>
-      </div>
+      </Col>
 
-      {/* Right Column - Illustration */}
-      <div className="hidden md:flex md:w-1/2 bg-[#162236] items-center justify-center relative">
-        <div className="absolute top-4 right-4">
-          <button className="text-white hover:bg-blue-700 p-2 rounded-full">
-            <IoClose size={24} />
-          </button>
-        </div>
+      {/* Right Section */}
+      <Col xs={0} md={12} className="bg-[#162236] flex items-center justify-center relative">
+        <Button
+          type="text"
+          shape="circle"
+          icon={<CloseOutlined />}
+          className="absolute top-5 right-5 text-white hover:bg-blue-700"
+        />
         <div className="text-center px-12">
-          <div className="w-[500px] h-[500px] mx-auto">
-            <img src="./reset.svg" alt="" />
-          </div>
+          <img src="./reset.svg" alt="reset" className="w-[500px] h-[500px] mx-auto" />
         </div>
-      </div>
-    </div>
+      </Col>
+    </Row>
   );
-}
+};
 
 export default ResetPassword;

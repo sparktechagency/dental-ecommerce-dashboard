@@ -1,9 +1,10 @@
-import { Form, Input, message, Modal, Spin, Upload } from "antd";
-import React, { useEffect, useState } from "react";
+'use client';
 
-import { useAddBlogMutation } from "../redux/api/blogApi";
-import { imageUrl } from "../redux/api/baseApi";
-// import { useAddCategoryMutation } from "../redux/api/productManageApi";
+import { Form, Input, message, Modal, Spin, Upload } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useUpdateBlogMutation } from '../redux/api/blogApi'; // Changed to useUpdateBlogMutation
+import { imageUrl } from '../redux/api/baseApi';
+
 const onPreview = async (file) => {
   let src = file.url;
   if (!src) {
@@ -18,64 +19,109 @@ const onPreview = async (file) => {
   const imgWindow = window.open(src);
   imgWindow?.document.write(image.outerHTML);
 };
+
 const EditBlog = ({ editModal, setEditModal, selectedBlogs }) => {
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState([]);
-  const [addcategory] = useAddBlogMutation();
+  const [initialFileList, setInitialFileList] = useState([]);
+  const [changedFields, setChangedFields] = useState({});
+  const [updateBlog] = useUpdateBlogMutation(); // Changed to update mutation
   const [loading, setLoading] = useState(false);
+
+  // Track form field changes
+  const onValuesChange = (changedValues) => {
+    setChangedFields((prev) => ({ ...prev, ...changedValues }));
+  };
+
+  // Handle file list changes
   const onChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
+    // Mark images as changed if fileList differs from initial
+    if (
+      JSON.stringify(newFileList.map((f) => f.uid)) !==
+      JSON.stringify(initialFileList.map((f) => f.uid))
+    ) {
+      setChangedFields((prev) => ({ ...prev, image: true }));
+    }
   };
+
+  // Prefill form and set initial file list
+  useEffect(() => {
+    if (selectedBlogs) {
+      form.setFieldsValue({
+        title: selectedBlogs?.title,
+        content: selectedBlogs?.content,
+      });
+
+      const initialFiles = selectedBlogs?.imageUrl
+        ? [
+            {
+              uid: '-1',
+              name: 'blog-image.png',
+              status: 'done',
+              url: `${imageUrl}${selectedBlogs?.imageUrl}`,
+            },
+          ]
+        : [];
+      setFileList(initialFiles);
+      setInitialFileList(initialFiles);
+      setChangedFields({}); // Reset changed fields on modal open
+    }
+  }, [selectedBlogs, form]);
 
   const handleCancel = () => {
     form.resetFields();
     setFileList([]);
+    setInitialFileList([]);
+    setChangedFields({});
     setEditModal(false);
   };
 
-   useEffect(() => {
-      if (selectedBlogs) {
-        form.setFieldsValue({
-          title: selectedBlogs?.title,
-          content: selectedBlogs?.content,
-        });
-  
-        setFileList([
-          {
-            uid: "-1",
-            name: "category-image.png",
-            status: "done",
-            url: `${imageUrl}${selectedBlogs?.imageUrl}`,
-          },
-        ]);
-      }
-    }, [selectedBlogs, form]);
-
   const handleSubmit = async (values) => {
-    console.log("Submitted values:", values);
     setLoading(true);
 
     try {
       const formData = new FormData();
 
-   
-      fileList.forEach((file) => {
-        formData.append("image", file.originFileObj);
-      });
-      formData.append("content", values.content);
-      formData.append("title", values.title);
+      // Append only changed fields
+      if (changedFields.title && values.title !== selectedBlogs?.title) {
+        formData.append('title', values.title);
+      }
+      if (changedFields.content && values.content !== selectedBlogs?.content) {
+        formData.append('content', values.content);
+      }
+      if (
+        changedFields.image &&
+        fileList.length > 0 &&
+        fileList[0].originFileObj
+      ) {
+        formData.append('images', fileList[0].originFileObj);
+      }
 
-      const res = await addcategory(formData);
-      console.log(res);
-      message.success(res.data.message);
+      // Only make API call if there are changed fields
+      if ([...formData.entries()].length > 0) {
+        const res = await updateBlog({
+          id: selectedBlogs?._id,
+          data: formData,
+        });
+        if (res.data) {
+          message.success(res.data.message);
+        } else {
+          throw new Error(res.error?.data?.message || 'Failed to update blog');
+        }
+      } else {
+        message.info('No changes detected.');
+      }
+
       setLoading(false);
       setEditModal(false);
+      form.resetFields();
+      setFileList([]);
+      setInitialFileList([]);
+      setChangedFields({});
     } catch (error) {
-      setLoading(false);
       console.error(error);
-      message.error(message?.data?.error);
-      setEditModal(false);
-    } finally {
+      message.error(error.message || 'Failed to update blog');
       setLoading(false);
       setEditModal(false);
     }
@@ -91,28 +137,29 @@ const EditBlog = ({ editModal, setEditModal, selectedBlogs }) => {
     >
       <div className="mb-20 mt-4">
         <div>
-          <div className="font-bold text-center mb-11">Edit Blogs</div>
+          <div className="font-bold text-center mb-11">Edit Blog</div>
 
-        <Form
+          <Form
             form={form}
             layout="vertical"
             onFinish={handleSubmit}
+            onValuesChange={onValuesChange}
             className="px-2"
           >
             <Form.Item
-              label="Name"
+              label="Title"
               name="title"
-              rules={[{ required: true, message: "Please input name!" }]}
+              rules={[{ required: true, message: 'Please input title!' }]}
             >
-              <Input placeholder="Enter title" style={{ height: "40px" }} />
+              <Input placeholder="Enter title" style={{ height: '40px' }} />
             </Form.Item>
 
             <Form.Item
-              label="Description"
+              label="Content"
               name="content"
-              rules={[{ required: true, message: "Please input Description!" }]}
+              rules={[{ required: true, message: 'Please input content!' }]}
             >
-              <Input.TextArea placeholder="Enter Description" />
+              <Input.TextArea placeholder="Enter content" rows={6} />
             </Form.Item>
 
             <Form.Item label="Photos">
@@ -121,20 +168,20 @@ const EditBlog = ({ editModal, setEditModal, selectedBlogs }) => {
                 fileList={fileList}
                 onChange={onChange}
                 onPreview={onPreview}
-                multiple={true}
+                multiple={false} 
+                beforeUpload={() => false} 
               >
-                {fileList.length < 1 && "+ Upload"}
+                {fileList.length < 1 && '+ Upload'}
               </Upload>
             </Form.Item>
 
-            {/* Save Button */}
             <Form.Item>
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-2 mt-2 bg-[#E63946] text-white rounded-md"
               >
-                {loading ? <Spin size="small" /> : "Add"}
+                {loading ? <Spin size="small" /> : 'Update'}
               </button>
             </Form.Item>
           </Form>

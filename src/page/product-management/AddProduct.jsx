@@ -1,6 +1,15 @@
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
-import { Modal, Form, Input, Select, Upload, Button, message } from "antd";
+import {
+  Modal,
+  Form,
+  Input,
+  Select,
+  Upload,
+  Button,
+  message,
+  Spin,
+} from "antd";
 import {
   useAddProductsMutation,
   useGetBrandsQuery,
@@ -49,10 +58,10 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
 
       // Append images as an array using `image[]`
       fileList.forEach((file) => {
-        formData.append("images", file.originFileObj); 
+        formData.append("images", file.originFileObj);
       });
       // ✅ Generate unique productId
-      const productId = uuidv4(); 
+      const productId = uuidv4();
 
       // Append productId to formData
       formData.append("productId", productId);
@@ -65,6 +74,7 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
       formData.append("brand", values.brand);
       formData.append("category", values.category);
       formData.append("procedure", values.procedure);
+      formData.append("productCode", values.productCode);
       formData.append("availability", values.availability);
       formData.append(
         "productUrl",
@@ -107,6 +117,7 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
         {/* Images */}
         <Form.Item label="Photos">
           <Upload
+            style={{ width: "100%", height: "160px" }}
             listType="picture-card"
             fileList={fileList}
             onChange={onChange}
@@ -123,7 +134,11 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
           name="name"
           rules={[{ required: true, message: "Please enter product name!" }]}
         >
-          <Input placeholder="Enter product name" size="large" />
+          <Input
+            style={{ height: "45px", borderRadius: "8px" }}
+            placeholder="Enter product name"
+            size="large"
+          />
         </Form.Item>
 
         {/* Description */}
@@ -133,19 +148,36 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
           rules={[{ required: true, message: "Please enter description!" }]}
         >
           <Input.TextArea
+            style={{ borderRadius: "8px" }}
             rows={4}
             placeholder="Enter description"
             size="large"
           />
         </Form.Item>
 
-        {/* Price */}
+        <Form.Item
+          label="Product Code"
+          name="productCode"
+          rules={[{ required: true, message: "Please enter product Code" }]}
+        >
+          <Input
+            style={{ height: "45px", borderRadius: "8px" }}
+            placeholder="Enter product Code"
+            size="large"
+          />
+        </Form.Item>
+
         <Form.Item
           label="Price"
           name="price"
           rules={[{ required: true, message: "Please enter price!" }]}
         >
-          <Input type="number" placeholder="Enter price" size="large" />
+          <Input
+            style={{ height: "45px", borderRadius: "8px" }}
+            type="number"
+            placeholder="Enter price"
+            size="large"
+          />
         </Form.Item>
 
         {/* Stock */}
@@ -154,7 +186,12 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
           name="stock"
           rules={[{ required: true, message: "Please enter stock!" }]}
         >
-          <Input type="number" placeholder="Enter stock" size="large" />
+          <Input
+            style={{ height: "45px", borderRadius: "8px" }}
+            type="number"
+            placeholder="Enter stock"
+            size="large"
+          />
         </Form.Item>
 
         {/* Brand */}
@@ -163,7 +200,11 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
           name="brand"
           rules={[{ required: true, message: "Please select a brand!" }]}
         >
-          <Select placeholder="Select brand" size="large">
+          <Select
+            style={{ height: "44px" }}
+            placeholder="Select brand"
+            size="large"
+          >
             {brands?.data?.map((b) => (
               <Option key={b._id} value={b._id}>
                 {b.name}
@@ -178,7 +219,11 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
           name="category"
           rules={[{ required: true, message: "Please select a category!" }]}
         >
-          <Select placeholder="Select category" size="large">
+          <Select
+            style={{ height: "44px" }}
+            placeholder="Select category"
+            size="large"
+          >
             {category?.data?.map((c) => (
               <Option key={c._id} value={c._id}>
                 {c.name}
@@ -193,7 +238,11 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
           name="procedure"
           rules={[{ required: true, message: "Please select a procedure!" }]}
         >
-          <Select placeholder="Select procedure" size="large">
+          <Select
+            style={{ height: "44px" }}
+            placeholder="Select procedure"
+            size="large"
+          >
             {procedure?.data?.map((p) => (
               <Option key={p._id} value={p._id}>
                 {p.name}
@@ -208,7 +257,11 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
           name="availability"
           rules={[{ required: true, message: "Please select availability!" }]}
         >
-          <Select placeholder="Select availability" size="large">
+          <Select
+            style={{ height: "44px" }}
+            placeholder="Select availability"
+            size="large"
+          >
             <Option value="In Stock">In Stock</Option>
             <Option value="Out of Stock">Out of Stock</Option>
             <Option value="Limited Stock">Limited Stock</Option>
@@ -218,14 +271,24 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
 
         {/* Submit */}
         <div className="flex justify-end">
-          <Button
-            type="primary"
-            htmlType="submit"
-            loading={loading}
-            className="px-6 py-2 text-base font-semibold rounded-lg"
+          <button
+            className={`w-full py-3 rounded text-white flex justify-center items-center gap-2 transition-all duration-300 ${
+              loading
+                ? "bg-blue-400 cursor-not-allowed"
+                : "bg-[#3b82f6] hover:bg-blue-500"
+            }`}
+            type="submit"
+            disabled={loading}
           >
-            Submit
-          </Button>
+            {loading ? (
+              <>
+                <Spin size="small" />
+                <span>Submitting...</span>
+              </>
+            ) : (
+              "Submit"
+            )}
+          </button>
         </div>
       </Form>
     </Modal>

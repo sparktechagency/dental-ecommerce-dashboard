@@ -6,17 +6,22 @@ import { IoSearch } from "react-icons/io5";
 import { FiPlus } from "react-icons/fi";
 import AddBlog from "./AddBlog";
 import { useState } from "react";
-import { useGetBlogQuery } from "../redux/api/blogApi";
-import { Modal, message } from "antd";
+import { useDeleteBlogMutation, useGetBlogQuery } from "../redux/api/blogApi";
+import { Input, Modal, Pagination, message } from "antd";
 import { imageUrl } from "../redux/api/baseApi";
 import EditBlog from "./EditBlog";
-
+import { SearchOutlined } from "@ant-design/icons";
 const Blog = () => {
-  const { data: blogData } = useGetBlogQuery();
+   const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  const handlePageChange = (page) => setCurrentPage(page);
+  const { data: blogData } = useGetBlogQuery({search, page: currentPage, limit: pageSize});
   const [openAddModal, setOpenAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [viewModal, setViewModal] = useState(false);
   const [currentBlog, setCurrentBlog] = useState(null);
+  const [deleteBlogs] = useDeleteBlogMutation()
   const navigate = useNavigate();
 const [selectedBlogs, setSelectedCategory] = useState(null);
   const showAddModal = () => {
@@ -29,16 +34,17 @@ setSelectedCategory(blog);
     setEditModal(true);
   };
 
-  const handleDelete = (blog) => {
-    Modal.confirm({
-      title: "Are you sure you want to delete this blog?",
-      okText: "Yes",
-      cancelText: "No",
-      onOk: () => {
-        // API call for delete
-        message.success("Blog deleted successfully!");
-      },
-    });
+  const handleDelete =async (id) => {
+
+
+     try {
+      const res = await deleteBlogs(id).unwrap();
+      message.success(res?.message || "Blog deleted successfully");
+     
+    } catch (error) {
+      console.error(error);
+      message.error(error?.data?.message || "Failed to delete blog");
+    }
   };
 
 
@@ -51,12 +57,13 @@ setSelectedCategory(blog);
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-2">
         <PageHeading title="Blog" />
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
-          <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
-            <SearchInput />
-            <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
-              <IoSearch className="text-[1.3rem]" />
-            </span>
-          </div>
+         
+          <Input
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by name..."
+            prefix={<SearchOutlined />}
+            style={{ maxWidth: "300px", height: "40px" }}
+          />
           <button
             onClick={showAddModal}
             className="w-full md:w-auto px-6 py-3 bg-[#136BFB] rounded-lg text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors whitespace-nowrap"
@@ -74,7 +81,7 @@ setSelectedCategory(blog);
               key={blog._id}
               className="bg-[#1c1c1c] rounded-lg shadow-sm overflow-hidden"
             >
-              <div className="min-h-[250px] min-w-[387px]">
+              <div className="h-[250px] min-w-[387px]">
                 <img
                   src={`${imageUrl}${blog.imageUrl[0]}`}
                   alt={blog.title}
@@ -112,7 +119,7 @@ setSelectedCategory(blog);
                       <Edit className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={() => handleDelete(blog)}
+                      onClick={() => handleDelete(blog._id)}
                       className="p-2 text-red-600"
                       title="Delete"
                     >
@@ -129,7 +136,17 @@ setSelectedCategory(blog);
           </div>
         )}
       </div>
-
+<div className="mt-4 flex justify-center ">
+        <div className="bg-white px-2 py-1 rounded-md shadow-md">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={blogData?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+          />
+        </div>
+      </div>
       {/* Add/Edit Modal */}
       <AddBlog
         openAddModal={openAddModal}

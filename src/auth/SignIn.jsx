@@ -61,7 +61,7 @@ function SignIn() {
             >
               <Input
                 placeholder="Enter your email"
-                className="bg-[#2D2D2D] text-white border-gray-600 rounded-lg"
+                className="bg-white py-3 text-black border-gray-600 rounded-lg"
               />
             </Form.Item>
 
@@ -84,7 +84,7 @@ function SignIn() {
                     <IoEyeOutline className="text-gray-400" />
                   )
                 }
-                className="bg-[#2D2D2D] text-white border-gray-600 rounded-lg"
+                className="bg-white py-3 text-black border-gray-600 rounded-lg"
                 visibilityToggle={{
                   visible: showPassword,
                   onVisibleChange: setShowPassword,
@@ -110,7 +110,7 @@ function SignIn() {
               <Button
                 type="primary"
                 htmlType="submit"
-                className="w-full font-bold py-3 rounded-lg mt-5"
+                className="w-full font-bold py-5 rounded-lg mt-5"
               >
                 Log In
               </Button>

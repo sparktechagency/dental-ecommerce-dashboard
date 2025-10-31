@@ -116,16 +116,12 @@ export default function OrderInformationModal({ order }) {
             <span className="font-medium">${subtotal.toFixed(2)}</span>
           </div>
 
-          <div className="flex justify-between items-center text-gray-700">
-            <span>Shipping fee</span>
-            <span className="font-medium">${shippingFee.toFixed(2)}</span>
-          </div>
-
+          
           <div className="border-t border-gray-200 pt-4">
             <div className="flex justify-between items-center">
               <span className="text-gray-900 font-medium text-lg">Total :</span>
               <span className="text-blue-600 font-bold text-xl">
-                ${total.toFixed(2)}
+                ${subtotal.toFixed(2)}
               </span>
             </div>
           </div>

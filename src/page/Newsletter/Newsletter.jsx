@@ -1,34 +1,81 @@
-import { useState } from "react";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
-import PageHeading from "../../shared/PageHeading";
+import  { useState, useRef, useEffect, } from 'react';
+import JoditEditor from 'jodit-react';
+import { FaArrowLeft } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
-function Newsletter() {
-  const [content, setContent] = useState(
-    "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum is therefore always free from repetition, injected humour, or non-characteristic words etc. There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing hidden in the middle of text. All the Lorem Ipsum generators on the Internet tend to repeat predefined chunks as necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with a handful of model sentence structures, to generate Lorem Ipsum which looks reasonable. The generated Lorem Ipsum."
-  );
+import { message, Spin } from 'antd';
+import PageHeading from '../../shared/PageHeading';
+import { useAddNewsletterMutation } from '../redux/api/metaDataApi';
+
+
+
+
+const PrivacyPolicy = () => {
+const [updateTerms] = useAddNewsletterMutation()
+
+  const editor = useRef(null);
+  const [content, setContent] = useState('');
+   const [isLoading, setLoading] = useState(false)
+  const navigate = useNavigate(); 
+const handleTerms = async () => {
+  const data = { content };
+
+  try {
+    setLoading(true);
+
+    const res = await updateTerms(data).unwrap();
+
+    message.success(res?.message || "Newsletter update successfull");
+  } catch (error) {
+    console.error("Error updating terms:", error);
+    message.error(error?.data?.message || "Failed to update terms. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+  const config = {
+      readonly: false,
+      placeholder: 'Start typings...',
+      style: {
+          height: 600,
+      },
+      buttons: [
+          'image', 'fontsize', 'bold', 'italic', 'underline', '|',
+          'font', 'brush',
+          'align'
+      ]
+  }
+
 
   return (
-    <div className="p-5 min-h-screen">
+    <div className=" mx-auto ">
       <PageHeading title="Newsletter" />
-      <div className=" bg-white rounded shadow p-5 h-full mt-5">
-        <ReactQuill
-          style={{ padding: "10px" }}
-          theme="snow"
-          value={content}
-          onChange={setContent}
-        />
-      </div>
-      <div className="text-center py-5">
+      <JoditEditor
+        ref={editor}
+        value={content}
+        config={config}
+        tabIndex={1}
+        onBlur={newContent => setContent(newContent)}
+        onChange={newContent => { }}
+      />
+      
+
+     <div className="mt-5 flex justify-center">
         <button
-          onClick={() => console.log(content)}
-          className="bg-[#136BFB] text-[#fff] font-bold w-full py-2 rounded"
+       onClick={handleTerms}
+       disabled={isLoading}
+          className="bg-[#212121] py-2 px-4 rounded text-white"
         >
-          Send To All
+            {isLoading ? (
+                <Spin size="small" /> 
+              ) : (
+                "Update"
+              )}
         </button>
       </div>
     </div>
   );
-}
+};
 
-export default Newsletter;
+export default PrivacyPolicy;

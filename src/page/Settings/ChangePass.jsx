@@ -1,107 +1,96 @@
-import { useState } from "react";
-import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+import { Button, Form, Input, message } from "antd";
+import React, { useState } from "react";
 
-function ChangePass() {
-  const [showPassword, setShowPassword] = useState(false);
+import { useNavigate } from "react-router-dom";
+import { useChangePasswordMutation } from "../redux/api/userApi";
+
+
+export const PasswordTab = () => {
+  const [changePassword] = useChangePasswordMutation();
+
+  const [passError, setPassError] = useState("");
+  const navigate = useNavigate();
+
+  const handlePasswordChange = async (values) => {
+    if (values?.newPassword === values.oldPassword) {
+      return setPassError("Your old password cannot be your new password.");
+    }
+    if (values?.newPassword !== values?.confirmPassword) {
+      return setPassError("Confirm password doesn't match.");
+    } else {
+      setPassError("");
+    }
+
+    const data = {
+      currentPassword: values.currentPassword,
+      newPassword: values.newPassword,
+    };
+    try {
+      const response = await changePassword(data).unwrap();
+      message.success(response.message);
+      console.log(response);
+      
+    } catch (error) {
+      console.log(error);
+      message.error(error.data.message);
+    }
+  };
 
   return (
-    <div className="bg-white px-5 md:px-20 w-full md:w-[715px] py-5 rounded-md">
-      <p className="text-primary text-center font-bold text-xl mb-5">
-        Change Password
-      </p>
-      <form className="space-y-4">
-        <div className="w-full">
-          <label
-            htmlFor="password"
-            className="text-xl text-[#0D0D0D] mb-2 font-bold"
-          >
-            Current Password
-          </label>
-          <div className="w-full relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="**********"
-              className="w-full border-2 border-[#6A6D76] rounded-md outline-none px-5 py-3 mt-5 placeholder:text-xl"
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 bottom-4 flex items-center text-[#6A6D76]"
-            >
-              {showPassword ? (
-                <IoEyeOffOutline className="w-5 h-5" />
-              ) : (
-                <IoEyeOutline className="w-5 h-5" />
-              )}
-            </button>
+    <div>
+      <Form layout="vertical" onFinish={handlePasswordChange}>
+        <h2 className="text-xl font-semibold mb-4 text-center">
+          Change Your Password
+        </h2>
+
+        <Form.Item
+          name="currentPassword"
+          label="Old Password"
+          rules={[
+            { required: true, message: "Please enter your current password!" },
+          ]}
+        >
+          <Input.Password style={{ padding: "9px", borderRadius: "0px" }} placeholder="Old Password" />
+        </Form.Item>
+
+        <Form.Item
+          name="newPassword"
+          label="New Password"
+          rules={[{ required: true, message: "Please enter a new password!" }]}
+        >
+          <Input.Password  style={{ padding: "9px", borderRadius: "0px" }} placeholder="New Password" />
+        </Form.Item>
+
+        <Form.Item
+          name="confirmPassword"
+          label="Confirm New Password"
+          dependencies={["newPassword"]}
+          rules={[
+            { required: true, message: "Please confirm your new password!" },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("newPassword") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject(new Error("Passwords do not match!"));
+              },
+            }),
+          ]}
+        >
+          <Input.Password style={{ padding: "9px", borderRadius: "0px" }} placeholder="Confirm Password" />
+        </Form.Item>
+
+        {/* Display error if password validations fail */}
+        {passError && <p className="text-red-500 text-sm mb-2">{passError}</p>}
+
+        <Form.Item>
+          <div className="flex justify-center">
+          <button type="submit" className="w-full bg-blue-600 text-white py-2">
+                Change Password
+              </button>
           </div>
-        </div>
-        <div className="w-full">
-          <label
-            htmlFor="password"
-            className="text-xl text-[#0D0D0D] mb-2 font-bold"
-          >
-            New Password
-          </label>
-          <div className="w-full relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="**********"
-              className="w-full border-2 border-[#6A6D76] rounded-md outline-none px-5 py-3 mt-5 placeholder:text-xl"
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 bottom-4 flex items-center text-[#6A6D76]"
-            >
-              {showPassword ? (
-                <IoEyeOffOutline className="w-5 h-5" />
-              ) : (
-                <IoEyeOutline className="w-5 h-5" />
-              )}
-            </button>
-          </div>
-        </div>
-        <div className="w-full">
-          <label
-            htmlFor="password"
-            className="text-xl text-[#0D0D0D] mb-2 font-bold"
-          >
-            Confirm New Password
-          </label>
-          <div className="w-full relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="**********"
-              className="w-full border-2 border-[#6A6D76] rounded-md outline-none px-5 py-3 mt-5 placeholder:text-xl"
-              required
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 bottom-4 flex items-center text-[#6A6D76]"
-            >
-              {showPassword ? (
-                <IoEyeOffOutline className="w-5 h-5" />
-              ) : (
-                <IoEyeOutline className="w-5 h-5" />
-              )}
-            </button>
-          </div>
-        </div>
-        <div className="text-center py-5">
-          <button className="bg-[#136BFB] text-white font-semibold w-full py-3 rounded-md">
-            Save & Change
-          </button>
-        </div>
-      </form>
+        </Form.Item>
+      </Form>
     </div>
   );
-}
-
-export default ChangePass;
+};

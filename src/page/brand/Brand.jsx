@@ -1,13 +1,15 @@
-import { Table, Modal, Form, Input, Button, message, Popconfirm } from "antd";
+import { Table, Modal, Form, Input, Button, message, Popconfirm, Pagination } from "antd";
 import PageHeading from "../../shared/PageHeading";
 import { IoSearch } from "react-icons/io5";
 import { FiEdit, FiPlus } from "react-icons/fi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useState, useMemo, useEffect } from "react";
 import { SearchInput } from "../../components/search/SearchInput";
+import { SearchOutlined } from "@ant-design/icons";
 import {
   useAddBrandsMutation,
   useDeleteBrandsMutation,
+  useGetBrandsAllQuery,
   useGetBrandsQuery,
   useUpdateBrandsMutation,
 } from "../redux/api/productManageApi";
@@ -20,9 +22,12 @@ const Brand = () => {
 
   const [form] = Form.useForm();
   const [editForm] = Form.useForm();
-
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
+  const handlePageChange = (page) => setCurrentPage(page);
   // API hooks
-  const { data: getAllBrand, refetch, isLoading } = useGetBrandsQuery();
+  const { data: getAllBrand, refetch, isLoading } = useGetBrandsAllQuery({ search, page: currentPage, limit: pageSize });
   const [addBrands] = useAddBrandsMutation();
   const [updateBrands] = useUpdateBrandsMutation();
   const [deleteBrands] = useDeleteBrandsMutation();
@@ -134,14 +139,12 @@ const Brand = () => {
 
         {/* Search + Add Button */}
         <div className="flex flex-col md:flex-row justify-center items-center gap-2 w-full md:w-auto">
-          <div className="relative w-full md:w-64">
-            <SearchInput
-              placeholder="Search brand..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-            <IoSearch className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-500" />
-          </div>
+           <Input
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by name..."
+            prefix={<SearchOutlined />}
+            style={{ maxWidth: "300px", height: "40px" }}
+          />
 
           <button
             type="primary"
@@ -161,7 +164,17 @@ const Brand = () => {
         columns={columns}
         pagination={false}
       />
-
+   <div className="mt-4 flex justify-center ">
+        <div className="bg-white px-2 py-1 rounded-md shadow-md">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={getAllBrand?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+          />
+        </div>
+      </div>
       {/* Add Brand Modal */}
       <Modal
         title="Add New Brand"

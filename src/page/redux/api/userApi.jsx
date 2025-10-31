@@ -11,19 +11,11 @@ const useApi = baseApi.injectEndpoints({
         };
       },
     }),
-    getUserAll: builder.query({
-      query: ({ searchTerm, page, limit }) => {
-        return {
-          url: `/normal-user/get-all-user?searchTerm=${searchTerm}&page=${page}&limit=${limit}`,
-          method: "GET",
-        };
-      },
-      providesTags: ["updateProfile"],
-    }),
+   
     getProfile: builder.query({
       query: () => {
         return {
-          url: "/user/get-my-profile",
+          url: "/users/profile",
           method: "GET",
         };
       },
@@ -66,21 +58,23 @@ const useApi = baseApi.injectEndpoints({
         };
       },
     }),
+
     updateProfile: builder.mutation({
       query: (data) => {
         return {
-          url: "/super-admin/update-profile",
+          url: "/users/profile",
           method: "PATCH",
           body: data,
         };
       },
       invalidatesTags: ["updateProfile"],
     }),
+
     changePassword: builder.mutation({
       query: (data) => {
         return {
           url: "/auth/change-password",
-          method: "POST",
+          method: "PATCH",
           body: data,
         };
       },
@@ -117,5 +111,5 @@ export const {
   useGetHostUserQuery,
   useBlockUserHostMutation,
   useResentHitMutation,
-  useGetUserAllQuery,
+  
 } = useApi;

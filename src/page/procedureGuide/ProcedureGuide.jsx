@@ -63,12 +63,7 @@ const ProcedureGuide = () => {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-2">
         <PageHeading title="Procedure Guide" />
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
-          <div className="relative w-full mt-5 md:mt-0 lg:mt-0">
-            <SearchInput />
-            <span className=" text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
-              <IoSearch className="text-[1.3rem]" />
-            </span>
-          </div>
+         
           <button
             onClick={() => setOpenAddModal(true)}
             className="w-full md:w-auto px-6 py-3 bg-[#136BFB] rounded-lg text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors whitespace-nowrap"

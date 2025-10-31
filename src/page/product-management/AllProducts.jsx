@@ -1,26 +1,47 @@
 import React, { useState } from "react";
-import { Card, Modal, Form, message, Spin } from "antd";
-import { IoSearch, IoEyeOutline, IoTrashOutline } from "react-icons/io5";
+import {
+  Table,
+  Modal,
+  Form,
+  message,
+  Spin,
+  Pagination,
+  Input,
+  Button,
+  Image,
+} from "antd";
+import { IoEyeOutline, IoTrashOutline } from "react-icons/io5";
 import { BiEditAlt } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import PageHeading from "../../shared/PageHeading";
 import AddProduct from "./AddProduct";
 import EditProduct from "./EditProduct";
-import { SearchInput } from "../../components/search/SearchInput";
-import { useDeleteProductsMutation, useGetProductsQuery } from "../redux/api/productManageApi";
+import {
+  useDeleteProductsMutation,
+  useGetProductsQuery,
+} from "../redux/api/productManageApi";
 import { imageUrl } from "../redux/api/baseApi";
+import { SearchOutlined } from "@ant-design/icons";
 
 export default function AllProducts() {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [form] = Form.useForm();
+  const [search, setSearch] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
-  const { data: getAllProducts, isLoading, isError } = useGetProductsQuery();
-const [deleteData] = useDeleteProductsMutation()
+  const handlePageChange = (page) => setCurrentPage(page);
 
+  const {
+    data: getAllProducts,
+    isLoading,
+    isError,
+  } = useGetProductsQuery({ search, page: currentPage, limit: pageSize });
+
+  const [deleteData] = useDeleteProductsMutation();
   const products = getAllProducts?.data || [];
-  console.log(products)
 
   const showAddModal = () => {
     form.resetFields();
@@ -31,6 +52,7 @@ const [deleteData] = useDeleteProductsMutation()
     setSelectedProduct(product);
     setEditModal(true);
   };
+
   const handleDelete = async (id) => {
     try {
       const res = await deleteData(id).unwrap();
@@ -54,114 +76,138 @@ const [deleteData] = useDeleteProductsMutation()
       </div>
     );
 
+  // Table Columns
+  const columns = [
+    {
+      title: "Image",
+      dataIndex: "images",
+      key: "image",
+      render: (images) => (
+        <Image
+          src={`${imageUrl}${images?.[0]}`}
+          alt="product"
+          width={60}
+          height={60}
+          className="object-contain rounded-md border"
+        />
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <span className="font-medium">{text}</span>,
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      ellipsis: true,
+    },
+    {
+      title: "Brand",
+      dataIndex: ["brand", "name"],
+      key: "brand",
+    },
+    {
+      title: "Category",
+      dataIndex: ["category", "name"],
+      key: "category",
+    },
+    {
+      title: "Price ($)",
+      dataIndex: "price",
+      key: "price",
+      render: (price) => (
+        <span className="text-[#136BFB] font-semibold">
+          ${price?.toFixed(2)}
+        </span>
+      ),
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <div className="flex gap-2">
+          <Link to={`/view-product/${record?.productId}`}>
+            <Button
+              icon={<IoEyeOutline />}
+              title="View"
+              className="flex items-center justify-center"
+            />
+          </Link>
+
+          <Button
+            icon={<BiEditAlt />}
+            onClick={() => handleEdit(record)}
+            title="Edit"
+            className="flex items-center justify-center"
+          />
+
+          <Button
+            icon={<IoTrashOutline />}
+            onClick={() => handleDelete(record?._id)}
+            danger
+            title="Delete"
+            className="flex items-center justify-center"
+          />
+        </div>
+      ),
+    },
+  ];
+
   return (
     <main className="pb-10">
       {/* Header */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
         <PageHeading title="All Products" />
-        <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
-          {/* Search Bar (UI only) */}
-          <div className="relative w-full mt-5 md:mt-0">
-            <SearchInput />
-            <span className="text-gray-600 absolute top-0 left-0 h-full px-5 flex items-center justify-center rounded-r-md cursor-pointer">
-              <IoSearch className="text-[1.3rem]" />
-            </span>
-          </div>
 
-          {/* Add Product Button */}
-          <div>
-            <button
+        <div className="flex flex-col md:flex-row gap-2 w-full md:w-auto">
+          <Input
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search by name..."
+            prefix={<SearchOutlined />}
+            style={{ maxWidth: "300px", height: "40px" }}
+          />
+
+          <Button
+            type="primary"
             onClick={showAddModal}
-            className="w-full md:w-[200px] p-[10px] bg-[#136BFB] rounded text-white"
+            style={{ height: "40px" }}
           >
             + Add Product
-          </button>
-          </div>
- 
+          </Button>
         </div>
       </header>
 
-      {/* Product List */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-        {products.map((product) => (
-          <Card
-            key={product?._id}
-            className="h-full flex flex-col hover:shadow-lg transition-shadow duration-300"
-            bodyStyle={{
-              flex: 1,
-              display: "flex",
-              flexDirection: "column",
-              padding: "16px",
-            }}
-            cover={
-              <div className="h-48 bg-gray-50 flex items-center justify-center">
-                <img
-                  alt={product?.name}
-                  src={`${imageUrl}${product?.images[0]}`}
-                  className="h-full w-full object-contain p-4"
-                />
-              </div>
-            }
-          >
-            <div className="flex-grow flex flex-col">
-              <h1 className="font-medium text-gray-900 line-clamp-2 h-10">
-                {product?.name}
-              </h1>
-              <h3 className="font-medium text-[#9F9C96] line-clamp-2 h-14">
-                {product?.description}
-              </h3>
+      {/* Product Table */}
+      <Table
+        dataSource={products}
+        columns={columns}
+        rowKey={(record) => record._id}
+        pagination={false}
+        bordered
+        className="shadow-sm rounded-md"
+      />
 
-              <div className="mt-auto pt-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-lg font-bold text-[#136BFB]">
-                    ${product?.price?.toFixed(2)}
-                  </span>
-                  <p className="m-0 text-[#29A366] font-semibold">
-                    {product?.brand?.name}
-                  </p>
-                </div>
-                <p className="m-0 text-[#9F9C96]">
-                  {product?.category?.name }
-                </p>
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex justify-start gap-2 mt-4">
-              <Link to={`/view-product/${product?.productId}`}>
-                <button
-                  className="border-2 border-[#3b3b3b] rounded-lg p-2 hover:bg-gray-100 transition"
-                  title="View Details"
-                >
-                  <IoEyeOutline className="w-6 h-6 text-[#3b3b3b]" />
-                </button>
-              </Link>
-
-              <button
-                onClick={() => handleEdit(product)}
-                className="border-2 border-[#3b3b3b] rounded-lg p-2 hover:bg-blue-50 transition"
-                title="Edit"
-              >
-                <BiEditAlt className="w-6 h-6 text-[#3b3b3b]" />
-              </button>
-
-              <button
-               onClick={() => handleDelete(product?._id)}
-                className="border-2 border-[#3b3b3b] rounded-lg p-2 hover:bg-red-50 hover:border-red-500 hover:text-red-500 transition"
-                title="Delete"
-              >
-                <IoTrashOutline className="w-6 h-6" />
-              </button>
-            </div>
-          </Card>
-        ))}
+      {/* Pagination */}
+        <div className="mt-4 flex justify-center ">
+        <div className="bg-white px-2 py-1 rounded-md shadow-md">
+          <Pagination
+            current={currentPage}
+            pageSize={pageSize}
+            total={getAllProducts?.meta?.total || 0}
+            onChange={handlePageChange}
+            showSizeChanger={false}
+          />
+        </div>
       </div>
 
+      {/* Modals */}
       <AddProduct
         openAddModal={openAddModal}
         setOpenAddModal={setOpenAddModal}
       />
-
       <EditProduct
         editModal={editModal}
         setEditModal={setEditModal}

@@ -12,6 +12,16 @@ const category = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
+    getCategroys: builder.query({
+      query: ({ page, limit }) => {
+        return {
+          url: `/categories?page=${page}&limit=${limit}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
     addCategory: builder.mutation({
       query: (data) => {
         return {
@@ -48,6 +58,16 @@ const category = baseApi.injectEndpoints({
       query: () => {
         return {
           url: `/brands`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    getBrandsAll: builder.query({
+      query: ({search,page,limit}) => {
+        return {
+          url: `/brands?search=${search}&page=${page}&limit=${limit}`,
           method: "GET",
         };
       },
@@ -129,9 +149,9 @@ const category = baseApi.injectEndpoints({
     }),
 
     getProducts: builder.query({
-      query: () => {
+      query: ({ page, limit, search }) => {
         return {
-          url: `/products`,
+          url: `/products?search=${search}&page=${page}&limit=${limit}`,
           method: "GET",
         };
       },
@@ -189,12 +209,7 @@ const category = baseApi.injectEndpoints({
       invalidatesTags: ["updateProfile"],
     }),
 
-
-
-
-
-
- getBanner: builder.query({
+    getBanner: builder.query({
       query: () => {
         return {
           url: `/sliders`,
@@ -203,8 +218,6 @@ const category = baseApi.injectEndpoints({
       },
       providesTags: ["updateProfile"],
     }),
-
-   
 
     addBanner: builder.mutation({
       query: (data) => {
@@ -237,14 +250,6 @@ const category = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
-
-
-
-
-
-
-
-
   }),
 });
 
@@ -267,6 +272,10 @@ export const {
   useGetProductsQuery,
   useUpdateProductsMutation,
   useDeleteProductsMutation,
+  useGetCategroysQuery,
   useAddBannerMutation,
-  useDeleteBannerMutation,useGetBannerQuery,useUpdateBannerMutation
+  useDeleteBannerMutation,
+  useGetBannerQuery,
+  useUpdateBannerMutation,
+  useGetBrandsAllQuery
 } = category;

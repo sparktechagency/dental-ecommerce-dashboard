@@ -12,17 +12,19 @@ function VerificationCode() {
 
   const handleVerify = async () => {
     const data = {
-      otp: Number(otp),
+      code: otp,
       email: localStorage.getItem("email"),
     };
 
-    if (!otp || otp.length < 6) {
+    if (!otp || otp.length < 5) {
       return message.warning("Please enter the 6-digit code");
     }
 
     try {
       const response = await verifyOtp(data).unwrap();
       message.success(response?.message);
+      localStorage.setItem("resetToken", response?.data?.resetToken);
+ 
       navigate("/reset-password");
     } catch (error) {
       console.error(error);
