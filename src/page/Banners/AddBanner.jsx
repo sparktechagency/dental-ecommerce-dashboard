@@ -1,7 +1,7 @@
 import { Form, Input, message, Modal, Spin, Upload } from "antd";
 import React, { useState } from "react";
 import { useAddBannerMutation, useAddProcedureMutation } from "../redux/api/productManageApi";
-
+// re
 const onPreview = async (file) => {
   let src = file.url;
   if (!src) {
