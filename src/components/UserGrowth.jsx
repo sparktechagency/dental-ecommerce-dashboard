@@ -9,8 +9,11 @@ import {
 } from "recharts";
 import { userData } from "../../utils/data";
 import { CustomTooltip } from "./CustomTooltip";
+import { useGetUserGrowthQuery } from "../page/redux/api/metaDataApi";
 
 export default function UserGrowth() {
+  // const {data:userGrowthData}= useGetUserGrowthQuery({year})
+  // console.log(userGrowthData)
   return (
     <div className="w-full h-[300px]">
       <ResponsiveContainer width="100%" height="100%">

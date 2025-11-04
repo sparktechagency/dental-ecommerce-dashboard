@@ -6,12 +6,12 @@ import YearDropDown from "../components/YearDropDown";
 import UserGrowth from "../components/UserGrowth";
 import OrderGrowth from "../components/OrderGrowth";
 import EarningGrowth from "../components/EarningGrowth";
-// import UserGrowth from "../components/dashboard/UserGrowth";
-// import OrderGrowth from "../components/OrderGrowth";
-// import EarningGrowth from "../components/EarningGrowth";
-// import YearDropDown from "../components/YearDropDown";
+import { useGetOverviewQuery } from "./redux/api/metaDataApi";
+
 
 export default function DashboardPage() {
+  const {data:dasboardData} = useGetOverviewQuery();
+  console.log(dasboardData)
   return (
     <main className="flex flex-col">
       <section className="grid grid-cols-1 md:grid-cols-2 mmd:grid-cols-3 lg:grid-cols-4 gap-2">
@@ -22,7 +22,7 @@ export default function DashboardPage() {
           </div>
 
           <p className="text-[#34C759] text-4xl font-bold">
-            ${new Intl.NumberFormat().format(6500)}
+            ${dasboardData?.data?.totalEarning}
           </p>
         </div>
         <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F] border border-gray-300">
@@ -32,7 +32,7 @@ export default function DashboardPage() {
           </div>
 
           <p className="text-[#34C759] text-4xl font-bold">
-            {new Intl.NumberFormat().format(300)}
+           {dasboardData?.data?.totalOrder}
           </p>
         </div>
         <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F] border border-gray-300">
@@ -42,7 +42,7 @@ export default function DashboardPage() {
           </div>
 
           <p className="text-[#34C759] text-4xl font-bold">
-            {new Intl.NumberFormat().format(6500)}
+           {dasboardData?.data?.totalUser}
           </p>
         </div>
         <div className="flex flex-col items-center justify-center p-5 rounded-lg shadow-sm max-w-md bg-[#6F6F6F] border border-gray-300">
@@ -52,7 +52,7 @@ export default function DashboardPage() {
           </div>
 
           <p className="text-red-500 text-4xl font-bold">
-            {new Intl.NumberFormat().format(10)}
+            {dasboardData?.data?.blockedAccount}
           </p>
         </div>
       </section>
@@ -63,7 +63,7 @@ export default function DashboardPage() {
             <div>
               <h1 className="text-white text-xl font-bold">User Growth</h1>
             </div>
-            <YearDropDown />
+           
           </div>
           <UserGrowth />
         </div>

@@ -12,6 +12,47 @@ const category = baseApi.injectEndpoints({
       providesTags: ["updateProfile"],
     }),
 
+    getUserGrowth: builder.query({
+      query: ({year}) => {
+        return {
+          url: `/dashboard/user-growth?year=${year}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    getOrderGrowth: builder.query({
+      query: ({year}) => {
+        return {
+          url: `/dashboard/order-growth?year=${year}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+    getEarningGrowth: builder.query({
+      query: ({year}) => {
+        return {
+          url: `/dashboard/earning-growth?year=${year}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
+
+    getOverview: builder.query({
+      query: () => {
+        return {
+          url: `/dashboard/overview`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+
     getOrder: builder.query({
       query: ({ search, page, limit, status }) => {
         return {
@@ -324,5 +365,6 @@ export const {
   useUpdateSocialLinkMutation,
   useGetOrderQuery,
   useUpdateOrderMutation,
-  useAddNewsletterMutation
+  useAddNewsletterMutation,
+  useGetOverviewQuery,
 } = category;
