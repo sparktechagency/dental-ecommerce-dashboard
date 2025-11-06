@@ -156,15 +156,7 @@ const category = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
-    getUserGrowth: builder.query({
-      query: (year) => {
-        return {
-          url: `/meta/user-chart-data?year=${year}`,
-          method: "GET",
-        };
-      },
-      providesTags: ["updateProfile"],
-    }),
+   
 
     getBanner: builder.query({
       query: () => {
