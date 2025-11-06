@@ -333,7 +333,8 @@ export const {
   useGetUserGrowthQuery,
   useGetTermsQuery,
   useGetAboutQuery,
-
+useGetOrderGrowthQuery,
+useGetEarningGrowthQuery,
   useGetFaqQuery,
   useAddFaqMutation,
   useDeleteFaqMutation,
