@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import PageHeading from "../../shared/PageHeading";
 
 export default function Notification() {
   const [notifications, setNotifications] = useState([
@@ -103,7 +104,10 @@ export default function Notification() {
   };
 
   return (
-    <div className="py-5 overflow-y-auto">
+    <div className=" overflow-y-auto">
+      <div className="mb-3">
+        <PageHeading title="Notification" />
+      </div>
       {notifications.length > 0 ? (
         notifications.map((notification) => (
           <div
