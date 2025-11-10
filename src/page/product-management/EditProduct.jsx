@@ -220,7 +220,7 @@ const EditProduct = ({ editModal, setEditModal, selectedProduct }) => {
     <Form.Item
           label="Product Code"
           name="productCode"
-          rules={[{ required: true, message: "Enter product Code!" }]}
+         
         >
           <Input placeholder="Enter product Code" size="large" />
         </Form.Item>

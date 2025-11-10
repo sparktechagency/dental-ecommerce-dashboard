@@ -25,9 +25,9 @@ export default function UserInformation({ user }) {
           <ProfileField label="Email" value={user?.email} />
           <ProfileField
             label="Contact No"
-            value={user?.phoneNumber}
+            value={user?.phone}
           />
-          <ProfileField label="GDC NO" value={user?.GDCNO} />
+          <ProfileField label="GDC NO" value={user?.gdcNumber} />
         </div>
       </div>
     </div>

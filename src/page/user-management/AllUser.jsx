@@ -24,6 +24,7 @@ const AllUser = () => {
   const [blockUnblock, { isLoading }] = useBlockUnblockMutation();
 
   const users = userData?.data?.users || [];
+  console.log(users)
 
   const dataSource = users.map((user, index) => ({
     key: user._id,
@@ -31,6 +32,8 @@ const AllUser = () => {
     userName: `${user.firstName} ${user.lastName}`,
     email: user.email,
     role: user.role,
+    phone:user?.phone,
+    gdcNumber:user?.gdcNumber,
     status: user.status,
     imageUrl: user.imageUrl,
   }));

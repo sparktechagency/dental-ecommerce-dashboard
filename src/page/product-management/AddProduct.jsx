@@ -236,7 +236,7 @@ const AddProduct = ({ openAddModal, setOpenAddModal }) => {
         <Form.Item
           label="Procedure Guide"
           name="procedure"
-          rules={[{ required: true, message: "Please select a procedure!" }]}
+         
         >
           <Select
             style={{ height: "44px" }}

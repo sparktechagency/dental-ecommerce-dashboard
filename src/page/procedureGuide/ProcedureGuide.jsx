@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { Modal, message } from "antd";
+import { Table, Modal, message, Button, Space } from "antd";
 import PageHeading from "../../shared/PageHeading";
-import { IoSearch } from "react-icons/io5";
 import { FiPlus, FiEye, FiEdit3, FiTrash2 } from "react-icons/fi";
-import { SearchInput } from "../../components/search/SearchInput";
 import Addprocedue from "./Addprocedue";
 import EditProcedure from "./EditProcedure";
 import {
@@ -16,25 +14,25 @@ const ProcedureGuide = () => {
   // ✅ Fetch all procedure data
   const { data: getAllProcedure, isLoading, isError } = useGetProcedureQuery();
   const [deleteProcedure] = useDeleteProcedureMutation();
+
+  // ✅ Modal states
   const [isViewModalVisible, setIsViewModalVisible] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [editModal, setEditModal] = useState(false);
   const [selectedProcedure, setSelectedProcedure] = useState(null);
   const [currentProcedure, setCurrentProcedure] = useState(null);
 
-  // ✅ Handle View
+  // ✅ Handle actions
   const handleView = (record) => {
     setCurrentProcedure(record);
     setIsViewModalVisible(true);
   };
 
-  // ✅ Handle Edit (Modal Open)
   const handleEdit = (record) => {
     setSelectedProcedure(record);
     setEditModal(true);
   };
 
-  // ✅ Handle Delete (just UI for now)
   const handleDeleteClick = async (id) => {
     try {
       const res = await deleteProcedure(id).unwrap();
@@ -44,7 +42,6 @@ const ProcedureGuide = () => {
     }
   };
 
-  // ✅ Show loading or error states
   if (isLoading)
     return <p className="text-center py-10">Loading procedures...</p>;
   if (isError)
@@ -54,8 +51,66 @@ const ProcedureGuide = () => {
       </p>
     );
 
-  // ✅ Data safely accessed
   const procedures = getAllProcedure?.data || [];
+
+  // ✅ Table Columns
+  const columns = [
+    {
+      title: "Image",
+      dataIndex: "imageUrl",
+      key: "imageUrl",
+      render: (text) => (
+        <img
+          src={`${imageUrl}${text}`}
+          alt="procedure"
+          className="w-16 h-16 rounded-md object-cover border"
+        />
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      render: (text) => <span className="font-semibold">{text}</span>,
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      render: (text) => (
+        <p className="text-gray-600 truncate max-w-xs">{text}</p>
+      ),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <Space>
+          <Button
+            type="primary"
+            icon={<FiEye />}
+            onClick={() => handleView(record)}
+          >
+            View
+          </Button>
+          <Button
+            type="default"
+            icon={<FiEdit3 />}
+            onClick={() => handleEdit(record)}
+          >
+            Edit
+          </Button>
+          <Button
+            danger
+            icon={<FiTrash2 />}
+            onClick={() => handleDeleteClick(record?._id)}
+          >
+            Delete
+          </Button>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     <main className="pb-10">
@@ -63,7 +118,6 @@ const ProcedureGuide = () => {
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-2">
         <PageHeading title="Procedure Guide" />
         <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full md:w-auto">
-         
           <button
             onClick={() => setOpenAddModal(true)}
             className="w-full md:w-auto px-6 py-3 bg-[#136BFB] rounded-lg text-white flex items-center justify-center gap-2 hover:bg-blue-600 transition-colors whitespace-nowrap"
@@ -74,67 +128,14 @@ const ProcedureGuide = () => {
         </div>
       </header>
 
-      {/* ✅ Procedure Cards */}
-      <div className="space-y-5 flex flex-col gap-5">
-        {procedures.length === 0 ? (
-          <p className="text-center text-gray-500 py-10">
-            No procedures found.
-          </p>
-        ) : (
-          procedures.map((procedure) => (
-            <div
-              key={procedure._id}
-              className="relative bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 group"
-            >
-              <div className="relative h-[20rem] md:h-[25rem] overflow-hidden">
-                <img
-                  src={`${imageUrl}${procedure.imageUrl}`}
-                  alt={procedure.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/50 to-transparent"></div>
-
-                <div className="absolute inset-0 flex flex-col justify-between p-8">
-                  <div className="flex-1">
-                    <h3 className="text-3xl font-bold text-white mb-3">
-                      {procedure.name}
-                    </h3>
-                    <p className="text-white/90 text-lg mb-4 max-w-2xl leading-relaxed">
-                      {procedure.description}
-                    </p>
-                  </div>
-
-                  <div className="flex gap-2 mt-5">
-                    <button
-                      onClick={() => handleView(procedure)}
-                      className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white md:px-6 px-3 md:py-3 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
-                    >
-                      <FiEye className="h-4 w-4" />
-                      <span>View</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleEdit(procedure)}
-                      className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white md:px-6 px-3 md:py-3 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
-                    >
-                      <FiEdit3 className="h-4 w-4" />
-                      <span>Edit</span>
-                    </button>
-
-                    <button
-                      onClick={() => handleDeleteClick(procedure?._id)}
-                      className="flex items-center space-x-2 bg-red-600 hover:bg-red-700 text-white md:px-6 px-3 md:py-3 py-2 rounded-lg font-semibold transition-all duration-200 transform hover:scale-105 shadow-lg"
-                    >
-                      <FiTrash2 className="h-4 w-4" />
-                      <span>Delete</span>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
+      {/* ✅ Ant Design Table */}
+      <Table
+        columns={columns}
+        dataSource={procedures}
+        rowKey="_id"
+        pagination={false}
+    
+      />
 
       {/* Add Modal */}
       <Addprocedue
@@ -159,7 +160,7 @@ const ProcedureGuide = () => {
         }}
         footer={null}
         centered
-        className="max-w-3xl"
+        width={700}
       >
         {currentProcedure && (
           <div className="space-y-6">
@@ -169,8 +170,7 @@ const ProcedureGuide = () => {
                 alt={currentProcedure.name}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 p-6 text-white">
+              <div className="absolute bottom-0 left-0 p-6 text-white bg-black/40 w-full">
                 <h2 className="text-2xl font-bold mb-2">
                   {currentProcedure.name}
                 </h2>
@@ -187,15 +187,15 @@ const ProcedureGuide = () => {
             </div>
 
             <div className="flex justify-end pt-4 border-t border-gray-100">
-              <button
+              <Button
+                type="primary"
                 onClick={() => {
                   setIsViewModalVisible(false);
                   setCurrentProcedure(null);
                 }}
-                className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700"
               >
                 Close
-              </button>
+              </Button>
             </div>
           </div>
         )}
