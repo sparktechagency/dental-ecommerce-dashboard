@@ -1,15 +1,20 @@
 import React, { useState } from "react";
 import PageHeading from "../../shared/PageHeading";
 import { useParams } from "react-router-dom";
-import { useGetSingleProductsQuery, useGetSingleProductsUrlQuery } from "../redux/api/productManageApi";
+import {
+  useGetSingleProductsQuery,
+  useGetSingleProductsUrlQuery,
+} from "../redux/api/productManageApi";
 import { imageUrl } from "../redux/api/baseApi";
 
 export default function ViewProduct() {
   const { id } = useParams();
-  const productId = id
-  const { data: singleProduct, isLoading } = useGetSingleProductsUrlQuery({ productId });
+  const productId = id;
+  const { data: singleProduct, isLoading } = useGetSingleProductsUrlQuery({
+    productId,
+  });
   const [selectedImage, setSelectedImage] = useState(0);
-console.log(singleProduct)
+  console.log(singleProduct);
   if (isLoading) {
     return <p className="text-center text-white">Loading...</p>;
   }
@@ -19,7 +24,7 @@ console.log(singleProduct)
     return <p className="text-center text-red-500">Product not found!</p>;
   }
 
-  const product = singleProduct; // shorthand
+  const product = singleProduct?.data; // shorthand
   const productImages = product?.images || [];
 
   return (
@@ -75,7 +80,12 @@ console.log(singleProduct)
               {product.availability}
             </span>
           </div>
-
+          <div className="flex items-center gap-2">
+            <span className="text-[#9F9C96]">Product Code:</span>
+            <span className="text-[#136BFB] font-semibold">
+              {product.productCode}
+            </span>
+          </div>
           <div className="space-y-2">
             <p className="text-[#9F9C96] leading-relaxed">
               {product.description}
@@ -105,7 +115,7 @@ console.log(singleProduct)
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-[#9F9C96]">Stock:</span>
+              <span className="text-[#9F9C96]">Stock Amount:</span>
               <span className="text-[#136BFB] font-semibold">
                 {product.stock}
               </span>

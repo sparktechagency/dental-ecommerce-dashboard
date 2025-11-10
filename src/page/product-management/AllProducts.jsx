@@ -191,7 +191,7 @@ export default function AllProducts() {
       />
 
       {/* Pagination */}
-        <div className="mt-4 flex justify-center ">
+      <div className="mt-4 flex justify-center ">
         <div className="bg-white px-2 py-1 rounded-md shadow-md">
           <Pagination
             current={currentPage}
