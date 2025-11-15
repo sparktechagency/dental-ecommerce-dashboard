@@ -5,9 +5,11 @@ import { Drawer } from "antd";
 import { FaBars, FaChevronRight } from "react-icons/fa";
 import { MdDashboard, MdManageAccounts, MdOutlineAdminPanelSettings, MdOutlineArticle, MdOutlineDescription, MdOutlineEmail, MdOutlineImage, MdOutlineInventory2, MdOutlineLocalOffer, MdOutlineSettings, MdOutlineShoppingCart } from "react-icons/md";
 import { BiCategoryAlt } from "react-icons/bi";
+import { useGetProfileQuery } from "../page/redux/api/userApi";
 // import { AdminItems } from "../SideBar";
 
 export default function Header() {
+    const { data: profile } = useGetProfileQuery();
   const [selectedKey, setSelectedKey] = useState("dashboard");
   const [expandedKeys, setExpandedKeys] = useState([]);
   const contentRef = useRef({});
@@ -170,7 +172,7 @@ const AdminItems = [
               </Link>
               <div className="hidden md:block">
                 <p className="text-sm font-medium text-gray-200 group-hover:text-white">
-                  Shah Aman
+                  {profile?.data.firstName} {profile?.data.lastName}
                 </p>
                 <p className="text-xs text-gray-400">Admin</p>
               </div>

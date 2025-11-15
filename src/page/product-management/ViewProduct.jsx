@@ -41,7 +41,7 @@ export default function ViewProduct() {
           >
             <img
               src={`${imageUrl}${productImages[selectedImage]}`}
-              alt={product.name}
+              alt={product?.name}
               className="w-full h-[500px] md:h-[600px] mx-auto object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </div>
@@ -70,25 +70,25 @@ export default function ViewProduct() {
         <div className="w-full space-y-5">
           <div>
             <h1 className="text-2xl font-bold text-white mb-2">
-              {product.name}
+              {product?.name}
             </h1>
           </div>
 
           <div className="flex items-center gap-2">
             <span className="text-[#9F9C96]">Availability:</span>
             <span className="text-[#136BFB] font-semibold">
-              {product.availability}
+              {product?.availability}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[#9F9C96]">Product Code:</span>
             <span className="text-[#136BFB] font-semibold">
-              {product.productCode}
+              {product?.productCode}
             </span>
           </div>
           <div className="space-y-2">
             <p className="text-[#9F9C96] leading-relaxed">
-              {product.description}
+              {product?.description}
             </p>
           </div>
 
@@ -117,14 +117,14 @@ export default function ViewProduct() {
             <div className="flex items-center gap-2">
               <span className="text-[#9F9C96]">Stock Amount:</span>
               <span className="text-[#136BFB] font-semibold">
-                {product.stock}
+                {product?.stock}
               </span>
             </div>
           </div>
 
           <div className="py-4">
             <p className="text-4xl font-bold text-[#136BFB]">
-              ${product.price}
+              ${product?.price}
             </p>
           </div>
         </div>

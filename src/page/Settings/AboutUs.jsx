@@ -78,7 +78,7 @@ const AboutUs = () => {
         <button
           onClick={handleTerms}
           disabled={isLoading}
-          className="bg-[#212121] py-2 px-4 rounded text-white"
+          className="bg-[#4444ff] py-2 px-4 rounded text-white"
         >
           {isLoading ? <Spin size="small" /> : "Update"}
         </button>

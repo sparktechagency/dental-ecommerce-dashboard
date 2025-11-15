@@ -13,7 +13,7 @@ const category = baseApi.injectEndpoints({
     }),
 
     getUserGrowth: builder.query({
-      query: ({year}) => {
+      query: ({ year }) => {
         return {
           url: `/dashboard/user-growth?year=${year}`,
           method: "GET",
@@ -23,7 +23,7 @@ const category = baseApi.injectEndpoints({
     }),
 
     getOrderGrowth: builder.query({
-      query: ({year}) => {
+      query: ({ year }) => {
         return {
           url: `/dashboard/order-growth?year=${year}`,
           method: "GET",
@@ -33,7 +33,7 @@ const category = baseApi.injectEndpoints({
     }),
 
     getEarningGrowth: builder.query({
-      query: ({year}) => {
+      query: ({ year }) => {
         return {
           url: `/dashboard/earning-growth?year=${year}`,
           method: "GET",
@@ -41,7 +41,6 @@ const category = baseApi.injectEndpoints({
       },
       providesTags: ["updateProfile"],
     }),
-
 
     getOverview: builder.query({
       query: () => {
@@ -156,7 +155,6 @@ const category = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
-   
 
     getBanner: builder.query({
       query: () => {
@@ -325,6 +323,25 @@ const category = baseApi.injectEndpoints({
       },
       invalidatesTags: ["updateProfile"],
     }),
+
+    getNotification: builder.query({
+      query: () => {
+        return {
+          url: `/notifications`,
+          method: "GET",
+        };
+      },
+      providesTags: ["updateProfile"],
+    }),
+    markReadNotification: builder.mutation({
+      query: (id) => {
+        return {
+          url: `/notifications/${id}/read`,
+          method: "PATCH",
+        };
+      },
+      invalidatesTags: ["updateProfile"],
+    }),
   }),
 });
 
@@ -333,8 +350,8 @@ export const {
   useGetUserGrowthQuery,
   useGetTermsQuery,
   useGetAboutQuery,
-useGetOrderGrowthQuery,
-useGetEarningGrowthQuery,
+  useGetOrderGrowthQuery,
+  useGetEarningGrowthQuery,
   useGetFaqQuery,
   useAddFaqMutation,
   useDeleteFaqMutation,
@@ -360,4 +377,6 @@ useGetEarningGrowthQuery,
   useUpdateOrderMutation,
   useAddNewsletterMutation,
   useGetOverviewQuery,
+  useGetNotificationQuery,
+  useMarkReadNotificationMutation,
 } = category;
